@@ -1,0 +1,132 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  name         String
+  passwordHash String   @map("password_hash")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  workouts         Workout[]
+  personalRecords  PersonalRecord[]
+  challengeResults ChallengeResult[]
+
+  @@map("users")
+}
+
+model Exercise {
+  id           Int      @id @default(autoincrement())
+  name         String   @unique
+  unit         String
+  category     String
+  optimization String   @default("MIN")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  workoutExercises WorkoutExercise[]
+  personalRecords  PersonalRecord[]
+  challenges       Challenge[]
+
+  @@map("exercises")
+}
+
+model Workout {
+  id              Int      @id @default(autoincrement())
+  userId          Int      @map("user_id")
+  date            DateTime
+  type            String
+  totalDuration   Int?     @map("total_duration")
+  roundsCompleted Float?   @map("rounds_completed")
+  notes           String?
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exercises       WorkoutExercise[]
+  personalRecords PersonalRecord[]
+
+  @@index([userId, date(sort: Desc)])
+  @@map("workouts")
+}
+
+model WorkoutExercise {
+  id             Int      @id @default(autoincrement())
+  workoutId      Int      @map("workout_id")
+  exerciseId     Int      @map("exercise_id")
+  value          Float
+  timeTaken      Int?     @map("time_taken")
+  orderInWorkout Int      @map("order_in_workout")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  workout  Workout  @relation(fields: [workoutId], references: [id], onDelete: Cascade)
+  exercise Exercise @relation(fields: [exerciseId], references: [id])
+
+  @@index([workoutId])
+  @@map("workout_exercises")
+}
+
+model PersonalRecord {
+  id           Int      @id @default(autoincrement())
+  userId       Int      @map("user_id")
+  exerciseId   Int      @map("exercise_id")
+  value        Float
+  timeTaken    Int?     @map("time_taken")
+  achievedDate DateTime @map("achieved_date")
+  workoutId    Int?     @map("workout_id")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exercise Exercise @relation(fields: [exerciseId], references: [id])
+  workout  Workout? @relation(fields: [workoutId], references: [id])
+
+  @@unique([userId, exerciseId, value])
+  @@map("personal_records")
+}
+
+model Challenge {
+  id               Int      @id @default(autoincrement())
+  name             String
+  description      String?
+  startDate        DateTime @map("start_date")
+  endDate          DateTime @map("end_date")
+  challengeType    String   @map("challenge_type")
+  targetExerciseId Int?     @map("target_exercise_id")
+  targetValue      Float?   @map("target_value")
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  targetExercise Exercise?         @relation(fields: [targetExerciseId], references: [id])
+  results        ChallengeResult[]
+
+  @@map("challenges")
+}
+
+model ChallengeResult {
+  id          Int      @id @default(autoincrement())
+  challengeId Int      @map("challenge_id")
+  userId      Int      @map("user_id")
+  resultValue Float    @map("result_value")
+  rank        Int?
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  challenge Challenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([challengeId, userId])
+  @@index([challengeId, rank])
+  @@map("challenge_results")
+}
