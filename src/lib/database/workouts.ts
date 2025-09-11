@@ -22,6 +22,8 @@ const mockWorkoutData = {
     ]
 }
 
+//TODO: fix type for workoutData
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function createWorkout(workoutData: any, userId: number) {
     const { name, type, notes, exercises } = workoutData;
 
