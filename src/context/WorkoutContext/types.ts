@@ -1,10 +1,12 @@
-export type WorkoutFormStage =
-  | "selectWorkoutType"
-  | "selectExercises"
-  | "enterExerciseValues"
-  | "confirm";
+import { Dispatch } from 'react';
 
-export type WorkoutType = "forTraining" | "hyroxSim";
+export type WorkoutFormStage =
+  | 'selectWorkoutType'
+  | 'selectExercises'
+  | 'enterExerciseValues'
+  | 'confirm';
+
+export type WorkoutType = 'forTraining' | 'hyroxSim';
 
 export type Exercise = {
   id: number;
@@ -34,10 +36,20 @@ export type State = {
 };
 
 export type Action =
-  | { type: "SET_WORKOUT_TYPE"; payload: WorkoutType }
-  | { type: "SELECT_EXERCISES"; payload: Exercise[] }
-  | { type: "ENTER_EXERCISE_VALUES"; payload: ExerciseEntry[] }
-  | { type: "NEXT_STAGE" }
-  | { type: "PREV_STAGE" }
-  | { type: "CONFIRM" }
-  | { type: "RESET" };
+  | { type: 'SET_WORKOUT_TYPE'; payload: WorkoutType }
+  | { type: 'SELECT_EXERCISES'; payload: Exercise[] }
+  | { type: 'ENTER_EXERCISE_VALUES'; payload: ExerciseEntry[] }
+  | { type: 'NEXT_STAGE' }
+  | { type: 'PREV_STAGE' }
+  | { type: 'CONFIRM' }
+  | { type: 'RESET' };
+
+export type WorkoutFormContextType = {
+  state: State;
+  dispatch: Dispatch<Action>;
+  setWorkoutType: (type: WorkoutType) => void;
+  selectExercises: (exercises: Exercise[]) => void;
+  nextStage: () => void;
+  prevStage: () => void;
+  canProceedToNext: () => boolean;
+};
