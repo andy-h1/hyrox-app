@@ -8,6 +8,7 @@ import {
   WorkoutType,
   Exercise,
   WorkoutFormContextType,
+  ExerciseValues,
 } from './types';
 
 const initialState: State = {
@@ -109,6 +110,10 @@ export const WorkoutFormProvider = ({ children }: { children: ReactNode }) => {
     dispatch({ type: 'SELECT_EXERCISES', payload: exercises });
   };
 
+  const enterExerciseValues = (exerciseValue: ExerciseValues) => {
+    dispatch({ type: 'ENTER_EXERCISE_VALUES', payload: exerciseValues });
+  };
+
   const nextStage = () => {
     dispatch({ type: 'NEXT_STAGE' });
   };
@@ -141,6 +146,7 @@ export const WorkoutFormProvider = ({ children }: { children: ReactNode }) => {
     dispatch,
     setWorkoutType,
     selectExercises,
+    enterExerciseValues,
     nextStage,
     prevStage,
     canProceedToNext,

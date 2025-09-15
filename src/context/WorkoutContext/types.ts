@@ -31,6 +31,12 @@ export type ConfirmEntry = {
   notes: string;
 };
 
+export type ExerciseValues = {
+  value: string;
+  timeTakenMins: string;
+  timeTakenSecs: string;
+};
+
 export type State = {
   stage: WorkoutFormStage;
   workoutType: WorkoutType;
@@ -53,6 +59,7 @@ export type WorkoutFormContextType = {
   dispatch: Dispatch<Action>;
   setWorkoutType: (type: WorkoutType) => void;
   selectExercises: (exercises: Exercise[]) => void;
+  enterExerciseValue: (exerciseValues: ExerciseValues) => void;
   nextStage: () => void;
   prevStage: () => void;
   canProceedToNext: () => boolean;

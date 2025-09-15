@@ -31,7 +31,6 @@ export const Cards = ({ exercises }: { exercises: Exercise[] }) => {
     selectExercises(newSelection);
   };
 
-  console.log(state.selectedExercises);
   return (
     <div className="rounded-2xl border-2 border-solid border-slate-300 bg-white p-8 dark:inset-ring dark:inset-ring-white/10">
       <div className="grid grid-cols-2 gap-4">
