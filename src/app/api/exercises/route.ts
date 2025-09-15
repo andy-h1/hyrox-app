@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
-import { getExercises } from '@/lib/database/exercises';
+import { getExercisesList } from '@/lib/database/exercises';
 
 export async function GET() {
-  const allExercises = await getExercises();
+  const allExercises = await getExercisesList();
 
   return NextResponse.json({ data: allExercises }, { status: 200 });
 }

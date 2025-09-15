@@ -10,6 +10,10 @@ export type WorkoutType = 'forTraining' | 'hyroxSim';
 
 export type Exercise = {
   id: number;
+  name: string;
+  unit: string;
+  category: string;
+  optimization: string;
 };
 
 export type ExerciseEntry = {
