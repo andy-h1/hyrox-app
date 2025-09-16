@@ -3,9 +3,9 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { useWorkoutForm } from '@/context/WorkoutContext/context';
 
 type Inputs = {
-  value: string;
-  timeTakenMins: string;
-  timeTakenSecs: string;
+  value: number;
+  timeTakenMins: number;
+  timeTakenSecs: number;
 };
 
 export const ExerciseForm = ({ exercise }: { exercise: Exercise }) => {
@@ -15,15 +15,18 @@ export const ExerciseForm = ({ exercise }: { exercise: Exercise }) => {
     formState: { errors },
   } = useForm<Inputs>();
   const { state, enterExerciseValue } = useWorkoutForm();
-  const onSubmit: SubmitHandler<Inputs> = (data) =>
-    enterExerciseValue({ ...data, exerciseId: exercise.id });
 
   console.log({ exercise });
   console.log(state.selectedExercises);
   console.log(state.exerciseEntries);
 
-  const calculateTime = (mins: string, secs: string) => {
+  const calculateTime = (mins: number, secs: number) => {
     return mins * 60 + secs;
+  };
+
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
+    const timeTaken = calculateTime(data.timeTakenMins, data.timeTakenSecs);
+    enterExerciseValue({ exerciseId: exercise.id, timeTaken, value: data.value });
   };
 
   return (
@@ -40,6 +43,7 @@ export const ExerciseForm = ({ exercise }: { exercise: Exercise }) => {
             <input
               className="border-2 border-slate-400 rounded-md"
               placeholder={exercise.unit === 'meters' ? '1000' : '50'}
+              type="number"
               {...register('value')}
             />
 
