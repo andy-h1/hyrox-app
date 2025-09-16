@@ -17,13 +17,11 @@ export type Exercise = {
 };
 
 export type ExerciseEntry = {
-  workoutId: number;
+  // workoutId: number;
   exerciseId: number;
-  values: {
-    value: number;
-    timeTaken: number;
-    order: number;
-  };
+  value: number;
+  timeTaken: number;
+  // order: number;
 };
 
 export type ConfirmEntry = {
@@ -31,24 +29,18 @@ export type ConfirmEntry = {
   notes: string;
 };
 
-export type ExerciseValues = {
-  value: string;
-  timeTakenMins: string;
-  timeTakenSecs: string;
-};
-
 export type State = {
   stage: WorkoutFormStage;
   workoutType: WorkoutType;
   selectedExercises: Exercise[];
-  exerciseEntries: ExerciseEntry[];
+  exerciseEntries: ExerciseEntry;
   confirmWorkout: ConfirmEntry;
 };
 
 export type Action =
   | { type: 'SET_WORKOUT_TYPE'; payload: WorkoutType }
   | { type: 'SELECT_EXERCISES'; payload: Exercise[] }
-  | { type: 'ENTER_EXERCISE_VALUES'; payload: ExerciseEntry[] }
+  | { type: 'ENTER_EXERCISE_VALUES'; payload: ExerciseEntry }
   | { type: 'NEXT_STAGE' }
   | { type: 'PREV_STAGE' }
   | { type: 'CONFIRM' }
@@ -59,7 +51,7 @@ export type WorkoutFormContextType = {
   dispatch: Dispatch<Action>;
   setWorkoutType: (type: WorkoutType) => void;
   selectExercises: (exercises: Exercise[]) => void;
-  enterExerciseValue: (exerciseValues: ExerciseValues) => void;
+  enterExerciseValue: (exerciseValues: ExerciseEntry) => void;
   nextStage: () => void;
   prevStage: () => void;
   canProceedToNext: () => boolean;

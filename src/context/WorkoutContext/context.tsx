@@ -8,14 +8,18 @@ import {
   WorkoutType,
   Exercise,
   WorkoutFormContextType,
-  ExerciseValues,
+  ExerciseEntry,
 } from './types';
 
 const initialState: State = {
   stage: 'selectWorkoutType',
   workoutType: 'forTraining',
   selectedExercises: [],
-  exerciseEntries: [],
+  exerciseEntries: {
+    exerciseId: 0,
+    value: 0,
+    timeTaken: 0,
+  },
   confirmWorkout: {
     isConfirmed: false,
     notes: '',
@@ -110,7 +114,7 @@ export const WorkoutFormProvider = ({ children }: { children: ReactNode }) => {
     dispatch({ type: 'SELECT_EXERCISES', payload: exercises });
   };
 
-  const enterExerciseValues = (exerciseValue: ExerciseValues) => {
+  const enterExerciseValue = (exerciseValues: ExerciseEntry) => {
     dispatch({ type: 'ENTER_EXERCISE_VALUES', payload: exerciseValues });
   };
 
@@ -130,10 +134,7 @@ export const WorkoutFormProvider = ({ children }: { children: ReactNode }) => {
       case 'selectExercises':
         return state.selectedExercises.length > 0;
       case 'enterExerciseValues':
-        return (
-          state.exerciseEntries.length === state.selectedExercises.length &&
-          state.exerciseEntries.every((entry) => entry.values.value > 0)
-        );
+        return state.exerciseEntries != undefined;
       case 'confirm':
         return state.confirmWorkout.isConfirmed;
       default:
@@ -146,7 +147,7 @@ export const WorkoutFormProvider = ({ children }: { children: ReactNode }) => {
     dispatch,
     setWorkoutType,
     selectExercises,
-    enterExerciseValues,
+    enterExerciseValue,
     nextStage,
     prevStage,
     canProceedToNext,

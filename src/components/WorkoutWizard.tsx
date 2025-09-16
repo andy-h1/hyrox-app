@@ -39,16 +39,10 @@ export const WorkoutWizard = ({ exercises }: { exercises: Exercise[] }) => {
         <div className="mt-8 flex flex-col gap-8">
           <h2>Log Your Exercises:</h2>
           {state.selectedExercises.map((exercise) => (
-            <form key={exercise.id}>
+            <div key={exercise.id}>
               <ExerciseForm exercise={exercise} />
-            </form>
+            </div>
           ))}
-          <button
-            type="submit"
-            className="rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
-          >
-            Submit
-          </button>
         </div>
       )}
     </>

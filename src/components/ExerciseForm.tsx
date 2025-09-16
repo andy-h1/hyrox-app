@@ -1,5 +1,6 @@
 import { Exercise } from '@/context/WorkoutContext/types';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { useWorkoutForm } from '@/context/WorkoutContext/context';
 
 type Inputs = {
   value: string;
@@ -13,9 +14,17 @@ export const ExerciseForm = ({ exercise }: { exercise: Exercise }) => {
     handleSubmit,
     formState: { errors },
   } = useForm<Inputs>();
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+  const { state, enterExerciseValue } = useWorkoutForm();
+  const onSubmit: SubmitHandler<Inputs> = (data) =>
+    enterExerciseValue({ ...data, exerciseId: exercise.id });
 
-  console.log(exercise.unit);
+  console.log({ exercise });
+  console.log(state.selectedExercises);
+  console.log(state.exerciseEntries);
+
+  const calculateTime = (mins: string, secs: string) => {
+    return mins * 60 + secs;
+  };
 
   return (
     <div className="border border-gray-200 rounded-lg p-6 bg-white shadow-sm text-black">
@@ -41,14 +50,22 @@ export const ExerciseForm = ({ exercise }: { exercise: Exercise }) => {
               <input
                 className="border-2 border-slate-400 rounded-md"
                 placeholder="4 mins"
+                type="number"
                 {...register('timeTakenMins')}
               />
               <input
                 className="border-2 border-slate-400 rounded-md"
                 placeholder="30 seconds"
+                type="number"
                 {...register('timeTakenSecs')}
               />
             </span>
+            <button
+              type="submit"
+              className="rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+            >
+              Submit
+            </button>
           </form>
         </div>
         <span className="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10">
