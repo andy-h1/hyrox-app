@@ -1,18 +1,22 @@
 'use client';
-import { Exercise } from '@/context/WorkoutContext/types';
+import { ExerciseData, ExerciseList } from '@/context/WorkoutContext/types';
 
 type CardsProps = {
-  exerciseList: Exercise[];
-  selectedExercises: Exercise[];
-  setSelectedExercises: React.Dispatch<React.SetStateAction<Exercise[]>>;
+  exerciseList: ExerciseList[];
+  selectedExercises: ExerciseData[];
+  setSelectedExercises: React.Dispatch<React.SetStateAction<ExerciseData[]>>;
 };
 
-export const Cards = ({ exerciseList, selectedExercises, setSelectedExercises }: CardsProps) => {
-  const toggleExercise = (exercise: Exercise) => {
+export const ExerciseCards = ({
+  exerciseList,
+  selectedExercises,
+  setSelectedExercises,
+}: CardsProps) => {
+  const toggleExercise = (exercise: ExerciseList) => {
     setSelectedExercises((prevState) =>
       prevState.find((ex) => ex.id === exercise.id)
         ? prevState.filter((e) => e.id !== exercise.id)
-        : [...prevState, exercise],
+        : [...prevState, { ...exercise, order: prevState.length + 1 }],
     );
   };
 

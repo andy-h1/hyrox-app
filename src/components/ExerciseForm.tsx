@@ -1,4 +1,4 @@
-import { Exercise } from '@/context/WorkoutContext/types';
+import { ExerciseList } from '@/context/WorkoutContext/types';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useWorkoutForm } from '@/context/WorkoutContext/context';
 
@@ -8,7 +8,7 @@ type Inputs = {
   timeTakenSecs: number;
 };
 
-export const ExerciseForm = (exercise: Exercise) => {
+export const ExerciseForm = ({ exercise }: { exercise: ExerciseList }) => {
   const {
     register,
     handleSubmit,

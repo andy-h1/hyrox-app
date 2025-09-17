@@ -1,15 +1,14 @@
 'use client';
-import { Cards } from './Cards';
+import { ExerciseCards } from './ExerciseCards';
 import { ExerciseForm } from './ExerciseForm';
 import { useState } from 'react';
-import { Exercise } from '@prisma/client';
-
-type ExerciseData = Omit<Exercise, 'createdAt'>;
+import { ExerciseData, ExerciseList } from '@/context/WorkoutContext/types';
 
 type WorkoutWizardProps = {
-  exerciseList: ExerciseData[];
+  exerciseList: ExerciseList[];
 };
 export const WorkoutWizard: React.FC<WorkoutWizardProps> = ({ exerciseList }) => {
+  // note: omit createdAt and adding order to properties
   const [selectedExercises, setSelectedExercises] = useState<ExerciseData[]>([]);
   console.log(selectedExercises);
 
@@ -37,7 +36,7 @@ export const WorkoutWizard: React.FC<WorkoutWizardProps> = ({ exerciseList }) =>
 
       <div className="w-full max-w-4xl">
         <h2 className="text-xl font-semibold mb-4 text-slate-800">Select Exercises:</h2>
-        <Cards
+        <ExerciseCards
           exerciseList={exerciseList}
           selectedExercises={selectedExercises}
           setSelectedExercises={setSelectedExercises}

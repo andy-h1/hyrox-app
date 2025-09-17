@@ -1,4 +1,3 @@
-import { WorkoutFormProvider } from '@/context/WorkoutContext/context';
 import Link from 'next/link';
 
 export default function Dashboard() {

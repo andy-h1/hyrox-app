@@ -1,4 +1,5 @@
 import { Dispatch } from 'react';
+import { Exercise } from '@prisma/client';
 
 export type WorkoutFormStage =
   | 'selectWorkoutType'
@@ -8,13 +9,9 @@ export type WorkoutFormStage =
 
 export type WorkoutType = 'forTraining' | 'hyroxSim';
 
-export type Exercise = {
-  id: number;
-  name: string;
-  unit: string;
-  category: string;
-  optimization: string;
-};
+export type ExerciseData = Omit<Exercise, 'createdAt'> & { order: number };
+
+export type ExerciseList = Omit<Exercise, 'createdAt'>;
 
 export type ExerciseEntry = {
   // workoutId: number;
