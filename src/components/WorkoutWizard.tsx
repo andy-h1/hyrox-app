@@ -1,12 +1,17 @@
 'use client';
-import { Exercise } from '@/context/WorkoutContext/types';
 import { Cards } from './Cards';
-import { useWorkoutForm } from '@/context/WorkoutContext/context';
 import { ExerciseForm } from './ExerciseForm';
+import { useState } from 'react';
+import { Exercise } from '@prisma/client';
 
-export const WorkoutWizard = ({ exercises }: { exercises: Exercise[] }) => {
-  const { state } = useWorkoutForm();
-  console.log(state.selectedExercises);
+type ExerciseData = Omit<Exercise, 'createdAt'>;
+
+type WorkoutWizardProps = {
+  exerciseList: ExerciseData[];
+};
+export const WorkoutWizard: React.FC<WorkoutWizardProps> = ({ exerciseList }) => {
+  const [selectedExercises, setSelectedExercises] = useState<ExerciseData[]>([]);
+  console.log(selectedExercises);
 
   return (
     <>
@@ -32,13 +37,17 @@ export const WorkoutWizard = ({ exercises }: { exercises: Exercise[] }) => {
 
       <div className="w-full max-w-4xl">
         <h2 className="text-xl font-semibold mb-4 text-slate-800">Select Exercises:</h2>
-        <Cards exercises={exercises} />
+        <Cards
+          exerciseList={exerciseList}
+          selectedExercises={selectedExercises}
+          setSelectedExercises={setSelectedExercises}
+        />
       </div>
 
-      {state.selectedExercises.length > 0 && (
+      {selectedExercises.length > 0 && (
         <div className="mt-8 flex flex-col gap-8">
           <h2>Log Your Exercises:</h2>
-          {state.selectedExercises.map((exercise) => (
+          {selectedExercises.map((exercise) => (
             <div key={exercise.id}>
               <ExerciseForm exercise={exercise} />
             </div>

@@ -8,17 +8,14 @@ type Inputs = {
   timeTakenSecs: number;
 };
 
-export const ExerciseForm = ({ exercise }: { exercise: Exercise }) => {
+export const ExerciseForm = (exercise: Exercise) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<Inputs>();
-  const { state, enterExerciseValue } = useWorkoutForm();
 
-  console.log({ exercise });
-  console.log(state.selectedExercises);
-  console.log(state.exerciseEntries);
+  console.log(exercise);
 
   const calculateTime = (mins: number, secs: number) => {
     return mins * 60 + secs;
@@ -26,7 +23,6 @@ export const ExerciseForm = ({ exercise }: { exercise: Exercise }) => {
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     const timeTaken = calculateTime(data.timeTakenMins, data.timeTakenSecs);
-    enterExerciseValue({ exerciseId: exercise.id, timeTaken, value: data.value });
   };
 
   return (
