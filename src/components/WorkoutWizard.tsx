@@ -2,7 +2,7 @@
 import { ExerciseCards } from './ExerciseCards';
 import { ExerciseForm } from './ExerciseForm';
 import { useState } from 'react';
-import { ExerciseData, ExerciseList } from '@/context/WorkoutContext/types';
+import { ExerciseData, ExerciseEntry, ExerciseList } from '@/context/WorkoutContext/types';
 
 type WorkoutWizardProps = {
   exerciseList: ExerciseList[];
@@ -10,6 +10,7 @@ type WorkoutWizardProps = {
 export const WorkoutWizard: React.FC<WorkoutWizardProps> = ({ exerciseList }) => {
   // note: omit createdAt and adding order to properties
   const [selectedExercises, setSelectedExercises] = useState<ExerciseData[]>([]);
+  const [workoutExercises, setWorkoutExercises] = useState<ExerciseEntry[]>([]);
   console.log(selectedExercises);
 
   return (

@@ -13,11 +13,19 @@ export const ExerciseCards = ({
   setSelectedExercises,
 }: CardsProps) => {
   const toggleExercise = (exercise: ExerciseList) => {
-    setSelectedExercises((prevState) =>
-      prevState.find((ex) => ex.id === exercise.id)
-        ? prevState.filter((e) => e.id !== exercise.id)
-        : [...prevState, { ...exercise, order: prevState.length + 1 }],
-    );
+    setSelectedExercises((prevState) => {
+      const doesExerciseExist = prevState.find((ex) => ex.id === exercise.id);
+      let updatedList;
+
+      // NOTE: if exercise exists return me a filtered list excluding that exercises
+      if (doesExerciseExist) {
+        updatedList = prevState.filter((ex) => ex.id !== exercise.id);
+      } else {
+        // NOTE: if exercise doesn't exist add it to the previous state and reset the order back to 0
+        updatedList = [...prevState, { ...exercise, order: 0 }];
+      }
+      return updatedList.map((ex, index) => ({ ...ex, order: index + 1 }));
+    });
   };
 
   return (

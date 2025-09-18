@@ -1,6 +1,5 @@
 import { ExerciseList } from '@/context/WorkoutContext/types';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { useWorkoutForm } from '@/context/WorkoutContext/context';
 
 type Inputs = {
   value: number;
@@ -23,8 +22,12 @@ export const ExerciseForm = ({ exercise }: { exercise: ExerciseList }) => {
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     const timeTaken = calculateTime(data.timeTakenMins, data.timeTakenSecs);
+    return { ...data, timeTaken };
   };
 
+  // TODO: we currently render a button on each component with a submit butt
+  // Ideally we just have one button which submits all the values
+  // Should I move it into WorkoutWizard?
   return (
     <div className="border border-gray-200 rounded-lg p-6 bg-white shadow-sm text-black">
       <div className="flex justify-between items-start mb-4">
