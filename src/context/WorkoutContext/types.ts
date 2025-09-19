@@ -15,7 +15,7 @@ export type ExerciseList = Omit<Exercise, 'createdAt'>;
 
 export type ExerciseEntry = {
   // workoutId: number;
-  exerciseId: number;
+  id: number;
   value: number;
   timeTaken: number;
   // order: number;

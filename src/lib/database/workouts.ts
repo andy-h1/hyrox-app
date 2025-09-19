@@ -27,28 +27,47 @@ const mockWorkoutData = {
 export async function createWorkout(workoutData: any, userId: number) {
   const { name, type, notes, exercises } = workoutData;
 
-  // Step 1: Create the workout
-  const newWorkout = await prisma.workout.create({
-    data: {
-      userId,
-      date: new Date(),
-      type,
-      notes,
-    },
-  });
+  const formatType = type === 'forTraining' ? 'FOR_TRAINING' : 'HYROX_SIM';
 
-  // Step 2: Create workout exercises
-  for (const exercise of exercises) {
-    await prisma.workoutExercise.create({
-      data: {
-        workoutId: newWorkout.id,
-        exerciseId: exercise.exerciseId,
-        value: exercise.value,
-        timeTaken: exercise.timeTaken,
-        orderInWorkout: exercise.orderInWorkout,
-      },
+  try {
+    console.log('Creating workout for user:', userId, 'with data:', workoutData);
+    await prisma.$transaction(async (tx) => {
+      // Step 1: Create the workout
+      const newWorkout = await tx.workout.create({
+        data: {
+          userId,
+          date: new Date(),
+          type: formatType,
+          notes,
+        },
+      });
+
+      console.log('Workout DB entry created:', newWorkout);
+
+      for (const exercise of exercises) {
+        console.log(
+          'Creating workoutExercise for workoutId:',
+          newWorkout.id,
+          'exercise:',
+          exercise,
+        );
+        await tx.workoutExercise.create({
+          data: {
+            workoutId: newWorkout.id,
+            exerciseId: parseFloat(exercise.exerciseId),
+            value: parseFloat(exercise.value),
+            timeTaken: parseFloat(exercise.timeTaken),
+            orderInWorkout: parseFloat(exercise.orderInWorkout),
+          },
+        });
+      }
+      console.log('All workout exercises created for workoutId:', newWorkout.id);
+      return newWorkout;
     });
+  } catch (error) {
+    console.error('Error in createWorkout:', error);
+    throw error; // Rethrow so the route handler can catch and respond
   }
-
-  return newWorkout;
 }
+
+// Note: Does my database structure make sense?!

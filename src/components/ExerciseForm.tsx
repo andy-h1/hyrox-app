@@ -1,4 +1,4 @@
-import { ExerciseList } from '@/context/WorkoutContext/types';
+import { ExerciseData, ExerciseEntry, ExerciseList } from '@/context/WorkoutContext/types';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 type Inputs = {
@@ -7,7 +7,12 @@ type Inputs = {
   timeTakenSecs: number;
 };
 
-export const ExerciseForm = ({ exercise }: { exercise: ExerciseList }) => {
+type ExerciseFormProps = {
+  exercise: ExerciseList;
+  setExerciseValues: React.Dispatch<React.SetStateAction<ExerciseEntry[]>>;
+};
+
+export const ExerciseForm = ({ exercise, setExerciseValues }: ExerciseFormProps) => {
   const {
     register,
     handleSubmit,
@@ -22,15 +27,25 @@ export const ExerciseForm = ({ exercise }: { exercise: ExerciseList }) => {
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     const timeTaken = calculateTime(data.timeTakenMins, data.timeTakenSecs);
-    return { ...data, timeTaken };
+    setExerciseValues((prevState) => {
+      const filtered = prevState.filter((entry) => entry.id !== exercise.id);
+      const newEntry = {
+        ...exercise,
+        exerciseId: exercise.id,
+        value: data.value,
+        timeTaken,
+      };
+
+      return [...filtered, newEntry];
+    });
   };
 
   // TODO: we currently render a button on each component with a submit butt
   // Ideally we just have one button which submits all the values
   // Should I move it into WorkoutWizard?
   return (
-    <div className="border border-gray-200 rounded-lg p-6 bg-white shadow-sm text-black">
-      <div className="flex justify-between items-start mb-4">
+    <div className="rounded-lg border border-gray-200 bg-white p-6 text-black shadow-sm">
+      <div className="mb-4 flex items-start justify-between">
         <div className="flex flex-col">
           <h3 className="text-lg font-semibold text-gray-900">{exercise.name}</h3>
           <p className="text-sm text-gray-500 capitalize">{exercise.category}</p>
@@ -40,9 +55,10 @@ export const ExerciseForm = ({ exercise }: { exercise: ExerciseList }) => {
               {exercise.unit === 'meters' ? 'Distance (m)' : 'Weight (kg)'}
             </label>
             <input
-              className="border-2 border-slate-400 rounded-md"
+              className="rounded-md border-1 border-slate-400 p-1"
               placeholder={exercise.unit === 'meters' ? '1000' : '50'}
               type="number"
+              min="0"
               {...register('value')}
             />
 
@@ -51,27 +67,29 @@ export const ExerciseForm = ({ exercise }: { exercise: ExerciseList }) => {
             </label>
             <span className="flex flex-row justify-between gap-8">
               <input
-                className="border-2 border-slate-400 rounded-md"
+                className="rounded-md border-1 border-slate-400 p-1"
                 placeholder="4 mins"
                 type="number"
+                min="0"
                 {...register('timeTakenMins')}
               />
               <input
-                className="border-2 border-slate-400 rounded-md"
+                className="rounded-md border-1 border-slate-400 p-1"
                 placeholder="30 seconds"
                 type="number"
+                min="0"
                 {...register('timeTakenSecs')}
               />
             </span>
             <button
               type="submit"
-              className="rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+              className="cursor-pointer rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
             >
               Submit
             </button>
           </form>
         </div>
-        <span className="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10">
+        <span className="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-blue-700/10 ring-inset">
           {exercise.unit}
         </span>
       </div>
