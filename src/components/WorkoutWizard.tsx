@@ -58,7 +58,7 @@ export const WorkoutWizard: React.FC<WorkoutWizardProps> = ({ exerciseList }) =>
       }
 
       const result = await response.json();
-      console.log('Workout created', result.data);
+      console.log('Workout created', result);
     } catch (error) {
       console.log('Error creating workout:', error);
     }

@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { NextResponse } from 'next/server';
 
 const prisma = new PrismaClient();
 
@@ -69,5 +70,35 @@ export async function createWorkout(workoutData: any, userId: number) {
     throw error; // Rethrow so the route handler can catch and respond
   }
 }
-
 // Note: Does my database structure make sense?!
+
+export async function getLoggedWorkouts() {
+  try {
+    const LoggedWorkoutData = await prisma.workout.findMany({
+      select: {
+        id: true,
+        date: true,
+        type: true,
+        totalDuration: true,
+        roundsCompleted: true,
+      },
+    });
+
+    const LoggedExercises = await prisma.workoutExercise.findMany({
+      select: {
+        workoutId: true,
+        exercise: true,
+        value: true,
+        timeTaken: true,
+        orderInWorkout: true,
+      },
+    });
+
+    return { LoggedExercises, LoggedWorkoutData };
+  } catch (error) {
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : 'Unknown error' },
+      { status: 500 },
+    );
+  }
+}
