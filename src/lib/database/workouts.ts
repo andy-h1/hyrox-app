@@ -94,7 +94,12 @@ export async function getLoggedWorkouts() {
       },
     });
 
-    return { LoggedExercises, LoggedWorkoutData };
+    const combined = LoggedWorkoutData.map((workout) => ({
+      ...workout,
+      exercises: LoggedExercises.filter((ex) => ex.workoutId === workout.id),
+    }));
+
+    return combined;
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Unknown error' },
