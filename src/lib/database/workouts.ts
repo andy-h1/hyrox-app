@@ -74,36 +74,36 @@ export async function createWorkout(workoutData: any, userId: number) {
 
 export async function getLoggedWorkouts() {
   try {
-    const LoggedWorkoutData = await prisma.workout.findMany({
+    const workouts = await prisma.workout.findMany({
       select: {
         id: true,
         date: true,
         type: true,
-        totalDuration: true,
-        roundsCompleted: true,
+        notes: true,
+        exercises: {
+          select: {
+            id: true,
+            value: true,
+            timeTaken: true,
+            orderInWorkout: true,
+            exercise: {
+              select: {
+                id: true,
+                name: true,
+                unit: true,
+                category: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: {
+        date: 'desc',
       },
     });
 
-    const LoggedExercises = await prisma.workoutExercise.findMany({
-      select: {
-        workoutId: true,
-        exercise: true,
-        value: true,
-        timeTaken: true,
-        orderInWorkout: true,
-      },
-    });
-
-    const combined = LoggedWorkoutData.map((workout) => ({
-      ...workout,
-      exercises: LoggedExercises.filter((ex) => ex.workoutId === workout.id),
-    }));
-
-    return combined;
+    return workouts;
   } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Unknown error' },
-      { status: 500 },
-    );
+    throw new Error(error instanceof Error ? error.message : 'Unknown error');
   }
 }

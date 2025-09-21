@@ -1,5 +1,7 @@
+import { ExerciseList } from '@/context/WorkoutContext/types';
 import { getLoggedWorkouts } from '@/lib/database/workouts';
 import { formatDate } from '@/utils/formatDate';
+import { Exercise, WorkoutExercise } from '@prisma/client';
 
 type WorkoutResponse = {
   id: string;
@@ -18,27 +20,35 @@ type WorkoutResponse = {
 
 export const WorkoutSummary = async () => {
   const loggedWorkouts = await getLoggedWorkouts();
-  console.log(loggedWorkouts);
+
+  console.log({ loggedWorkouts });
+  // TODO: time isn't calculated correctly
 
   return (
-    <div>
+    <div className="flex flex-col gap-8">
       <h1>Activity</h1>
       <p>Your workouts this week:</p>
 
       {loggedWorkouts.map((workout) => (
-        <div key={workout.id}>
-          <p>{formatDate(workout.date)}</p>
+        <div key={workout.id} className="border-2 border-slate-300 p-8 border-solid rounded-md">
           <p>{workout.type === 'FOR_TRAINING' ? 'Training session' : 'Hyrox simulation'}</p>
-          <p>Total workout duration: {workout.totalDuration}</p>
+          <span className="bg-white pr-2 text-sm text-gray-500 dark:bg-gray-900 dark:text-gray-400">
+            {formatDate(workout.date)}
+          </span>
 
-          <h3>Exercises done:</h3>
           {workout.exercises.map((exercise) => (
-            <div key={exercise.workoutId}>
-              <p>Exercise: {exercise.timeTaken / 60}</p>
-              <p>Order of workout:{exercise.orderInWorkout}</p>
+            <div key={`${exercise.id}-${exercise.orderInWorkout}`}>
+              <span className="flex justify-between">
+                <p>{exercise.exercise.name}</p>
+                <p>{exercise.exercise.category}</p>
+              </span>
+              <p>Order: {exercise.orderInWorkout}</p>
+              <p>
+                {exercise.value} {exercise.exercise.unit}
+              </p>
+              <p>Time: {exercise.timeTaken / 60}</p>
             </div>
           ))}
-          <p>{workout.exercises[0].orderInWorkout}</p>
         </div>
       ))}
     </div>
