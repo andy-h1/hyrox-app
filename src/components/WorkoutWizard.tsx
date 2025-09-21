@@ -24,7 +24,7 @@ export const WorkoutWizard: React.FC<WorkoutWizardProps> = ({ exerciseList }) =>
   // note: omit createdAt and adding order to properties
   const [selectedExercises, setSelectedExercises] = useState<ExerciseData[]>([]);
   const [exerciseValues, setExerciseValues] = useState<ExerciseEntry[]>([]);
-  const [workoutType, setWorkoutType] = useState<WorkoutType>();
+  const [workoutType, setWorkoutType] = useState<WorkoutType>('forTraining');
   const { register, handleSubmit } = useForm<SummaryInput>();
 
   console.log({ exerciseValues });

@@ -22,7 +22,7 @@ export const ExerciseForm = ({ exercise, setExerciseValues }: ExerciseFormProps)
   console.log(exercise);
 
   const calculateTime = (mins: number, secs: number) => {
-    return mins * 60 + secs;
+    return Number(mins) * 60 + Number(secs);
   };
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
@@ -65,7 +65,7 @@ export const ExerciseForm = ({ exercise, setExerciseValues }: ExerciseFormProps)
             <label className="text-gray-900">
               How long did it take you to complete the exercise? (mins) / (secs)
             </label>
-            <span className="flex flex-row justify-between gap-8">
+            <span className="flex flex-row justify-start gap-8">
               <input
                 className="rounded-md border-1 border-slate-400 p-1"
                 placeholder="4 mins"
@@ -78,6 +78,7 @@ export const ExerciseForm = ({ exercise, setExerciseValues }: ExerciseFormProps)
                 placeholder="30 seconds"
                 type="number"
                 min="0"
+                max="59"
                 {...register('timeTakenSecs')}
               />
             </span>
