@@ -6,6 +6,7 @@ export default async function Dashboard() {
     <div className="grid min-h-screen grid-rows-[20px_1fr_20px] items-center justify-items-center gap-16 p-8 pb-20 font-sans sm:p-20">
       <main className="row-start-2 flex flex-col items-center gap-[32px] sm:items-start">
         <h1 className="text-3xl">Dashboard</h1>
+        <h2>Your activities this week:</h2>
         <WorkoutSummary />
         <Link
           href="/dashboard/log-workout"

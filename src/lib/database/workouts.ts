@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { redirect } from 'next/dist/server/api-utils';
 import { NextResponse } from 'next/server';
 
 const prisma = new PrismaClient();
@@ -63,7 +64,7 @@ export async function createWorkout(workoutData: any, userId: number) {
         });
       }
       console.log('All workout exercises created for workoutId:', newWorkout.id);
-      return newWorkout;
+      return { message: 'Workout logged successfully', newWorkout };
     });
   } catch (error) {
     console.error('Error in createWorkout:', error);

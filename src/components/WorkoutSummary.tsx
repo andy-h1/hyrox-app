@@ -26,6 +26,12 @@ export const WorkoutSummary = async () => {
   console.log({ loggedWorkouts });
   // TODO: time isn't calculated correctly
 
+  const convertSecondsToMins = (totalSeconds: number) => {
+    const mins = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return `${mins}mins ${seconds}secs`;
+  };
+
   return (
     <div className="flex flex-col gap-8">
       <h1>Activity</h1>
@@ -43,21 +49,23 @@ export const WorkoutSummary = async () => {
             <span className="pr-2 text-sm text-gray-500 dark:text-white mb-2">
               {formatDate(workout.date)}
             </span>
-            <ChevronDownIcon className="size-5 fill-white/60 group-data-hover:fill-white/50 group-data-open:rotate-180" />
+            <ChevronDownIcon className="size-5 fill-neutral-700 group-data-hover:fill-neutral/700 dark:fill-white/60 dark:group-data-hover:fill-white/50 group-data-open:rotate-180" />
           </DisclosureButton>
 
           {workout.exercises.map((exercise) => (
             <DisclosurePanel
               key={`${exercise.id}-${exercise.orderInWorkout}`}
-              className="mt-2 text-sm/5 text-white/50"
+              className="mt-2 text-sm/5 text-slate-800 dark:text-white/50"
             >
               <div
                 aria-hidden="true"
                 className="w-full border-t border-gray-300 dark:border-white/15 mt-4"
               >
                 <span className="flex justify-between mt-2">
-                  <p className="font-bold">{exercise.exercise.name}</p>
-                  <p className="text-sm text-neutral-700 dark:text-blue-500">
+                  <p className="font-bold text-slate-800 dark:text-white/50">
+                    {exercise.exercise.name}
+                  </p>
+                  <p className="text-xs text-neutral-700 dark:text-blue-500">
                     Order: {exercise.orderInWorkout}
                   </p>
                 </span>
@@ -65,7 +73,8 @@ export const WorkoutSummary = async () => {
                 <p>
                   {exercise.value} {exercise.exercise.unit}
                 </p>
-                <p>Time: {exercise.timeTaken / 60}</p>
+
+                {exercise.timeTaken && <p>{convertSecondsToMins(exercise.timeTaken)}</p>}
               </div>
             </DisclosurePanel>
           ))}

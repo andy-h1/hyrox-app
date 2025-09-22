@@ -10,6 +10,7 @@ import {
 } from '@/context/WorkoutContext/types';
 import { formatDate } from '@/utils/formatDate';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { useRouter } from 'next/navigation';
 
 type WorkoutWizardProps = {
   exerciseList: ExerciseList[];
@@ -26,6 +27,7 @@ export const WorkoutWizard: React.FC<WorkoutWizardProps> = ({ exerciseList }) =>
   const [exerciseValues, setExerciseValues] = useState<ExerciseEntry[]>([]);
   const [workoutType, setWorkoutType] = useState<WorkoutType>('forTraining');
   const { register, handleSubmit } = useForm<SummaryInput>();
+  const router = useRouter();
 
   console.log({ exerciseValues });
 
@@ -58,6 +60,9 @@ export const WorkoutWizard: React.FC<WorkoutWizardProps> = ({ exerciseList }) =>
       }
 
       const result = await response.json();
+      if (response.ok) {
+        router.push('/dashboard');
+      }
       console.log('Workout created', result);
     } catch (error) {
       console.log('Error creating workout:', error);
