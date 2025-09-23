@@ -46,6 +46,12 @@ export const WorkoutWizard: React.FC<WorkoutWizardProps> = ({ exerciseList }) =>
   const nextStep = () => setCurrentStep((prevStep) => Math.min(prevStep + 1, steps.length - 1));
   const backStep = () => setCurrentStep((prevStep) => Math.max(prevStep - 1, 0));
 
+  const goToStep = (stepIndex: number) => {
+    if (stepIndex >= 0 && stepIndex < steps.length) {
+      setCurrentStep(stepIndex);
+    }
+  };
+
   const onClickWorkoutType = (type: WorkoutType) => {
     setWorkoutType(type);
     nextStep();
@@ -99,7 +105,7 @@ export const WorkoutWizard: React.FC<WorkoutWizardProps> = ({ exerciseList }) =>
 
   return (
     <FormProvider {...methods}>
-      <ProgressBar steps={steps} currentStep={currentStep} />
+      <ProgressBar steps={steps} currentStep={currentStep} goToStep={goToStep} />
 
       <form className="w-full flex flex-col gap-8" onSubmit={methods.handleSubmit(logWorkout)}>
         {currentStep === 0 && (

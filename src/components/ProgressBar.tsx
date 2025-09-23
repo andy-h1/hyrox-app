@@ -9,6 +9,7 @@ enum StepStatus {
 type ProgressBarProps = {
   steps: Step[];
   currentStep: number;
+  goToStep: (stepIdx: number) => void;
 };
 
 type Step = {
@@ -33,7 +34,7 @@ const getStepStatuses = (steps: Step[], currentStep: number): StepWithStatus[] =
   }));
 };
 
-export const ProgressBar = ({ steps, currentStep }: ProgressBarProps) => {
+export const ProgressBar = ({ steps, currentStep, goToStep }: ProgressBarProps) => {
   const stepStatuses = getStepStatuses(steps, currentStep);
 
   return (
