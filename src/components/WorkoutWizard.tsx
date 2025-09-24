@@ -107,12 +107,12 @@ export const WorkoutWizard: React.FC<WorkoutWizardProps> = ({ exerciseList }) =>
     <FormProvider {...methods}>
       <ProgressBar steps={steps} currentStep={currentStep} goToStep={goToStep} />
 
-      <form className="w-full flex flex-col gap-8" onSubmit={methods.handleSubmit(logWorkout)}>
+      <form className="flex w-full flex-col gap-8" onSubmit={methods.handleSubmit(logWorkout)}>
         {currentStep === 0 && (
           <div className="flex flex-col gap-3">
             <button
               id="forTrainingBtn"
-              className="cursor-pointer rounded-md w-full bg-sky-950 px-6 py-3 text-3xl font-semibold text-white shadow-xs hover:bg-sky-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600 dark:bg-sky-500 dark:shadow-none dark:hover:bg-sky-400 dark:focus-visible:outline-sky-500"
+              className="w-full cursor-pointer rounded-md bg-sky-950 px-6 py-3 text-3xl font-semibold text-white shadow-xs hover:bg-sky-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600 dark:bg-sky-500 dark:shadow-none dark:hover:bg-sky-400 dark:focus-visible:outline-sky-500"
               onClick={() => onClickWorkoutType('forTraining')}
             >
               Training!
@@ -123,7 +123,7 @@ export const WorkoutWizard: React.FC<WorkoutWizardProps> = ({ exerciseList }) =>
 
             <button
               id="hyroxSim"
-              className="cursor-pointer rounded-md w-full bg-sky-950 px-3.5 py-2.5 text-3xl font-semibold text-white shadow-xs hover:bg-sky-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600 dark:bg-sky-500 dark:shadow-none dark:hover:bg-sky-400 dark:focus-visible:outline-sky-500"
+              className="w-full cursor-pointer rounded-md bg-sky-950 px-3.5 py-2.5 text-3xl font-semibold text-white shadow-xs hover:bg-sky-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600 dark:bg-sky-500 dark:shadow-none dark:hover:bg-sky-400 dark:focus-visible:outline-sky-500"
               onClick={() => onClickWorkoutType('hyroxSim')}
             >
               Hyrox Simulation
@@ -137,7 +137,7 @@ export const WorkoutWizard: React.FC<WorkoutWizardProps> = ({ exerciseList }) =>
         )}
 
         {currentStep === 1 && (
-          <div className="w-full max-w-4xl flex flex-col gap-4">
+          <div className="flex w-full max-w-4xl flex-col gap-4">
             <h2 className="mb-4 text-xl font-semibold text-slate-800">Select Exercises:</h2>
             <ExerciseCards
               exerciseList={exerciseList}
@@ -147,7 +147,7 @@ export const WorkoutWizard: React.FC<WorkoutWizardProps> = ({ exerciseList }) =>
             <button
               type="button"
               onClick={nextStep}
-              className="rounded-md w-full bg-sky-950 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-sky-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600 dark:bg-sky-500 dark:shadow-none dark:hover:bg-sky-400 dark:focus-visible:outline-sky-500"
+              className="w-full rounded-md bg-sky-950 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-sky-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600 dark:bg-sky-500 dark:shadow-none dark:hover:bg-sky-400 dark:focus-visible:outline-sky-500"
             >
               Next
             </button>
@@ -155,7 +155,7 @@ export const WorkoutWizard: React.FC<WorkoutWizardProps> = ({ exerciseList }) =>
         )}
 
         {currentStep === 2 && selectedExercises.length > 0 && (
-          <div className="mt-8 flex flex-col gap-8 pointer-events-auto">
+          <div className="pointer-events-auto mt-8 flex flex-col gap-8">
             <h2>Log Your Exercises:</h2>
             {selectedExercises.map((exercise) => (
               <ExerciseForm key={exercise.id} exercise={exercise} />
@@ -163,7 +163,7 @@ export const WorkoutWizard: React.FC<WorkoutWizardProps> = ({ exerciseList }) =>
             <button
               type="button"
               onClick={nextStep}
-              className="rounded-md w-full bg-sky-950 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-sky-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600 dark:bg-sky-500 dark:shadow-none dark:hover:bg-sky-400 dark:focus-visible:outline-sky-500"
+              className="w-full rounded-md bg-sky-950 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-sky-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600 dark:bg-sky-500 dark:shadow-none dark:hover:bg-sky-400 dark:focus-visible:outline-sky-500"
             >
               Submit
             </button>
@@ -171,10 +171,10 @@ export const WorkoutWizard: React.FC<WorkoutWizardProps> = ({ exerciseList }) =>
         )}
 
         {currentStep === 3 && (
-          <div className="flex w-full flex-col rounded-md border-2 border-solid border-slate-300 p-8 gap-3">
+          <div className="flex w-full flex-col gap-3 rounded-md border-2 border-solid border-slate-300 p-8">
             <h2 className="font-bold">Summary of your workout</h2>
             <p className="text-gray-500">{formatDate(new Date())}</p>
-            <label className="text-gray-900 mb-0">Workout name</label>
+            <label className="mb-0 text-gray-900">Workout name</label>
             <input
               className="rounded-md border-1 border-slate-400 p-1"
               type="text"
@@ -184,7 +184,7 @@ export const WorkoutWizard: React.FC<WorkoutWizardProps> = ({ exerciseList }) =>
 
             <label>
               <textarea
-                className="rounded-md border-1 border-solid border-slate-400 w-full p-4"
+                className="w-full rounded-md border-1 border-solid border-slate-400 p-4"
                 id="notes"
                 placeholder="Would you like to add any notes to your workout?"
                 {...methods.register('notes')}
@@ -203,7 +203,7 @@ export const WorkoutWizard: React.FC<WorkoutWizardProps> = ({ exerciseList }) =>
           <button
             type="button"
             onClick={() => router.push('/dashboard')}
-            className="rounded-md w-full bg-teal-700 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-teal-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500 dark:bg-teal-400 dark:shadow-none dark:hover:bg-teal-400 dark:focus-visible:outline-teal-500"
+            className="w-full rounded-md bg-teal-700 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-teal-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500 dark:bg-teal-400 dark:shadow-none dark:hover:bg-teal-400 dark:focus-visible:outline-teal-500"
           >
             Back to Dashboard
           </button>
@@ -213,7 +213,7 @@ export const WorkoutWizard: React.FC<WorkoutWizardProps> = ({ exerciseList }) =>
           <button
             type="button"
             onClick={backStep}
-            className="rounded-md w-full bg-teal-700 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-teal-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500 dark:bg-teal-400 dark:shadow-none dark:hover:bg-teal-400 dark:focus-visible:outline-teal-500"
+            className="w-full rounded-md bg-teal-700 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-teal-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500 dark:bg-teal-400 dark:shadow-none dark:hover:bg-teal-400 dark:focus-visible:outline-teal-500"
           >
             Back
           </button>

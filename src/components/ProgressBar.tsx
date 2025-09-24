@@ -50,21 +50,20 @@ export const ProgressBar = ({ steps, currentStep, goToStep }: ProgressBarProps) 
                 <div aria-hidden="true" className="absolute inset-0 flex items-center">
                   <div className="h-0.5 w-full bg-indigo-600 dark:bg-indigo-500" />
                 </div>
-                <a
-                  href="#"
+                <button
+                  onClick={() => goToStep(stepIdx)}
                   className="relative flex size-8 items-center justify-center rounded-full bg-indigo-600 hover:bg-indigo-900 dark:bg-indigo-500 dark:hover:bg-indigo-400"
                 >
                   <CheckIcon aria-hidden="true" className="size-5 text-white" />
                   <span className="sr-only">{step.name}</span>
-                </a>
+                </button>
               </>
             ) : step.status === StepStatus.Current ? (
               <>
                 <div aria-hidden="true" className="absolute inset-0 flex items-center">
                   <div className="h-0.5 w-full bg-gray-200 dark:bg-white/15" />
                 </div>
-                <a
-                  href="#"
+                <span
                   aria-current="step"
                   className="relative flex size-8 items-center justify-center rounded-full border-2 border-indigo-600 bg-white dark:border-indigo-500 dark:bg-gray-900"
                 >
@@ -73,23 +72,20 @@ export const ProgressBar = ({ steps, currentStep, goToStep }: ProgressBarProps) 
                     className="size-2.5 rounded-full bg-indigo-600 dark:bg-indigo-500"
                   />
                   <span className="sr-only">{step.name}</span>
-                </a>
+                </span>
               </>
             ) : (
               <>
                 <div aria-hidden="true" className="absolute inset-0 flex items-center">
                   <div className="h-0.5 w-full bg-gray-200 dark:bg-white/15" />
                 </div>
-                <a
-                  href="#"
-                  className="group relative flex size-8 items-center justify-center rounded-full border-2 border-gray-300 bg-white hover:border-gray-400 dark:border-white/15 dark:bg-gray-900 dark:hover:border-white/25"
-                >
+                <span className="group relative flex size-8 items-center justify-center rounded-full border-2 border-gray-300 bg-white hover:border-gray-400 dark:border-white/15 dark:bg-gray-900 dark:hover:border-white/25">
                   <span
                     aria-hidden="true"
                     className="size-2.5 rounded-full bg-transparent group-hover:bg-gray-300 dark:group-hover:bg-white/15"
                   />
                   <span className="sr-only">{step.name}</span>
-                </a>
+                </span>
               </>
             )}
           </li>

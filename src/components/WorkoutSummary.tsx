@@ -42,14 +42,14 @@ export const WorkoutSummary = async () => {
           as="div"
           key={workout.id}
           defaultOpen={false}
-          className="border-2 border-slate-300 p-8 border-solid rounded-md"
+          className="rounded-md border-2 border-solid border-slate-300 p-8"
         >
-          <DisclosureButton className="group flex flex-col w-full items-center justify-between">
+          <DisclosureButton className="group flex w-full flex-col items-center justify-between">
             <p>{workout.type === 'FOR_TRAINING' ? 'Training session' : 'Hyrox simulation'}</p>
-            <span className="pr-2 text-sm text-gray-500 dark:text-white mb-2">
+            <span className="mb-2 pr-2 text-sm text-gray-500 dark:text-white">
               {formatDate(workout.date)}
             </span>
-            <ChevronDownIcon className="size-5 fill-neutral-700 group-data-hover:fill-neutral/700 dark:fill-white/60 dark:group-data-hover:fill-white/50 group-data-open:rotate-180" />
+            <ChevronDownIcon className="group-data-hover:fill-neutral/700 size-5 fill-neutral-700 group-data-open:rotate-180 dark:fill-white/60 dark:group-data-hover:fill-white/50" />
           </DisclosureButton>
 
           {workout.exercises.map((exercise) => (
@@ -59,9 +59,9 @@ export const WorkoutSummary = async () => {
             >
               <div
                 aria-hidden="true"
-                className="w-full border-t border-gray-300 dark:border-white/15 mt-4"
+                className="mt-4 w-full border-t border-gray-300 dark:border-white/15"
               >
-                <span className="flex justify-between mt-2">
+                <span className="mt-2 flex justify-between">
                   <p className="font-bold text-slate-800 dark:text-white/50">
                     {exercise.exercise.name}
                   </p>
