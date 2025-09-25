@@ -33,9 +33,8 @@ export const WorkoutSummary = async () => {
   };
 
   return (
-    <div className="flex flex-col gap-8">
-      <h1>Activity</h1>
-      <p>Your workouts this week:</p>
+    <div className="round-md border-neutral grid grid-cols-1 gap-6 rounded-md border-2 p-8 sm:grid-cols-2 lg:grid-cols-3">
+      <h1 className="col-span-full">Your workouts this week:</h1>
 
       {loggedWorkouts.map((workout) => (
         <Disclosure

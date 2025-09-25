@@ -116,9 +116,6 @@ export const WorkoutWizard: React.FC<WorkoutWizardProps> = ({ exerciseList }) =>
               onClick={() => onClickWorkoutType('forTraining')}
             >
               Training!
-              {/* <div className="sm:w-80 sm:shrink lg:w-auto lg:flex-none">
-                <p className="text-lg font-semibold text-white">I want to log in my own workout!</p>
-              </div> */}
             </button>
 
             <button
@@ -127,11 +124,6 @@ export const WorkoutWizard: React.FC<WorkoutWizardProps> = ({ exerciseList }) =>
               onClick={() => onClickWorkoutType('hyroxSim')}
             >
               Hyrox Simulation
-              {/* <div className="sm:w-80 sm:shrink lg:w-auto lg:flex-none">
-                <p className="text-lg font-semibold text-white">
-                  I want to follow up a pre-defined hyrox sim workout!
-                </p>
-              </div> */}
             </button>
           </div>
         )}
