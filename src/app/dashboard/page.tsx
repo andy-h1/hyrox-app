@@ -1,7 +1,15 @@
+import { getServerSession } from 'next-auth';
+import { redirect } from 'next/navigation';
+import { authOptions } from '../api/auth/[...nextauth]/route';
 import { WorkoutSummary } from '@/components/WorkoutSummary';
 import Link from 'next/link';
 
 export default async function Dashboard() {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    redirect('/');
+  }
   return (
     <div className="grid min-h-screen grid-rows-[20px_1fr_20px] items-center justify-items-center gap-16 p-8 pb-20 text-center font-sans sm:p-20">
       <main className="row-start-2 flex flex-col items-center gap-[32px]">
