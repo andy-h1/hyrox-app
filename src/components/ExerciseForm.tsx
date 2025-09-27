@@ -36,14 +36,14 @@ export const ExerciseForm: React.FC<ExerciseFormProps> = ({ exercise }) => {
         </label>
         <span className="flex flex-row justify-start gap-8">
           <input
-            className="rounded-md border-1 border-slate-400 p-1 w-full"
+            className="w-full rounded-md border-1 border-slate-400 p-1"
             placeholder="4 mins"
             type="number"
             min="0"
             {...register(`exercises.${exercise.id}.timeTakenMins`, { valueAsNumber: true })}
           />
           <input
-            className="rounded-md border-1 border-slate-400 p-1 w-full"
+            className="w-full rounded-md border-1 border-slate-400 p-1"
             placeholder="30 seconds"
             type="number"
             min="0"
