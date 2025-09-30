@@ -7,7 +7,8 @@
     "build": "prisma generate && next build --turbopack",
     "start": "next start",
     "lint": "eslint",
-    "format": "prettier --write \"src/**/*.{js,ts,tsx,jsx,json,css,md}\""
+    "format": "prettier --write \"src/**/*.{js,ts,tsx,jsx,json,css,md}\" \"prisma/**/*.prisma\"",
+    "validate:prisma": "prisma validate"
   },
   "dependencies": {
     "@apollo/server": "^5.0.0",
@@ -35,6 +36,7 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
     "prettier": "^3.6.2",
+    "prettier-plugin-prisma": "^5.0.0",
     "prettier-plugin-tailwindcss": "^0.6.14",
     "tailwindcss": "^4",
     "tsx": "^4.20.5",

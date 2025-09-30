@@ -6,5 +6,5 @@ module.exports = {
   printWidth: 100,
   tabWidth: 2,
   arrowParens: 'always',
-  plugins: ['prettier-plugin-tailwindcss'],
+  plugins: ['prettier-plugin-tailwindcss', 'prettier-plugin-prisma'],
 };
