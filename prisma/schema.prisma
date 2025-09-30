@@ -14,7 +14,19 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-model AuthAccount {
+model User {
+  id            String        @id @default(cuid())
+  name          String?
+  email         String?       @unique
+  emailVerified DateTime?     @map("email_verified")
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+
+  @@map("auth_users")
+}
+
+model Account {
   id                String  @id @default(cuid())
   userId            String  @map("user_id")
   type              String
@@ -28,34 +40,21 @@ model AuthAccount {
   id_token          String? @db.Text
   session_state     String?
 
-  user AuthUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
   @@map("auth_accounts")
 }
 
-model AuthSession {
+model Session {
   id           String   @id @default(cuid())
   sessionToken String   @unique @map("session_token")
   userId       String   @map("user_id")
   expires      DateTime
-  user         AuthUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("auth_sessions")
 }
-
-model AuthUser {
-  id            String        @id @default(cuid())
-  name          String?
-  email         String?       @unique
-  emailVerified DateTime?     @map("email_verified")
-  image         String?
-  accounts      AuthAccount[]
-  sessions      AuthSession[]
-
-  @@map("auth_users")
-}
-
 model VerificationToken {
   identifier String
   token      String
@@ -65,11 +64,11 @@ model VerificationToken {
   @@map("auth_verification_tokens")
 }
 
-model User {
+model AppUser {
   id           Int      @id @default(autoincrement())
   email        String   @unique
   name         String
-  passwordHash String   @map("password_hash")
+  passwordHash String?   @map("password_hash")
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 
@@ -93,7 +92,7 @@ model Profile {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user AppUser @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("profiles")
 }
@@ -124,7 +123,7 @@ model Workout {
   createdAt       DateTime @default(now()) @map("created_at")
   updatedAt       DateTime @updatedAt @map("updated_at")
 
-  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user            AppUser              @relation(fields: [userId], references: [id], onDelete: Cascade)
   exercises       WorkoutExercise[]
   personalRecords PersonalRecord[]
 
@@ -159,7 +158,7 @@ model PersonalRecord {
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 
-  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user     AppUser     @relation(fields: [userId], references: [id], onDelete: Cascade)
   exercise Exercise @relation(fields: [exerciseId], references: [id])
   workout  Workout? @relation(fields: [workoutId], references: [id])
 
@@ -193,7 +192,7 @@ model ChallengeResult {
   updatedAt   DateTime @updatedAt @map("updated_at")
 
   challenge Challenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      AppUser      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([challengeId, userId])
   @@index([challengeId, rank])

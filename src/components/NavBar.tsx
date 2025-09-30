@@ -1,14 +1,13 @@
 // components/NavBar.tsx
 import Link from 'next/link';
 import Image from 'next/image';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { auth } from '@/auth';
 import { SignInButton, SignOutButton } from './AuthButtons';
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 
 export const NavBar = async () => {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
   const profilePic = session?.user?.image ?? '/blank-avatar.jpg';
 
   const navigation = [

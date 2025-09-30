@@ -1,11 +1,10 @@
-import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
-import { authOptions } from '../api/auth/[...nextauth]/route';
 import { WorkoutSummary } from '@/components/WorkoutSummary';
 import Link from 'next/link';
+import { auth } from '@/auth';
 
 export default async function Dashboard() {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
 
   if (!session) {
     redirect('/');
