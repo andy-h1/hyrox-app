@@ -1,5 +1,12 @@
+# .prettierignore
 node_modules
-build
 .next
 out
-public
+build
+dist
+coverage
+.turbo
+
+# Ignore generated Prisma artifacts
+src/generated
+prisma/generated

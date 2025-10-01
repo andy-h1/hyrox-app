@@ -6,8 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "prisma generate && next build --turbopack",
     "start": "next start",
-    "lint": "eslint",
-    "format": "prettier --write \"src/**/*.{js,ts,tsx,jsx,json,css,md}\" \"prisma/**/*.prisma\"",
+    "lint": "eslint \"src/**/*.{ts,tsx,js,jsx}\" --max-warnings=0",
+    "format": "prettier --write \"src/**/*.{js,ts,tsx,jsx,json,css,md}\" \"prisma/**/*.prisma\" --ignore-path .prettierignore",
     "validate:prisma": "prisma validate"
   },
   "dependencies": {

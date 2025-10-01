@@ -12,7 +12,20 @@ const compat = new FlatCompat({
 const eslintConfig = [
   ...compat.extends('next/core-web-vitals', 'next/typescript', 'plugin:prettier/recommended'),
   {
-    ignores: ['node_modules/**', '.next/**', 'out/**', 'build/**', 'next-env.d.ts'],
+    ignores: [
+      '**/node_modules/**',
+      '**/.next/**',
+      '**/out/**',
+      '**/build/**',
+      '**/dist/**',
+      '**/.turbo/**',
+      'next-env.d.ts',
+
+      // Ignore Prisma generated types
+      '**/src/generated/**',
+      // 'prisma/generated/**',
+    ],
+    files: ['src/**/*.{ts,tsx}'],
     rules: {
       'prettier/prettier': 'error',
     },
