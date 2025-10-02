@@ -1,0 +1,15 @@
+// tsconfig.json
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "verbatimModuleSyntax": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "strict": true,
+    "types": ["node"],
+    "outDir": "dist"
+  },
+  "include": ["**/*.ts"]
+}
