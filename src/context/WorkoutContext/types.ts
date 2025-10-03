@@ -9,7 +9,10 @@ export type WorkoutFormStage =
 
 export type WorkoutType = 'forTraining' | 'hyroxSim';
 
-export type ExerciseData = Omit<Exercise, 'createdAt'> & { order?: number };
+export type ExerciseData = Omit<Exercise, 'createdAt'> & {
+  orderInWorkout?: number;
+  instanceId: string | number;
+};
 
 export type ExerciseList = Omit<Exercise, 'createdAt'>;
 

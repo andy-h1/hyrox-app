@@ -150,7 +150,7 @@ export const WorkoutWizard: React.FC<WorkoutWizardProps> = ({ exerciseList }) =>
           <div className="pointer-events-auto mt-8 flex flex-col gap-8">
             <h2>Log Your Exercises:</h2>
             {selectedExercises.map((exercise) => (
-              <ExerciseForm key={exercise.id} exercise={exercise} />
+              <ExerciseForm key={exercise.instanceId} exercise={exercise} />
             ))}
             <button
               type="button"
