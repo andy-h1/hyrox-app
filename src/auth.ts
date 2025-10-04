@@ -11,26 +11,18 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   events: {
     async createUser({ user }) {
       if (!user?.email) return;
-      const existing = await prisma.appUser.findUnique({
+
+      await prisma.appUser.upsert({
         where: { email: user.email },
-      });
-
-      if (existing) {
-        if (!existing.authUserId) {
-          await prisma.appUser.update({
-            where: { email: user.email },
-            data: { authUserId: user.id },
-          });
-        }
-        return;
-      }
-
-      await prisma.appUser.create({
-        data: {
+        create: {
           email: user.email,
           name: user.name ?? 'New User',
           authUserId: user.id,
-          passwordHash: '',
+          passwordHash: null,
+        },
+        update: {
+          name: user.name ?? 'New User',
+          authUserId: user.id,
         },
       });
     },
@@ -38,7 +30,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   callbacks: {
     async redirect({ url, baseUrl }) {
       if (url.startsWith(baseUrl)) return url;
-
       return `${baseUrl}/after-login`;
     },
   },
