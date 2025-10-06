@@ -1,4 +1,3 @@
-// app/profile/page.tsx
 import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import { redirect } from 'next/navigation';
@@ -6,17 +5,25 @@ import Image from 'next/image';
 
 export default async function ProfilePage() {
   const session = await auth();
+
   if (!session?.user?.id) {
     redirect('/api/auth/signin');
   }
 
-  const appUser = await prisma.appUser.findFirst({
+  let appUser = await prisma.appUser.findFirst({
     where: { authUserId: session.user.id },
     include: { profile: true },
   });
 
   if (!appUser) {
-    redirect('/dashboard');
+    appUser = await prisma.appUser.create({
+      data: {
+        email: session.user.email ?? `user-${session.user.id}@example.local`,
+        name: session.user.name ?? 'New User',
+        authUserId: session.user.id,
+      },
+      include: { profile: true },
+    });
   }
 
   const { profile } = appUser;
@@ -46,6 +53,8 @@ export default async function ProfilePage() {
                 src={profile.avatarUrl}
                 alt="Avatar"
                 className="h-24 w-24 rounded-full object-cover"
+                width={96}
+                height={96}
               />
             )}
             <p>
