@@ -22,12 +22,11 @@ export default async function Home() {
           priority
         />
         <div className="flex flex-col items-center gap-4 sm:flex-row">
-          <Link href="/dashboard">Dashboard</Link>
           <Link
             className="bg-foreground text-background flex h-10 items-center justify-center gap-2 rounded-full border border-solid border-transparent px-4 text-sm font-medium transition-colors hover:bg-[#383838] sm:h-12 sm:w-auto sm:px-5 sm:text-base dark:hover:bg-[#ccc]"
             href="/api/auth/signin?provider=google&callbackUrl=%2Fdashboard"
           >
-            Sign in with Google
+            Sign in
           </Link>
         </div>
       </main>

@@ -3,8 +3,8 @@ import NextAuth from 'next-auth';
 import Google from 'next-auth/providers/google';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import { prisma } from '@/lib/prisma';
-import Resend from 'next-auth/providers/resend';
-import { sendVerificationRequest } from './lib/sendAuthRequest';
+import ResendProvider from 'next-auth/providers/resend';
+import { sendVerificationRequest } from '@/lib/sendAuthRequest';
 
 function setSessionUserId(session: any, userId?: string) {
   if (!session.user) session.user = {} as any;
@@ -14,12 +14,13 @@ function setSessionUserId(session: any, userId?: string) {
 export const { auth, handlers, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
   session: { strategy: 'jwt' },
+  pages: { signIn: '/login' },
   providers: [
     Google({
       clientId: process.env.AUTH_GOOGLE_ID as string,
       clientSecret: process.env.AUTH_GOOGLE_SECRET as string,
     }),
-    Resend({
+    ResendProvider({
       apiKey: process.env.AUTH_RESEND_KEY,
       from: process.env.RESEND_DOMAIN_EMAIL,
       sendVerificationRequest,
@@ -44,14 +45,11 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       }
       return true;
     },
-
     async session({ session, user, token }) {
       const authUserId = user?.id ?? (typeof token?.sub === 'string' ? token.sub : undefined);
       setSessionUserId(session, authUserId);
-      console.log({ session });
       return session;
     },
-
     async redirect({ url, baseUrl }) {
       const isSameOrigin = url.startsWith(baseUrl);
       const isRelative = url.startsWith('/');
@@ -60,3 +58,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     },
   },
 });
+
+export const GET = handlers.GET;
+export const POST = handlers.POST;
