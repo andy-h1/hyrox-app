@@ -5,8 +5,6 @@ import { redirect } from 'next/navigation';
 export default async function AfterLogin() {
   const session = await auth();
 
-  console.log('Session in after-login:', session);
-
   if (!session?.user?.id) {
     redirect('/api/auth/signin');
   }

@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { signIn } from '@/auth';
 
 const EmailSchema = z.object({
-  email: z.string().email(),
+  email: z.email(),
 });
 
 export async function sendMagicLink(formData: FormData) {
