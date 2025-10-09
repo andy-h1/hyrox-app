@@ -73,6 +73,48 @@ export async function createWorkout(workoutData: any, userId: number) {
 }
 // Note: Does my database structure make sense?!
 
+export async function getWorkoutTemplates() {
+  try {
+    const workoutTemplates = await prisma.workout.findMany({
+      select: {
+        id: true,
+        date: true,
+        type: true,
+        exercises: {
+          select: {
+            id: true,
+            orderInWorkout: true,
+            exercise: {
+              select: {
+                id: true,
+                name: true,
+                category: true,
+                unit: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: {
+        id: 'desc',
+      },
+    });
+
+    return workoutTemplates.map((workout) => ({
+      ...workout,
+      exercises: workout.exercises.map((exercise) => ({
+        id: exercise.id,
+        orderInWorkout: exercise.orderInWorkout,
+        name: exercise.exercise.name,
+        category: exercise.exercise.category,
+        unit: exercise.exercise.unit,
+      })),
+    }));
+  } catch (error) {
+    throw new Error(error instanceof Error ? error.message : 'Unknown error');
+  }
+}
+
 export async function getLoggedWorkouts() {
   try {
     const workouts = await prisma.workout.findMany({
