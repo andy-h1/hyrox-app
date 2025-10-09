@@ -10,7 +10,7 @@ export default async function WorkoutsPage() {
       <main>
         <h1>List of previous workouts</h1>
         {workoutTemplates.map((workout) => (
-          <div key={workout.id}>
+          <div key={workout.id} className="border border-white">
             <li>Workout date: {formatDate(workout.date)}</li>
             <li>{workout.type}</li>
             {workout.exercises.map((exercise) => (

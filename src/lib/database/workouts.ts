@@ -1,6 +1,4 @@
 import { PrismaClient } from '@prisma/client';
-import { redirect } from 'next/dist/server/api-utils';
-import { NextResponse } from 'next/server';
 
 const prisma = new PrismaClient();
 
