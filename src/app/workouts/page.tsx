@@ -5,9 +5,17 @@ export default async function WorkoutsPage() {
   const workoutTemplates = await getWorkoutTemplates();
   console.log(workoutTemplates);
 
+  // what do we need to build a new workout?
+  // name of workout
+  // exercises chosen
+  // values of the exercises
+  // choose different units - weight, distance,
+  // save workout
+
   return (
     <div>
       <main>
+        <button type="button">Add new workout</button>
         <h1>List of previous workouts</h1>
         {workoutTemplates.map((workout) => (
           <div key={workout.id} className="border border-white">

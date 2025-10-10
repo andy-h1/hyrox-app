@@ -75,7 +75,7 @@ model AppUser {
 
   authUserId String? @unique @map("auth_user_id")
 
-  workouts         Workout[]
+  workouts         WorkoutLog[]
   personalRecords  PersonalRecord[]
   challengeResults ChallengeResult[]
   profile          Profile?
@@ -98,54 +98,113 @@ model Profile {
   @@map("profiles")
 }
 
-model Exercise {
-  id           Int      @id @default(autoincrement())
-  name         String   @unique
-  unit         String
-  category     String
-  optimization String   @default("MIN")
-  createdAt    DateTime @default(now()) @map("created_at")
+model WorkoutTemplate {
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String?
+  createdBy   Int     @map("created_by")
 
-  workoutExercises WorkoutExercise[]
-  personalRecords  PersonalRecord[]
-  challenges       Challenge[]
+  format       String // "AMRAP", "FOR_TIME", "EMOM"
+  duration     Int? // Total minutes allowed
+  targetRounds Int?   @map("target_rounds")
+
+  exercises TemplateExercise[]
+  logs      WorkoutLog[]
+
+  @@map("workout_templates")
+}
+
+model TemplateExercise {
+  id          Int     @id @default(autoincrement())
+  templateId  Int     @map("template_id")
+  exerciseId  Int     @map("exercise_id")
+  targetValue Float   @map("target_value")
+  targetUnit  String  @map("target_unit")
+  orderIndex  Int     @map("order_index")
+  notes       String?
+
+  template WorkoutTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  exercise Exercise        @relation(fields: [exerciseId], references: [id])
+
+  @@map("template_exercises")
+}
+
+model WorkoutLog {
+  id          Int      @id @default(autoincrement())
+  userId      Int      @map("user_id")
+  templateId  Int?     @map("template_id")
+  completedAt DateTime @map("completed_at")
+
+  // Summary metrics:
+  roundsCompleted Float @map("rounds_completed")
+  totalDuration   Int   @map("total_duration") // includes rest
+  totalWorkTime   Int   @map("total_work_time") // excludes rest
+  totalRestTime   Int   @map("total_rest_time")
+
+  status String  @default("COMPLETED") // "COMPLETED", "ABANDONED"
+  notes  String?
+
+  template       WorkoutTemplate? @relation(fields: [templateId], references: [id])
+  user           AppUser          @relation(fields: [userId], references: [id])
+  rounds         WorkoutRound[] // The gold - round-by-round breakdown
+  PersonalRecord PersonalRecord[]
+
+  @@map("workout_logs")
+}
+
+// This is the key table for tracking performance over time:
+model WorkoutRound {
+  id          Int @id @default(autoincrement())
+  logId       Int @map("log_id")
+  roundNumber Int @map("round_number")
+
+  startedAt   DateTime @map("started_at")
+  completedAt DateTime @map("completed_at")
+
+  duration  Int // seconds for this round (work time only)
+  restAfter Int? @map("rest_after") // seconds of rest after this round
+
+  log       WorkoutLog      @relation(fields: [logId], references: [id], onDelete: Cascade)
+  exercises RoundExercise[] // Individual exercise times within the round
+
+  @@unique([logId, roundNumber])
+  @@index([logId])
+  @@map("workout_rounds")
+}
+
+// Granular tracking per exercise per round:
+model RoundExercise {
+  id         Int @id @default(autoincrement())
+  roundId    Int @map("round_id")
+  exerciseId Int @map("exercise_id")
+
+  startedAt   DateTime @map("started_at")
+  completedAt DateTime @map("completed_at")
+  duration    Int // seconds on this specific exercise
+
+  // What they actually did (vs template target):
+  actualValue Float   @map("actual_value")
+  actualUnit  String  @map("actual_unit")
+  scaled      Boolean @default(false) // Did they modify from template?
+
+  round    WorkoutRound @relation(fields: [roundId], references: [id], onDelete: Cascade)
+  exercise Exercise     @relation(fields: [exerciseId], references: [id])
+
+  @@index([roundId])
+  @@map("round_exercises")
+}
+
+model Exercise {
+  id       Int    @id @default(autoincrement())
+  name     String @unique
+  category String
+
+  templateExercises TemplateExercise[]
+  roundExercises    RoundExercise[]
+  personalRecords   PersonalRecord[]
+  Challenge         Challenge[]
 
   @@map("exercises")
-}
-
-model Workout {
-  id              Int      @id @default(autoincrement())
-  userId          Int      @map("user_id")
-  date            DateTime
-  type            String
-  totalDuration   Int?     @map("total_duration")
-  roundsCompleted Float?   @map("rounds_completed")
-  notes           String?
-  createdAt       DateTime @default(now()) @map("created_at")
-  updatedAt       DateTime @updatedAt @map("updated_at")
-
-  user            AppUser           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  exercises       WorkoutExercise[]
-  personalRecords PersonalRecord[]
-
-  @@index([userId, date(sort: Desc)])
-  @@map("workouts")
-}
-
-model WorkoutExercise {
-  id             Int      @id @default(autoincrement())
-  workoutId      Int      @map("workout_id")
-  exerciseId     Int      @map("exercise_id")
-  value          Float
-  timeTaken      Int?     @map("time_taken")
-  orderInWorkout Int      @map("order_in_workout")
-  createdAt      DateTime @default(now()) @map("created_at")
-
-  workout  Workout  @relation(fields: [workoutId], references: [id], onDelete: Cascade)
-  exercise Exercise @relation(fields: [exerciseId], references: [id])
-
-  @@index([workoutId])
-  @@map("workout_exercises")
 }
 
 model PersonalRecord {
@@ -159,9 +218,9 @@ model PersonalRecord {
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 
-  user     AppUser  @relation(fields: [userId], references: [id], onDelete: Cascade)
-  exercise Exercise @relation(fields: [exerciseId], references: [id])
-  workout  Workout? @relation(fields: [workoutId], references: [id])
+  user     AppUser     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exercise Exercise    @relation(fields: [exerciseId], references: [id])
+  workout  WorkoutLog? @relation(fields: [workoutId], references: [id])
 
   @@unique([userId, exerciseId, value])
   @@map("personal_records")
