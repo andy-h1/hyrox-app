@@ -98,6 +98,7 @@ model Profile {
   @@map("profiles")
 }
 
+// Used for templates for workouts to log exercise
 model WorkoutTemplate {
   id          Int     @id @default(autoincrement())
   name        String

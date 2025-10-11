@@ -23,127 +23,89 @@ const mockWorkoutData = {
 };
 
 //TODO: fix type for workoutData
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function createWorkout(workoutData: any, userId: number) {
-  const { name, type, notes, exercises } = workoutData;
 
-  const formatType = type === 'forTraining' ? 'FOR_TRAINING' : 'HYROX_SIM';
+// export async function createWorkout(workoutData: any, userId: number) {
+//   const { name, type, notes, exercises } = workoutData;
 
-  try {
-    console.log('Creating workout for user:', userId, 'with data:', workoutData);
-    await prisma.$transaction(async (tx) => {
-      // Step 1: Create the workout
-      const newWorkout = await tx.workout.create({
-        data: {
-          userId,
-          date: new Date(),
-          type: formatType,
-          notes,
-        },
-      });
+//   const formatType = type === 'forTraining' ? 'FOR_TRAINING' : 'HYROX_SIM';
 
-      console.log('Workout DB entry created:', newWorkout);
+//   try {
+//     console.log('Creating workout for user:', userId, 'with data:', workoutData);
+//     await prisma.$transaction(async (tx) => {
+//       // Step 1: Create the workout
+//       const newWorkout = await tx.workout.create({
+//         data: {
+//           userId,
+//           date: new Date(),
+//           type: formatType,
+//           notes,
+//         },
+//       });
 
-      for (const exercise of exercises) {
-        console.log(
-          'Creating workoutExercise for workoutId:',
-          newWorkout.id,
-          'exercise:',
-          exercise,
-        );
-        await tx.workoutExercise.create({
-          data: {
-            workoutId: newWorkout.id,
-            exerciseId: parseFloat(exercise.exerciseId),
-            value: parseFloat(exercise.value),
-            timeTaken: parseFloat(exercise.timeTaken),
-            orderInWorkout: parseFloat(exercise.orderInWorkout),
-          },
-        });
-      }
-      console.log('All workout exercises created for workoutId:', newWorkout.id);
-      return { message: 'Workout logged successfully', newWorkout };
-    });
-  } catch (error) {
-    console.error('Error in createWorkout:', error);
-    throw error; // Rethrow so the route handler can catch and respond
-  }
-}
-// Note: Does my database structure make sense?!
+//       console.log('Workout DB entry created:', newWorkout);
 
-export async function getWorkoutTemplates() {
-  try {
-    const workoutTemplates = await prisma.workout.findMany({
-      select: {
-        id: true,
-        date: true,
-        type: true,
-        exercises: {
-          select: {
-            id: true,
-            orderInWorkout: true,
-            exercise: {
-              select: {
-                id: true,
-                name: true,
-                category: true,
-                unit: true,
-              },
-            },
-          },
-        },
-      },
-      orderBy: {
-        id: 'desc',
-      },
-    });
+//       for (const exercise of exercises) {
+//         console.log(
+//           'Creating workoutExercise for workoutId:',
+//           newWorkout.id,
+//           'exercise:',
+//           exercise,
+//         );
+//         await tx.workoutExercise.create({
+//           data: {
+//             workoutId: newWorkout.id,
+//             exerciseId: parseFloat(exercise.exerciseId),
+//             value: parseFloat(exercise.value),
+//             timeTaken: parseFloat(exercise.timeTaken),
+//             orderInWorkout: parseFloat(exercise.orderInWorkout),
+//           },
+//         });
+//       }
+//       console.log('All workout exercises created for workoutId:', newWorkout.id);
+//       return { message: 'Workout logged successfully', newWorkout };
+//     });
+//   } catch (error) {
+//     console.error('Error in createWorkout:', error);
+//     throw error; // Rethrow so the route handler can catch and respond
+//   }
+// }
+// // Note: Does my database structure make sense?!
 
-    return workoutTemplates.map((workout) => ({
-      ...workout,
-      exercises: workout.exercises.map((exercise) => ({
-        id: exercise.id,
-        orderInWorkout: exercise.orderInWorkout,
-        name: exercise.exercise.name,
-        category: exercise.exercise.category,
-        unit: exercise.exercise.unit,
-      })),
-    }));
-  } catch (error) {
-    throw new Error(error instanceof Error ? error.message : 'Unknown error');
-  }
-}
+// export async function getWorkoutTemplates() {
+//   try {
+//     const workoutTemplates = await prisma.workoutTemplate.findMany({
+//       select: {
+//         id: true,
+//         name: true,
+//         description: true,
+//         createdBy: true,
+//         format: true,
+//         duration: true,
+//         targetRounds: true,
+//       },
+//     });
+
+//     return workoutTemplates;
+//   } catch (error) {
+//     throw new Error(error instanceof Error ? error.message : 'Unknown error');
+//   }
+// }
 
 export async function getLoggedWorkouts() {
   try {
-    const workouts = await prisma.workout.findMany({
+    const workoutLogs = await prisma.workoutLog.findMany({
       select: {
         id: true,
-        date: true,
-        type: true,
+        roundsCompleted: true,
+        totalDuration: true,
+        totalWorkTime: true,
+        totalRestTime: true,
+        status: true,
         notes: true,
-        exercises: {
-          select: {
-            id: true,
-            value: true,
-            timeTaken: true,
-            orderInWorkout: true,
-            exercise: {
-              select: {
-                id: true,
-                name: true,
-                unit: true,
-                category: true,
-              },
-            },
-          },
-        },
-      },
-      orderBy: {
-        date: 'desc',
       },
     });
 
-    return workouts;
+    return workoutLogs;
   } catch (error) {
     throw new Error(error instanceof Error ? error.message : 'Unknown error');
   }

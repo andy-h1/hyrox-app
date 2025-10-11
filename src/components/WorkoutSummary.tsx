@@ -1,7 +1,7 @@
-import { ExerciseList } from '@/context/WorkoutContext/types';
+// import { ExerciseList } from '@/context/WorkoutContext/types';
 import { getLoggedWorkouts } from '@/lib/database/workouts';
 import { formatDate } from '@/utils/formatDate';
-import { Exercise, WorkoutExercise } from '@prisma/client';
+// import { Exercise, WorkoutExercise } from '@prisma/client';
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/24/solid';
 
@@ -21,9 +21,9 @@ type WorkoutResponse = {
 };
 
 export const WorkoutSummary = async () => {
-  const loggedWorkouts = await getLoggedWorkouts();
+  // const loggedWorkouts = await getLoggedWorkouts();
 
-  console.log({ loggedWorkouts });
+  // console.log({ loggedWorkouts });
   // TODO: time isn't calculated correctly
 
   const convertSecondsToMins = (totalSeconds: number) => {
@@ -36,7 +36,7 @@ export const WorkoutSummary = async () => {
     <div className="round-md border-neutral grid grid-cols-1 gap-6 rounded-md border-2 p-8 sm:grid-cols-2 lg:grid-cols-3">
       <h1 className="col-span-full">Your workouts this week:</h1>
 
-      {loggedWorkouts.map((workout) => (
+      {/* {loggedWorkouts.map((workout) => (
         <Disclosure
           as="div"
           key={workout.id}
@@ -78,7 +78,7 @@ export const WorkoutSummary = async () => {
             </DisclosurePanel>
           ))}
         </Disclosure>
-      ))}
+      ))} */}
     </div>
   );
 };

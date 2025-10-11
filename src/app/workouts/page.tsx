@@ -1,9 +1,9 @@
-import { getWorkoutTemplates } from '@/lib/database/workouts';
+// import { getWorkoutTemplates } from '@/lib/database/workouts';
 import { formatDate } from '@/utils/formatDate';
 
 export default async function WorkoutsPage() {
-  const workoutTemplates = await getWorkoutTemplates();
-  console.log(workoutTemplates);
+  //   const workoutTemplates = await getWorkoutTemplates();
+  //   console.log(workoutTemplates);
 
   // what do we need to build a new workout?
   // name of workout
@@ -17,7 +17,7 @@ export default async function WorkoutsPage() {
       <main>
         <button type="button">Add new workout</button>
         <h1>List of previous workouts</h1>
-        {workoutTemplates.map((workout) => (
+        {/* {workoutTemplates.map((workout) => (
           <div key={workout.id} className="border border-white">
             <li>Workout date: {formatDate(workout.date)}</li>
             <li>{workout.type}</li>
@@ -30,7 +30,7 @@ export default async function WorkoutsPage() {
               </div>
             ))}
           </div>
-        ))}
+        ))} */}
       </main>
     </div>
   );

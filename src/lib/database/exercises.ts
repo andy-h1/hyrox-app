@@ -7,9 +7,7 @@ export async function getExercisesList() {
     select: {
       id: true,
       name: true,
-      unit: true,
       category: true,
-      optimization: true,
     },
   });
   return allExercises;
