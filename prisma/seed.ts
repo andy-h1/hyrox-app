@@ -6,69 +6,24 @@ async function main() {
   // Create exercises
   const exercises = [
     // Cardio
-    { name: 'Run', unit: 'meters', category: 'cardio', optimization: 'MIN' },
-    {
-      name: 'Ski Erg',
-      unit: 'meters',
-      category: 'cardio',
-      optimization: 'MIN',
-    },
-    { name: 'Row', unit: 'meters', category: 'cardio', optimization: 'MIN' },
-    { name: 'Bike', unit: 'meters', category: 'cardio', optimization: 'MIN' },
+    { name: 'Run', category: 'cardio' },
+    { name: 'Ski Erg', category: 'cardio' },
+    { name: 'Row', category: 'cardio' },
+    { name: 'Bike', category: 'cardio' },
 
     // Strength
-    {
-      name: 'Sled Push',
-      unit: 'meters',
-      category: 'strength',
-      optimization: 'MIN',
-    },
-    {
-      name: 'Sled Pull',
-      unit: 'meters',
-      category: 'strength',
-      optimization: 'MIN',
-    },
-    {
-      name: 'Burpee Broad Jump',
-      unit: 'reps',
-      category: 'strength',
-      optimization: 'MIN',
-    },
-    {
-      name: 'Wall Balls',
-      unit: 'reps',
-      category: 'strength',
-      optimization: 'MAX',
-    },
-    { name: 'Lunges', unit: 'reps', category: 'strength', optimization: 'MAX' },
+    { name: 'Sled Push', category: 'strength' },
+    { name: 'Sled Pull', category: 'strength' },
+    { name: 'Burpee Broad Jump', category: 'strength' },
+    { name: 'Wall Balls', category: 'strength' },
+    { name: 'Lunges', category: 'strength' },
 
     // Additional Training Exercises
-    { name: 'Squats', unit: 'reps', category: 'strength', optimization: 'MAX' },
-    {
-      name: 'Overhead Press',
-      unit: 'reps',
-      category: 'strength',
-      optimization: 'MAX',
-    },
-    {
-      name: 'Pull-ups',
-      unit: 'reps',
-      category: 'strength',
-      optimization: 'MAX',
-    },
-    {
-      name: 'Push-ups',
-      unit: 'reps',
-      category: 'strength',
-      optimization: 'MAX',
-    },
-    {
-      name: 'Sit-ups',
-      unit: 'reps',
-      category: 'strength',
-      optimization: 'MAX',
-    },
+    { name: 'Squats', category: 'strength' },
+    { name: 'Overhead Press', category: 'strength' },
+    { name: 'Pull-ups', category: 'strength' },
+    { name: 'Push-ups', category: 'strength' },
+    { name: 'Sit-ups', category: 'strength' },
   ];
 
   for (const exercise of exercises) {
