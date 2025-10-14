@@ -1,6 +1,6 @@
 // import { ExerciseList } from '@/context/WorkoutContext/types';
 import { getLoggedWorkouts } from '@/lib/database/workouts';
-import { formatDate } from '@/utils/formatDate';
+import { formatDate } from '@/utils/timeAndDateUtils';
 // import { Exercise, WorkoutExercise } from '@prisma/client';
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/24/solid';
@@ -25,12 +25,6 @@ export const WorkoutSummary = async () => {
 
   // console.log({ loggedWorkouts });
   // TODO: time isn't calculated correctly
-
-  const convertSecondsToMins = (totalSeconds: number) => {
-    const mins = Math.floor(totalSeconds / 60);
-    const seconds = totalSeconds % 60;
-    return `${mins}mins ${seconds}secs`;
-  };
 
   return (
     <div className="round-md border-neutral grid grid-cols-1 gap-6 rounded-md border-2 p-8 sm:grid-cols-2 lg:grid-cols-3">

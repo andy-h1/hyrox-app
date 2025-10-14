@@ -24,3 +24,9 @@ export const formatDate = (date: Date): string => {
 
   return `${month} ${day}, ${year} at ${formattedHour}:${minute} ${hourAmPM}`;
 };
+
+export const convertSecondsToMins = (totalSeconds: number) => {
+  const mins = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  return `${mins}mins ${seconds}secs`;
+};

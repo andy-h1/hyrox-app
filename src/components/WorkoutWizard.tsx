@@ -8,7 +8,7 @@ import {
   ExerciseList,
   WorkoutType,
 } from '@/context/WorkoutContext/types';
-import { formatDate } from '@/utils/formatDate';
+import { formatDate } from '@/utils/timeAndDateUtils';
 import { SubmitHandler, useForm, FormProvider } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import { ProgressBar } from './ProgressBar';

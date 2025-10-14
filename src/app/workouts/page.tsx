@@ -1,5 +1,5 @@
 // import { getWorkoutTemplates } from '@/lib/database/workouts';
-import { formatDate } from '@/utils/formatDate';
+import { formatDate } from '@/utils/timeAndDateUtils';
 
 export default async function WorkoutsPage() {
   //   const workoutTemplates = await getWorkoutTemplates();
