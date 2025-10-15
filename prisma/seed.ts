@@ -3,6 +3,23 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
+  const user1 = await prisma.appUser.upsert({
+    where: { email: 'andyh1@hey.com' },
+    update: {},
+    create: {
+      email: 'andyh1@hey.com',
+      name: 'Andy',
+    },
+  });
+  const user2 = await prisma.appUser.upsert({
+    where: { email: 'a.huynh2612@gmail.com' },
+    update: {},
+    create: {
+      email: 'a.huynh2612@gmail.com',
+      name: 'Andy',
+    },
+  });
+
   // Create exercises
   const exercises = [
     // Cardio
@@ -18,6 +35,7 @@ async function main() {
     { name: 'Burpee Broad Jump', category: 'strength' },
     { name: 'Wall Balls', category: 'strength' },
     { name: 'Walking Lunges', category: 'strength' },
+    { name: 'Farmers carry', category: 'strength' },
 
     // Additional Training Exercises
     { name: 'Back Squats', category: 'strength' },
@@ -42,23 +60,44 @@ async function main() {
 
   console.log('Seed data created successfully');
 
-  const workoutTemplates = [
-    //
-    {
-      name: 'Hyrox template 1',
-      description: 'Complete as many rounds as you can in 30 mins',
-      createdBy: 1,
-      format: 'AMRAP',
+  const HyroxWedTemplate = await prisma.workoutTemplate.create({
+    data: {
+      name: 'Hyrox station for Weds',
+      description: 'Complete 2 rounds',
+      createdBy: user1.id,
+      format: 'FOR_TIME',
       duration: 1800,
-
+      isPublic: false,
       exercises: {
-        exerciseId: 1,
-        targetValue: 1000,
-        targetUnit: 'meters',
-        orderIndex: 1,
+        create: [
+          {
+            exerciseId: 1,
+            targetValue: 1000,
+            targetUnit: 'meters',
+            orderIndex: 1,
+          },
+          {
+            exerciseId: 3,
+            targetValue: 750,
+            targetUnit: 'meters',
+            orderIndex: 2,
+          },
+          {
+            exerciseId: 8,
+            targetValue: 40,
+            targetUnit: 'meters',
+            orderIndex: 3,
+          },
+          {
+            exerciseId: 11,
+            targetValue: 150,
+            targetUnit: 'meters',
+            orderIndex: 4,
+          },
+        ],
       },
     },
-  ];
+  });
 }
 
 main()
@@ -69,3 +108,6 @@ main()
   .finally(async () => {
     await prisma.$disconnect();
   });
+
+// Template:
+// 800m run -> 750m Row -> Burpee broad jumps 40m -> Farmers carry 150m

@@ -84,6 +84,8 @@ model AppUser {
   personalRecords  PersonalRecord[]
   challengeResults ChallengeResult[]
   profile          Profile?
+  createdTemplates WorkoutTemplate[] @relation("CreatedTemplates") // Templates I made and shared
+  sharedTemplates  TemplateShare[] // Templates shared with me
 
   @@map("users")
 }
@@ -109,13 +111,19 @@ model WorkoutTemplate {
   name        String
   description String?
   createdBy   Int     @map("created_by")
+  isPublic    Boolean @default(false) @map("is_public")
 
   format       String // "AMRAP", "FOR_TIME", "EMOM"
   duration     Int? // Total minutes allowed
   targetRounds Int?   @map("target_rounds")
 
-  exercises TemplateExercise[]
-  logs      WorkoutLog[]
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  exercises  TemplateExercise[]
+  logs       WorkoutLog[]
+  creator    AppUser            @relation("CreatedTemplates", fields: [createdBy], references: [id])
+  sharedWith TemplateShare[] //Many-to-many through join table
 
   @@map("workout_templates")
 }
@@ -133,6 +141,22 @@ model TemplateExercise {
   exercise Exercise        @relation(fields: [exerciseId], references: [id])
 
   @@map("template_exercises")
+}
+
+// Templates can have multiple users / users can have multiple templates
+model TemplateShare {
+  id         Int      @id @default(autoincrement())
+  templateId Int      @map("template_id")
+  userId     Int      @map("user_id")
+  sharedAt   DateTime @default(now()) @map("shared_at")
+
+  template WorkoutTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  user     AppUser         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([templateId, userId])
+  @@index([userId])
+  @@index([templateId])
+  @@map("template_shares")
 }
 
 model WorkoutLog {
