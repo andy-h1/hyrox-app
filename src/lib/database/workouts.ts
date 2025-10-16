@@ -110,3 +110,27 @@ export async function getLoggedWorkouts() {
     throw new Error(error instanceof Error ? error.message : 'Unknown error');
   }
 }
+
+export async function getWorkoutTemplates() {
+  try {
+    const workoutTemplates = await prisma.workoutTemplate.findMany({
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        createdBy: true,
+        isPublic: true,
+        format: true,
+        duration: true,
+        targetRounds: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    return workoutTemplates;
+  } catch (error) {
+    console.error('Error fetching workout templates:', error);
+    throw new Error('Unknown error');
+  }
+}
