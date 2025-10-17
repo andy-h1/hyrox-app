@@ -116,18 +116,33 @@ export async function getWorkoutTemplates() {
         id: true,
         name: true,
         description: true,
-        createdBy: true,
         isPublic: true,
         format: true,
         duration: true,
         targetRounds: true,
         createdAt: true,
         updatedAt: true,
+        exercises: {
+          select: {
+            exercise: true,
+          },
+        },
+        creator: true,
+        sharedWith: {
+          select: {
+            user: true,
+          },
+        },
       },
     });
 
-    return workoutTemplates;
+    return workoutTemplates.map((template) => ({
+      ...template,
+      exercises: template.exercises.map((e) => e.exercise),
+      sharedWith: template.sharedWith.map((shared) => shared.user),
+    }));
   } catch (error) {
+    // Look at adding PrismaClient errors
     console.error('Error fetching workout templates:', error);
     throw new Error('Unknown error');
   }
