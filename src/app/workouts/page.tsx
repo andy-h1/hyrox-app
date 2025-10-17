@@ -1,9 +1,10 @@
 // import { getWorkoutTemplates } from '@/lib/database/workouts';
 import { formatDate } from '@/utils/timeAndDateUtils';
+import { getWorkoutTemplates } from '@/lib/database/workouts';
 
 export default async function WorkoutsPage() {
-  //   const workoutTemplates = await getWorkoutTemplates();
-  //   console.log(workoutTemplates);
+  const workoutTemplates = await getWorkoutTemplates();
+  console.log(workoutTemplates);
 
   // what do we need to build a new workout?
   // name of workout
