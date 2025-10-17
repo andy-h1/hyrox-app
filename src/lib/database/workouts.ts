@@ -124,6 +124,8 @@ export async function getWorkoutTemplates() {
         updatedAt: true,
         exercises: {
           select: {
+            targetValue: true,
+            targetUnit: true,
             exercise: true,
           },
         },
@@ -138,7 +140,12 @@ export async function getWorkoutTemplates() {
 
     return workoutTemplates.map((template) => ({
       ...template,
-      exercises: template.exercises.map((e) => e.exercise),
+      exercises: template.exercises.map((e) => ({
+        ...e,
+        id: e.exercise.id,
+        name: e.exercise.name,
+        category: e.exercise.category,
+      })),
       sharedWith: template.sharedWith.map((shared) => shared.user),
     }));
   } catch (error) {

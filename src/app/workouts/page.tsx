@@ -41,7 +41,9 @@ export default async function WorkoutsPage() {
                 </p>
                 <ul className="mt-1 text-sm text-gray-600">
                   {exercises.slice(0, 3).map((ex) => (
-                    <li key={ex.id}>• {ex.name}</li>
+                    <li key={ex.id}>
+                      • {ex.name} {ex.targetValue} {ex.targetUnit}
+                    </li>
                   ))}
                   {exercises.length > 3 && (
                     <li className="text-gray-400">+{exercises.length - 3} more</li>
