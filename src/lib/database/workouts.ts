@@ -1,25 +1,5 @@
 import { prisma } from '../../lib/prisma';
 
-const mockWorkoutData = {
-  name: '1k run',
-  type: 'FOR_TRAINING',
-  notes: 'quick session',
-  exercises: [
-    {
-      exerciseId: 1,
-      value: 1000,
-      timeTaken: 270,
-      orderInWorkout: 1,
-    },
-    {
-      exerciseId: 8,
-      value: 50,
-      timeTaken: 135,
-      orderInWorkout: 2,
-    },
-  ],
-};
-
 //TODO: fix type for workoutData
 
 // export async function createWorkout(workoutData: any, userId: number) {
