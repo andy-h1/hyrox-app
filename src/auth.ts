@@ -29,11 +29,9 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     }),
   ],
   callbacks: {
-    async signIn({ user, account, profile }) {
-      // Ensure AppUser is created/linked when user signs in
+    async signIn({ user }) {
       if (user.email) {
         try {
-          // Check if AppUser exists with this email
           const existingAppUser = await prisma.appUser.findUnique({
             where: { email: user.email },
           });
@@ -61,7 +59,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           }
         } catch (error) {
           console.error('Error in signIn callback:', error);
-          // Don't block sign in, handle in profile page
         }
       }
       return true;

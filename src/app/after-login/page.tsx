@@ -46,11 +46,9 @@ export default async function AfterLogin() {
       redirect('/profile');
     }
 
-    // All good, redirect to dashboard
     redirect('/dashboard');
   } catch (error) {
     console.error('Error in after-login:', error);
-    // On any error, send to profile page to handle
     redirect('/profile');
   }
 }
