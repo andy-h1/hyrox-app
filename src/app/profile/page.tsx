@@ -11,16 +11,31 @@ export default async function ProfilePage() {
   }
 
   let appUser = await prisma.appUser.findFirst({
-    where: { authUserId: session.user.id },
+    where: {
+      OR: [{ authUserId: session.user.id }, { email: session.user.email ?? undefined }],
+    },
     include: { profile: true },
   });
 
   if (!appUser) {
+    if (!session.user.email) {
+      throw new Error('Unable to create user profile without email');
+    }
+
     appUser = await prisma.appUser.create({
       data: {
-        email: session.user.email ?? `user-${session.user.id}@example.local`,
+        email: session.user.email,
         name: session.user.name ?? 'New User',
         authUserId: session.user.id,
+      },
+      include: { profile: true },
+    });
+  } else if (!appUser.authUserId) {
+    appUser = await prisma.appUser.update({
+      where: { id: appUser.id },
+      data: {
+        authUserId: session.user.id,
+        name: session.user.name || appUser.name,
       },
       include: { profile: true },
     });
@@ -70,7 +85,7 @@ export default async function ProfilePage() {
           </div>
         ) : (
           <div className="rounded border p-4">
-            <p>No profile yet. You’ll be able to create one here soon.</p>
+            <p>No profile yet. You&apos;ll be able to create one here soon.</p>
           </div>
         )}
       </section>

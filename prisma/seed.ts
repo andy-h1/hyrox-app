@@ -4,19 +4,11 @@ const prisma = new PrismaClient();
 
 async function main() {
   const user1 = await prisma.appUser.upsert({
-    where: { email: 'andyh1@hey.com' },
+    where: { email: 'test-user@hyrox-local.app' },
     update: {},
     create: {
-      email: 'andyh1@hey.com',
-      name: 'Andy',
-    },
-  });
-  const user2 = await prisma.appUser.upsert({
-    where: { email: 'a.huynh2612@gmail.com' },
-    update: {},
-    create: {
-      email: 'a.huynh2612@gmail.com',
-      name: 'Andy',
+      email: 'test-user@hyrox-local.app',
+      name: 'Test Useer',
     },
   });
 
@@ -67,7 +59,7 @@ async function main() {
       createdBy: user1.id,
       format: 'FOR_TIME',
       duration: 1800,
-      isPublic: false,
+      isPublic: true,
       exercises: {
         create: [
           {

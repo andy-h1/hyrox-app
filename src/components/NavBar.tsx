@@ -8,6 +8,7 @@ import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 
 export const NavBar = async () => {
   const session = await auth();
+  console.log({ session });
   const profilePic = session?.user?.image ?? '/blank-avatar.jpg';
 
   const navigation = [
@@ -69,7 +70,7 @@ export const NavBar = async () => {
             <div className="ml-3 flex items-center gap-3">
               {session ? (
                 <>
-                  <Link href="/dashboard" aria-label="Go to dashboard">
+                  <Link href="/profile" aria-label="Go to profile">
                     <Image
                       src={profilePic}
                       alt="Profile pic"

@@ -1,14 +1,16 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import NextAuth from 'next-auth';
+import NextAuth, { DefaultSession } from 'next-auth';
 import Google from 'next-auth/providers/google';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import { prisma } from '@/lib/prisma';
 import ResendProvider from 'next-auth/providers/resend';
 import { sendVerificationRequest } from '@/lib/sendAuthRequest';
 
-function setSessionUserId(session: any, userId?: string) {
-  if (!session.user) session.user = {} as any;
-  if (userId) (session.user as any).id = userId;
+declare module 'next-auth' {
+  interface Session {
+    user: {
+      id: string;
+    } & DefaultSession['user'];
+  }
 }
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
@@ -27,33 +29,53 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     }),
   ],
   callbacks: {
-    async signIn({ user }) {
-      if (user?.email) {
-        await prisma.appUser.upsert({
-          where: { email: user.email },
-          create: {
-            email: user.email,
-            name: user.name ?? 'New User',
-            authUserId: user.id,
-            passwordHash: null,
-          },
-          update: {
-            name: user.name ?? 'New User',
-            authUserId: user.id,
-          },
-        });
+    async signIn({ user, account, profile }) {
+      // Ensure AppUser is created/linked when user signs in
+      if (user.email) {
+        try {
+          // Check if AppUser exists with this email
+          const existingAppUser = await prisma.appUser.findUnique({
+            where: { email: user.email },
+          });
+
+          if (existingAppUser) {
+            // If AppUser exists but no authUserId, update it
+            if (!existingAppUser.authUserId && user.id) {
+              await prisma.appUser.update({
+                where: { id: existingAppUser.id },
+                data: {
+                  authUserId: user.id,
+                  name: user.name || existingAppUser.name,
+                },
+              });
+            }
+          } else if (user.id) {
+            // Create new AppUser if it doesn't exist
+            await prisma.appUser.create({
+              data: {
+                email: user.email,
+                name: user.name || 'New User',
+                authUserId: user.id,
+              },
+            });
+          }
+        } catch (error) {
+          console.error('Error in signIn callback:', error);
+          // Don't block sign in, handle in profile page
+        }
       }
       return true;
     },
-    async session({ session, user, token }) {
-      const authUserId = user?.id ?? (typeof token?.sub === 'string' ? token.sub : undefined);
-      setSessionUserId(session, authUserId);
+    async session({ session, token }) {
+      if (session.user && token.sub) {
+        session.user.id = token.sub;
+      }
       return session;
     },
     async redirect({ url, baseUrl }) {
-      const isSameOrigin = url.startsWith(baseUrl);
-      const isRelative = url.startsWith('/');
-      if (isSameOrigin || isRelative) return url;
+      if (url === baseUrl) return `${baseUrl}/after-login`;
+      if (url.startsWith(baseUrl)) return url;
+      if (url.startsWith('/')) return `${baseUrl}${url}`;
       return `${baseUrl}/after-login`;
     },
   },
