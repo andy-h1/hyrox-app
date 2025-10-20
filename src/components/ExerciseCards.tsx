@@ -44,22 +44,6 @@ export const ExerciseCards = ({
     });
   };
 
-  // const toggleExercise = (exercise: ExerciseList) => {
-  //   setSelectedExercises((prevState) => {
-  //     const doesExerciseExist = prevState.find((ex) => ex.id === exercise.id);
-  //     let updatedList;
-
-  //     // NOTE: if exercise exists return me a filtered list excluding that exercises
-  //     if (doesExerciseExist) {
-  //       updatedList = prevState.filter((ex) => ex.id !== exercise.id);
-  //     } else {
-  //       // NOTE: if exercise doesn't exist add it to the previous state and reset the order back to 0
-  //       updatedList = [...prevState, { ...exercise, orderInWorkout: 0 }];
-  //     }
-  //     return updatedList.map((ex, index) => ({ ...ex, orderInWorkout: index + 1 }));
-  //   });
-  // };
-
   const countSelected = (exerciseId: string | number) =>
     selectedExercises.filter((ex) => ex.id === exerciseId).length;
 
@@ -99,7 +83,7 @@ export const ExerciseCards = ({
                       isSelected ? 'text-blue-700' : 'text-white-500 dark:text-white-400'
                     }`}
                   >
-                    {exercise.unit} • {exercise.category}
+                    • {exercise.category}
                   </div>
                 </button>
 
