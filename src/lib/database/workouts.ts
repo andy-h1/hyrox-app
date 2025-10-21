@@ -134,3 +134,39 @@ export async function getWorkoutTemplates() {
     throw new Error('Unknown error');
   }
 }
+
+export async function createWorkoutTemplate(workoutData, userId) {
+  try {
+    await prisma.$transaction(async (tx) => {
+      // tables that need to be updated are: WorkoutTemplate / TemplateExercise / TemplateShare?
+      const newWorkoutTemplate = await tx.workoutTemplate.create({
+        data: {
+          createdBy: userId,
+          name: workoutData.name,
+          description: workoutData.description,
+          isPublic: workoutData.isPublic,
+          format: workoutData.format,
+          duration: workoutData.duration ?? undefined,
+          targetRounds: workoutData.targetRounds ?? undefined,
+        },
+      });
+
+      const selectedExercises = workoutData.exercise;
+
+      // for each exercise - create a new template exercise row
+      selectedExercises.forEach((exercise) => {
+        await tx.templateExercise.create({
+          data: {
+            templateId: newWorkoutTemplate.id,
+            exerciseId: exercise.id,
+            targetValue: exercise.targetValue,
+            targetUnit: exercise.targetUnit,
+            orderIndex: exercise.orderIndex,
+          },
+        });
+      });
+    });
+  } catch (error) {
+    console.error('Error creating new workout templates', error);
+  }
+}

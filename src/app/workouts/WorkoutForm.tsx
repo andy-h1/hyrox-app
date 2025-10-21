@@ -10,8 +10,15 @@ import {
 } from '@headlessui/react';
 import { useState } from 'react';
 
-export const WorkoutForm = () => {
+export const WorkoutForm = ({ onSuccess }) => {
   const [enabled, setEnabled] = useState(false);
+
+  const handleSubmit = async (formData: FormData) => {
+    const result = await createWorkoutTemplate(formData);
+    if (result.success) {
+      onSuccess(result.template);
+    }
+  };
   return (
     <Fieldset>
       <Legend>Create a workout template to log your exercises</Legend>

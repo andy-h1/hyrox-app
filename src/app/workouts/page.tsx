@@ -1,65 +1,12 @@
 import { getWorkoutTemplates } from '@/lib/database/workouts';
-import { formatDate } from '@/utils/timeAndDateUtils';
+import { WorkoutTemplateGrid } from './WorkoutTemplateGrid';
 
 export default async function WorkoutsPage() {
   const workoutTemplates = await getWorkoutTemplates();
 
   return (
-    <div className="p-6">
-      <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Workout Templates</h1>
-      </div>
-
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {workoutTemplates.map(
-          ({
-            id,
-            name,
-            description,
-            format,
-            duration,
-            exercises,
-            creator,
-            sharedWith,
-            createdAt,
-            isPublic,
-          }) => (
-            <div key={id} className="rounded-lg border p-4 hover:shadow-lg">
-              <h2 className="text-xl font-semibold">{name}</h2>
-              <p className="mb-3 text-sm text-gray-600">{description}</p>
-
-              {/* Format badge */}
-              <span className="inline-block rounded bg-blue-100 px-2 py-1 text-xs text-blue-800">
-                {format}
-              </span>
-
-              {/* Exercise count */}
-              <div className="mt-3">
-                <p className="text-sm font-medium">
-                  {exercises.length} exercise{exercises.length !== 1 ? 's' : ''}
-                </p>
-                <ul className="mt-1 text-sm text-gray-600">
-                  {exercises.slice(0, 3).map((ex) => (
-                    <li key={ex.id}>
-                      • {ex.name} {ex.targetValue} {ex.targetUnit}
-                    </li>
-                  ))}
-                  {exercises.length > 3 && (
-                    <li className="text-gray-400">+{exercises.length - 3} more</li>
-                  )}
-                </ul>
-              </div>
-
-              {/* Footer */}
-              <div className="mt-4 border-t pt-3 text-xs text-gray-500">
-                <p>By {creator.name}</p>
-                <p>{formatDate(createdAt)}</p>
-                {sharedWith.length > 0 && <p>Shared with {sharedWith.length} people</p>}
-              </div>
-            </div>
-          ),
-        )}
-      </div>
+    <div className="flex h-full flex-col border-2 border-red-500 p-6">
+      <WorkoutTemplateGrid initialTemplate={workoutTemplates} />
     </div>
   );
 }
