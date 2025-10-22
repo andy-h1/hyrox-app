@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createWorkout } from '@/lib/database/workouts';
+import { createWorkout, createWorkoutTemplate } from '@/lib/database/workouts';
 
 export async function POST(req: NextRequest) {
   try {
@@ -11,5 +11,15 @@ export async function POST(req: NextRequest) {
       { error: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 },
     );
+  }
+}
+
+export async function POST(req: NextRequest) {
+  try {
+    const data = await req.json();
+    const newWorkoutTemplate = await createWorkoutTemplate(data, userId);
+    return NextResponse.json({ data: newWorkoutTemplate }, { status: 201 });
+  } catch (error) {
+    return NextResponse.json({ error: error.message || 'Unknown error' }, { status: 500 });
   }
 }

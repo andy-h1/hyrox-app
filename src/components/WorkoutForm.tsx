@@ -9,6 +9,7 @@ import {
   Switch,
 } from '@headlessui/react';
 import { useState } from 'react';
+import { createWorkoutTemplate } from '@/app/actions/workouts';
 
 export const WorkoutForm = ({ onSuccess }) => {
   const [enabled, setEnabled] = useState(false);

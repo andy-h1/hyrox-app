@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { WorkoutForm } from './WorkoutForm';
 import { TemplateCard } from './TemplateCard';
-import type { WorkoutTemplate } from './page';
+import type { WorkoutTemplate } from '../app/workouts/page';
 
 type TemplateProps = {
   initialTemplate: WorkoutTemplate[];

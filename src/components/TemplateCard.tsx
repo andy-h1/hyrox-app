@@ -1,5 +1,5 @@
 import { formatDate } from '@/utils/timeAndDateUtils';
-import { WorkoutTemplate } from './page';
+import { WorkoutTemplate } from '../app/workouts/page';
 
 export const TemplateCard = ({ template }: { template: WorkoutTemplate }) => {
   const { id, name, description, format, exercises, creator, sharedWith, createdAt } = template;

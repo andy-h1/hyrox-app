@@ -1,5 +1,5 @@
 import { getWorkoutTemplates } from '@/lib/database/workouts';
-import { WorkoutTemplateGrid } from './WorkoutTemplateGrid';
+import { WorkoutTemplateGrid } from '../../components/WorkoutTemplateGrid';
 
 export type WorkoutTemplate = Awaited<ReturnType<typeof getWorkoutTemplates>>[0];
 
