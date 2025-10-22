@@ -1,6 +1,8 @@
 import { getWorkoutTemplates } from '@/lib/database/workouts';
 import { WorkoutTemplateGrid } from './WorkoutTemplateGrid';
 
+export type WorkoutTemplate = Awaited<ReturnType<typeof getWorkoutTemplates>>[0];
+
 export default async function WorkoutsPage() {
   const workoutTemplates = await getWorkoutTemplates();
 

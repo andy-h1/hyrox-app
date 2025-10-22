@@ -3,8 +3,13 @@
 import { useState } from 'react';
 import { WorkoutForm } from './WorkoutForm';
 import { TemplateCard } from './TemplateCard';
+import type { WorkoutTemplate } from './page';
 
-export const WorkoutTemplateGrid = (initialTemplate) => {
+type TemplateProps = {
+  initialTemplate: WorkoutTemplate[];
+};
+
+export const WorkoutTemplateGrid = ({ initialTemplate }: TemplateProps) => {
   const [showForm, setShowForm] = useState(false);
   const [templates, setTemplates] = useState(initialTemplate);
 
@@ -19,7 +24,7 @@ export const WorkoutTemplateGrid = (initialTemplate) => {
             ✕
           </button>
           <WorkoutForm
-            onSuccess={(newTemplate) => {
+            onSuccess={(newTemplate: WorkoutTemplate) => {
               setTemplates([newTemplate, ...templates]);
               setShowForm(false);
             }}
@@ -42,7 +47,7 @@ export const WorkoutTemplateGrid = (initialTemplate) => {
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {templates.map((template) => (
-            <TemplateCard key={template.id} {...template} />
+            <TemplateCard key={template.id} template={template} />
           ))}
         </div>
       </div>

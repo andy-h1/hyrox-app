@@ -1,17 +1,8 @@
 import { formatDate } from '@/utils/timeAndDateUtils';
+import { WorkoutTemplate } from './page';
 
-export const TemplateCard = ({
-  id,
-  name,
-  description,
-  format,
-  duration,
-  exercises,
-  creator,
-  sharedWith,
-  createdAt,
-  isPublic,
-}) => {
+export const TemplateCard = ({ template }: { template: WorkoutTemplate }) => {
+  const { id, name, description, format, exercises, creator, sharedWith, createdAt } = template;
   return (
     <div key={id} className="rounded-lg border p-4 hover:shadow-lg">
       <h2 className="text-xl font-semibold">{name}</h2>

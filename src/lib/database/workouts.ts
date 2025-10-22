@@ -1,3 +1,4 @@
+import { WorkoutTemplate } from '@prisma/client';
 import { prisma } from '../../lib/prisma';
 
 //TODO: fix type for workoutData
@@ -154,7 +155,7 @@ export async function createWorkoutTemplate(workoutData, userId) {
       const selectedExercises = workoutData.exercise;
 
       // for each exercise - create a new template exercise row
-      selectedExercises.forEach((exercise) => {
+      selectedExercises.forEach(async (exercise) => {
         await tx.templateExercise.create({
           data: {
             templateId: newWorkoutTemplate.id,
