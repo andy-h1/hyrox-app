@@ -52,9 +52,28 @@ async function main() {
 
   console.log('Seed data created successfully');
 
+  const HyroxMonTemplate = await prisma.workoutTemplate.create({
+    data: {
+      name: 'Hyrox station for Monday',
+      description: 'Complete 2-3 rounds',
+      createdBy: user1.id,
+      format: 'FOR_TIME',
+      duration: 2700,
+      isPublic: true,
+      exercises: {
+        create: [
+          { exerciseId: 1, targetValue: 800, targetUnit: 'meters', orderIndex: 1 },
+          { exerciseId: 2, targetValue: 500, targetUnit: 'meters', orderIndex: 2 },
+          { exerciseId: 6, targetValue: 40, targetUnit: 'meters', orderIndex: 3 },
+          { exerciseId: 7, targetValue: 40, targetUnit: 'meters', orderIndex: 4 },
+        ],
+      },
+    },
+  });
+
   const HyroxWedTemplate = await prisma.workoutTemplate.create({
     data: {
-      name: 'Hyrox station for Weds',
+      name: 'Hyrox station for Wednesday',
       description: 'Complete 2 rounds',
       createdBy: user1.id,
       format: 'FOR_TIME',
@@ -83,6 +102,45 @@ async function main() {
           {
             exerciseId: 11,
             targetValue: 150,
+            targetUnit: 'meters',
+            orderIndex: 4,
+          },
+        ],
+      },
+    },
+  });
+
+  const HyroxFriTemplate = await prisma.workoutTemplate.create({
+    data: {
+      name: 'Hyrox station for Friday',
+      description: 'Complete 2 rounds',
+      createdBy: user1.id,
+      format: 'FOR_TIME',
+      duration: 1800,
+      isPublic: true,
+      exercises: {
+        create: [
+          {
+            exerciseId: 2,
+            targetValue: 250,
+            targetUnit: 'meters',
+            orderIndex: 1,
+          },
+          {
+            exerciseId: 3,
+            targetValue: 250,
+            targetUnit: 'meters',
+            orderIndex: 2,
+          },
+          {
+            exerciseId: 9,
+            targetValue: 20,
+            targetUnit: 'reps',
+            orderIndex: 3,
+          },
+          {
+            exerciseId: 11,
+            targetValue: 80,
             targetUnit: 'meters',
             orderIndex: 4,
           },

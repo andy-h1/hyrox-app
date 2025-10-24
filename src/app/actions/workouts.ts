@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { getWorkoutById, createWorkoutTemplateInDB } from '@/lib/database/workouts';
+import { createWorkoutTemplate } from '@/lib/database/workouts';
 
 enum WorkoutFormat {
   AMRAP = 'AMRAP',
@@ -28,9 +28,9 @@ export type WorkoutTemplateInput = {
   exercises: SelectedExercises[];
 };
 
-export async function createWorkoutTemplate(formData: FormData) {
-  const workout = await createWorkoutTemplateInDB(formData);
+export async function createWorkoutTemplateAction(formData: FormData, userId: number) {
+  const workout = await createWorkoutTemplate(formData, userId);
 
   revalidatePath('/workouts');
-  redirect(`/workouts/${workout.id}`);
+  redirect('/workouts/');
 }

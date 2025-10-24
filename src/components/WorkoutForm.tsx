@@ -9,13 +9,13 @@ import {
   Switch,
 } from '@headlessui/react';
 import { useState } from 'react';
-import { createWorkoutTemplate } from '@/app/actions/workouts';
+import { createWorkoutTemplateAction } from '@/app/actions/workouts';
 
 export const WorkoutForm = ({ onSuccess }) => {
   const [enabled, setEnabled] = useState(false);
 
-  const handleSubmit = async (formData: FormData) => {
-    const result = await createWorkoutTemplate(formData);
+  const handleSubmit = async (formData: FormData, userId) => {
+    const result = await createWorkoutTemplateAction(formData, userId);
     if (result.success) {
       onSuccess(result.template);
     }
