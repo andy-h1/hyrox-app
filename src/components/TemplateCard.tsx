@@ -19,12 +19,12 @@ export const TemplateCard = ({ template }: { template: WorkoutTemplate }) => {
           {exercises.length} exercise{exercises.length !== 1 ? 's' : ''}
         </p>
         <ul className="mt-1 text-sm text-gray-600">
-          {exercises.slice(0, 3).map((ex) => (
+          {exercises.slice(0, 5).map((ex) => (
             <li key={ex.id}>
               • {ex.name} {ex.targetValue} {ex.targetUnit}
             </li>
           ))}
-          {exercises.length > 3 && <li className="text-gray-400">+{exercises.length - 3} more</li>}
+          {exercises.length > 5 && <li className="text-gray-400">+{exercises.length - 5} more</li>}
         </ul>
       </div>
 
