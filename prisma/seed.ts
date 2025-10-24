@@ -55,7 +55,8 @@ async function main() {
   const HyroxMonTemplate = await prisma.workoutTemplate.create({
     data: {
       name: 'Hyrox station for Monday',
-      description: 'Complete 2-3 rounds',
+      targetRounds: 2,
+      description: 'Complete 2 rounds',
       createdBy: user1.id,
       format: 'FOR_TIME',
       duration: 2700,
@@ -74,6 +75,7 @@ async function main() {
   const HyroxWedTemplate = await prisma.workoutTemplate.create({
     data: {
       name: 'Hyrox station for Wednesday',
+      targetRounds: 2,
       description: 'Complete 2 rounds',
       createdBy: user1.id,
       format: 'FOR_TIME',
@@ -113,6 +115,7 @@ async function main() {
   const HyroxFriTemplate = await prisma.workoutTemplate.create({
     data: {
       name: 'Hyrox station for Friday',
+      targetRounds: 2,
       description: 'Complete 2 rounds',
       createdBy: user1.id,
       format: 'FOR_TIME',

@@ -12,7 +12,7 @@ export default async function LogWorkoutForm() {
       <main className="row-start-2 flex flex-col items-center gap-[32px] sm:items-start">
         <h1>Let&apos;s get it! Choose your workout from the list below</h1>
         <WorkoutLogger templates={workoutTemplates} />
-        <WorkoutWizard exerciseList={exerciseList} />
+        {/* <WorkoutWizard exerciseList={exerciseList} /> */}
       </main>
     </div>
   );

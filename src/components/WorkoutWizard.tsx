@@ -12,7 +12,6 @@ import { formatDate } from '@/utils/timeAndDateUtils';
 import { SubmitHandler, useForm, FormProvider } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import { ProgressBar } from './ProgressBar';
-import { Stopwatch } from './Stopwatch';
 
 type WorkoutWizardProps = {
   exerciseList: ExerciseList[];
@@ -107,7 +106,6 @@ export const WorkoutWizard: React.FC<WorkoutWizardProps> = ({ exerciseList }) =>
   return (
     <FormProvider {...methods}>
       <ProgressBar steps={steps} currentStep={currentStep} goToStep={goToStep} />
-      <Stopwatch />
 
       <form className="flex w-full flex-col gap-8" onSubmit={methods.handleSubmit(logWorkout)}>
         {currentStep === 0 && (

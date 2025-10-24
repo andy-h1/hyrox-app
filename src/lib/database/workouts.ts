@@ -117,15 +117,19 @@ export async function getWorkoutTemplates() {
           },
         },
       },
+      orderBy: {
+        id: 'asc',
+      },
     });
 
     return workoutTemplates.map((template) => ({
       ...template,
       exercises: template.exercises.map((e) => ({
-        ...e,
         id: e.exercise.id,
         name: e.exercise.name,
         category: e.exercise.category,
+        targetValue: e.targetValue,
+        targetUnit: e.targetUnit,
       })),
       sharedWith: template.sharedWith.map((shared) => shared.user),
     }));

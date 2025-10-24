@@ -1,12 +1,17 @@
+import { Exercise } from '@prisma/client';
 import { useState, useEffect, useRef } from 'react';
 
-interface Lap {
+type Lap = {
   id: number;
   type: 'exercise' | 'rest';
   duration: number;
-}
+};
 
-export const Stopwatch = () => {
+type StopWatchProps = {
+  exercises: Exercise[];
+};
+
+export const Stopwatch = ({ exercises }) => {
   const [time, setTime] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const [laps, setLaps] = useState<Lap[]>([]);
@@ -47,19 +52,31 @@ export const Stopwatch = () => {
   };
 
   return (
-    <div>
-      <h1>Workout stopwatch</h1>
-
+    <div className="flex w-full flex-col place-content-center justify-center rounded-md border-2">
       <p>{formatTime(time)}</p>
 
       <h3>Current: {currentType.toUpperCase()}</h3>
 
-      <span>
-        <button onClick={() => setIsRunning(!isRunning)}>{isRunning ? 'Pause' : 'Start'}</button>
-        <button onClick={handleLap} disabled={!isRunning}>
+      <span className="grid gap-4 md:grid-cols-3">
+        <button
+          className="cursor-pointer rounded-md bg-sky-950 px-6 py-3 text-xl font-semibold text-white shadow-xs hover:bg-sky-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600 dark:bg-sky-500 dark:shadow-none dark:hover:bg-sky-400 dark:focus-visible:outline-sky-500"
+          onClick={() => setIsRunning(!isRunning)}
+        >
+          {isRunning ? 'Pause' : 'Start'}
+        </button>
+        <button
+          className="cursor-pointer rounded-md bg-green-800 px-6 py-3 text-xl font-semibold text-white shadow-xs hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 dark:bg-green-500 dark:shadow-none dark:hover:bg-green-400 dark:focus-visible:outline-green-500"
+          onClick={handleLap}
+          disabled={!isRunning}
+        >
           Log {currentType === 'exercise' ? 'Exercise' : 'Rest'}
         </button>
-        <button onClick={reset}>Reset all</button>
+        <button
+          className="cursor-pointer rounded-md bg-red-800 px-6 py-3 text-xl font-semibold text-white shadow-xs hover:bg-red-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 dark:bg-red-500 dark:shadow-none dark:hover:bg-red-400 dark:focus-visible:outline-red-500"
+          onClick={reset}
+        >
+          Reset all
+        </button>
       </span>
 
       <h3>Laps ({laps.length})</h3>
