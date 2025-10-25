@@ -52,7 +52,10 @@ async function main() {
 
   console.log('Seed data created successfully');
 
-  const HyroxMonTemplate = await prisma.workoutTemplate.create({
+  const HyroxMonTemplate = await prisma.workoutTemplate.update({
+    where: {
+      id: 2,
+    },
     data: {
       name: 'Hyrox station for Monday',
       targetRounds: 2,
@@ -72,7 +75,10 @@ async function main() {
     },
   });
 
-  const HyroxWedTemplate = await prisma.workoutTemplate.create({
+  const HyroxWedTemplate = await prisma.workoutTemplate.update({
+    where: {
+      id: 3,
+    },
     data: {
       name: 'Hyrox station for Wednesday',
       targetRounds: 2,
@@ -112,7 +118,10 @@ async function main() {
     },
   });
 
-  const HyroxFriTemplate = await prisma.workoutTemplate.create({
+  const HyroxFriTemplate = await prisma.workoutTemplate.update({
+    where: {
+      id: 4,
+    },
     data: {
       name: 'Hyrox station for Friday',
       targetRounds: 2,
