@@ -5,6 +5,7 @@ import Image from 'next/image';
 
 export default async function ProfilePage() {
   const session = await auth();
+  console.log({ session });
 
   if (!session?.user?.id) {
     redirect('/api/auth/signin');
@@ -42,6 +43,8 @@ export default async function ProfilePage() {
   }
 
   const { profile } = appUser;
+
+  console.log({ appUser });
 
   return (
     <div className="mx-auto max-w-xl space-y-6 p-6">
