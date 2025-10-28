@@ -16,7 +16,7 @@ export async function sendMagicLink(formData: FormData) {
   }
 
   try {
-    const result = await signIn('resend', { email, redirect: false });
+    const result = await signIn('resend', { email, redirect: false, redirectTo: '/dashboard' });
     console.log({ result });
     if (result || result.ok) {
       console.log('result ok');

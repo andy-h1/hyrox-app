@@ -8,7 +8,7 @@ export default async function ProfilePage() {
 
   if (!user) redirect('/api/auth/signin');
 
-  const { profile } = user;
+  const profile = user.profile;
 
   return (
     <div className="mx-auto max-w-xl space-y-6 p-6">
@@ -28,7 +28,7 @@ export default async function ProfilePage() {
 
       <section className="space-y-2">
         <h2 className="text-lg font-medium">Profile</h2>
-        {user.profile ? (
+        {profile ? (
           <div className="space-y-2 rounded border p-4">
             {profile.avatarUrl && (
               <Image

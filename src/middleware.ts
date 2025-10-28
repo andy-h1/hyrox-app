@@ -4,6 +4,7 @@ import { auth } from './auth';
 import { prisma } from './lib/prisma';
 
 export async function middleware(request: NextRequest) {
+  console.log('Middleware hit:', request.nextUrl.pathname);
   const session = await auth();
   const { pathname } = request.nextUrl;
 
@@ -13,35 +14,6 @@ export async function middleware(request: NextRequest) {
 
   if (!session?.user?.id) {
     return NextResponse.redirect(new URL('/login', request.url));
-  }
-
-  if (session.user.email) {
-    try {
-      const existingUser = await prisma.appUser.findFirst({
-        where: {
-          OR: [{ authUserId: session.user.id }, { email: session.user.email }],
-        },
-      });
-      if (!existingUser) {
-        await prisma.appUser.create({
-          data: {
-            email: session.user.email,
-            name: session.user.name || 'New User',
-            authUserId: session.user.id,
-          },
-        });
-      } else if (!existingUser.authUserId) {
-        await prisma.appUser.update({
-          where: { id: existingUser.id },
-          data: {
-            authUserId: session.user.id,
-            name: session.user.name || existingUser.name,
-          },
-        });
-      }
-    } catch (error) {
-      console.error('Middleware user sync error:', error);
-    }
   }
 
   return NextResponse.next();
