@@ -29,40 +29,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     }),
   ],
   callbacks: {
-    async signIn({ user }) {
-      if (user.email) {
-        try {
-          const existingAppUser = await prisma.appUser.findUnique({
-            where: { email: user.email },
-          });
-
-          if (existingAppUser) {
-            // If AppUser exists but no authUserId, update it
-            if (!existingAppUser.authUserId && user.id) {
-              await prisma.appUser.update({
-                where: { id: existingAppUser.id },
-                data: {
-                  authUserId: user.id,
-                  name: user.name || existingAppUser.name,
-                },
-              });
-            }
-          } else if (user.id) {
-            // Create new AppUser if it doesn't exist
-            await prisma.appUser.create({
-              data: {
-                email: user.email,
-                name: user.name || 'New User',
-                authUserId: user.id,
-              },
-            });
-          }
-        } catch (error) {
-          console.error('Error in signIn callback:', error);
-        }
-      }
-      return true;
-    },
     async session({ session, token }) {
       if (session.user && token.sub) {
         session.user.id = token.sub;
@@ -70,10 +36,10 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       return session;
     },
     async redirect({ url, baseUrl }) {
-      if (url === baseUrl) return `${baseUrl}/after-login`;
+      if (url === baseUrl) return `${baseUrl}/dashboard`;
       if (url.startsWith(baseUrl)) return url;
       if (url.startsWith('/')) return `${baseUrl}${url}`;
-      return `${baseUrl}/after-login`;
+      return `${baseUrl}/dashboard`;
     },
   },
 });

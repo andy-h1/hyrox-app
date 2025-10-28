@@ -1,50 +1,14 @@
-import { auth } from '@/auth';
-import { prisma } from '@/lib/prisma';
-import { redirect } from 'next/navigation';
 import Image from 'next/image';
+import { getCurrentUser } from '@/lib/auth-server';
+import { redirect } from 'next/navigation';
 
 export default async function ProfilePage() {
-  const session = await auth();
-  console.log({ session });
+  const user = await getCurrentUser();
+  console.log({ user });
 
-  if (!session?.user?.id) {
-    redirect('/api/auth/signin');
-  }
+  if (!user) redirect('/api/auth/signin');
 
-  let appUser = await prisma.appUser.findFirst({
-    where: {
-      OR: [{ authUserId: session.user.id }, { email: session.user.email ?? undefined }],
-    },
-    include: { profile: true },
-  });
-
-  if (!appUser) {
-    if (!session.user.email) {
-      throw new Error('Unable to create user profile without email');
-    }
-
-    appUser = await prisma.appUser.create({
-      data: {
-        email: session.user.email,
-        name: session.user.name ?? 'New User',
-        authUserId: session.user.id,
-      },
-      include: { profile: true },
-    });
-  } else if (!appUser.authUserId) {
-    appUser = await prisma.appUser.update({
-      where: { id: appUser.id },
-      data: {
-        authUserId: session.user.id,
-        name: session.user.name || appUser.name,
-      },
-      include: { profile: true },
-    });
-  }
-
-  const { profile } = appUser;
-
-  console.log({ appUser });
+  const { profile } = user;
 
   return (
     <div className="mx-auto max-w-xl space-y-6 p-6">
@@ -54,17 +18,17 @@ export default async function ProfilePage() {
         <h2 className="text-lg font-medium">Account</h2>
         <div className="space-y-1 rounded border p-4">
           <p>
-            <span className="font-semibold">Name:</span> {appUser.name}
+            <span className="font-semibold">Name:</span> {user?.name}
           </p>
           <p>
-            <span className="font-semibold">Email:</span> {appUser.email}
+            <span className="font-semibold">Email:</span> {user?.email}
           </p>
         </div>
       </section>
 
       <section className="space-y-2">
         <h2 className="text-lg font-medium">Profile</h2>
-        {profile ? (
+        {user.profile ? (
           <div className="space-y-2 rounded border p-4">
             {profile.avatarUrl && (
               <Image
