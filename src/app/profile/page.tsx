@@ -1,6 +1,6 @@
-import Image from 'next/image';
 import { getCurrentUser } from '@/lib/auth-server';
 import { redirect } from 'next/navigation';
+import { ProfileForm } from '@/components/ProfileForm';
 
 export default async function ProfilePage() {
   const user = await getCurrentUser();
@@ -8,7 +8,19 @@ export default async function ProfilePage() {
 
   if (!user) redirect('/api/auth/signin');
 
-  const profile = user.profile;
+  const userForForm = {
+    name: user.name ?? '',
+    id: String(user.id),
+  };
+
+  const profileForForm = user.profile
+    ? {
+        bio: user.profile.bio,
+        height: user.profile.height,
+        weight: user.profile.weight ? user.profile.weight.toNumber() : null,
+        avatarUrl: user.profile.avatarUrl,
+      }
+    : null;
 
   return (
     <div className="mx-auto max-w-xl space-y-6 p-6">
@@ -27,34 +39,7 @@ export default async function ProfilePage() {
       </section>
 
       <section className="space-y-2">
-        <h2 className="text-lg font-medium">Profile</h2>
-        {profile ? (
-          <div className="space-y-2 rounded border p-4">
-            {profile.avatarUrl && (
-              <Image
-                src={profile.avatarUrl}
-                alt="Avatar"
-                className="h-24 w-24 rounded-full object-cover"
-                width={96}
-                height={96}
-              />
-            )}
-            <p>
-              <span className="font-semibold">Bio:</span> {profile.bio ?? '—'}
-            </p>
-            <p>
-              <span className="font-semibold">Height (cm):</span> {profile.height ?? '—'}
-            </p>
-            <p>
-              <span className="font-semibold">Weight (kg):</span>{' '}
-              {profile.weight ? String(profile.weight) : '—'}
-            </p>
-          </div>
-        ) : (
-          <div className="rounded border p-4">
-            <p>No profile yet. You&apos;ll be able to create one here soon.</p>
-          </div>
-        )}
+        <ProfileForm user={userForForm} profile={profileForForm} />
       </section>
     </div>
   );

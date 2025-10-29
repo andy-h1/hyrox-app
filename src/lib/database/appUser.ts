@@ -5,7 +5,7 @@ export const updateUserProfile = async (
   updates: {
     name?: string;
     bio?: string;
-    height?: string;
+    height?: number;
     weight?: number;
     avatarUrl?: string;
   },
@@ -31,9 +31,10 @@ export const updateUserProfile = async (
       data: cleanUser,
     });
 
-    const profile = await tx.profile.update({
-      where: { id: user.id },
-      data: cleanProfile,
+    const profile = await tx.profile.upsert({
+      where: { id: userId },
+      update: cleanProfile,
+      create: { userId, ...cleanProfile },
     });
 
     return { user, profile };
