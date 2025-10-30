@@ -11,17 +11,22 @@ export const uploadAvatar = async (file: File, userId: string) => {
     const fileName = `${userId}-${Date.now()}.${fileExt}`;
     const filePath = `avatars/${fileName}`;
 
-    const { error } = await supabase.storage.from('profiles').upload(filePath, file, {
+    console.log('uploading to:', filePath);
+
+    const { data, error } = await supabase.storage.from('profiles').upload(filePath, file, {
       cacheControl: '3600',
       upsert: true,
     });
 
     if (error) throw error;
 
+    console.log('Upload success:', data);
+
     const {
       data: { publicUrl },
     } = supabase.storage.from('profiles').getPublicUrl(filePath);
 
+    console.log('Public URL:', publicUrl);
     return publicUrl;
   }
 };

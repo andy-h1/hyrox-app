@@ -10,7 +10,18 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'xwogixizjgrsdqhmxbbz.supabase.co', // Add your Supabase hostname
+        port: '',
+        pathname: '/storage/v1/object/public/**',
+      },
     ],
+  },
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '3mb',
+    },
   },
 };
 

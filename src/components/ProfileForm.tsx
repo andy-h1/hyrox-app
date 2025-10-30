@@ -35,7 +35,9 @@ export const ProfileForm = ({ user, profile }: ProfileFormProps) => {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-1">
       <div className="flex flex-col gap-1">
-        <label htmlFor="avatar">Profile Picture</label>
+        <label className="text-gray-90 block text-sm/6 font-medium" htmlFor="avatar">
+          Profile Picture
+        </label>
         {profile?.avatarUrl && (
           <Image
             src={profile.avatarUrl}
@@ -46,7 +48,7 @@ export const ProfileForm = ({ user, profile }: ProfileFormProps) => {
           />
         )}
         <input
-          className="rounded-md border-2 border-blue-900 dark:border-white"
+          className="rounded-md border-1 border-blue-900 px-2 py-1 dark:border-white"
           type="file"
           id="avatar"
           name="avatar"
@@ -55,9 +57,11 @@ export const ProfileForm = ({ user, profile }: ProfileFormProps) => {
       </div>
 
       <div className="flex flex-col gap-1">
-        <label htmlFor="name">Name</label>
+        <label className="text-gray-90 block text-sm/6 font-medium" htmlFor="name">
+          Name
+        </label>
         <input
-          className="rounded-md border-2 border-black dark:border-white"
+          className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
           type="text"
           id="name"
           name="name"
@@ -66,9 +70,11 @@ export const ProfileForm = ({ user, profile }: ProfileFormProps) => {
       </div>
 
       <div className="flex flex-col gap-1">
-        <label htmlFor="bio">Bio</label>
+        <label className="text-gray-90 block text-sm/6 font-medium" htmlFor="bio">
+          Bio
+        </label>
         <textarea
-          className="rounded-md border-2 border-black dark:border-white"
+          className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
           id="bio"
           name="bio"
           defaultValue={profile?.bio ?? ''}
@@ -77,9 +83,11 @@ export const ProfileForm = ({ user, profile }: ProfileFormProps) => {
       </div>
 
       <div className="flex flex-col gap-1">
-        <label htmlFor="height">Height</label>
+        <label className="text-gray-90 block text-sm/6 font-medium" htmlFor="height">
+          Height
+        </label>
         <input
-          className="rounded-md border-2 border-black dark:border-white"
+          className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
           type="number"
           id="height"
           name="height"
@@ -88,9 +96,11 @@ export const ProfileForm = ({ user, profile }: ProfileFormProps) => {
       </div>
 
       <div className="flex flex-col gap-1">
-        <label htmlFor="height">Weight</label>
+        <label className="text-gray-90 block text-sm/6 font-medium" htmlFor="height">
+          Weight
+        </label>
         <input
-          className="rounded-md border-2 border-black dark:border-white"
+          className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
           type="number"
           id="weight"
           name="weight"
