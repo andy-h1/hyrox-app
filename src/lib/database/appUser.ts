@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/prisma';
 
 export const updateUserProfile = async (
-  userId: number,
+  authUserId: string,
   updates: {
     name?: string;
     bio?: string;
@@ -27,14 +27,16 @@ export const updateUserProfile = async (
 
   return await prisma.$transaction(async (tx) => {
     const user = await tx.appUser.update({
-      where: { id: userId },
+      where: { authUserId },
       data: cleanUser,
     });
 
+    console.log(user.id);
+
     const profile = await tx.profile.upsert({
-      where: { id: userId },
+      where: { userId: user.id },
       update: cleanProfile,
-      create: { userId, ...cleanProfile },
+      create: { userId: user.id, ...cleanProfile },
     });
 
     return { user, profile };

@@ -4,6 +4,7 @@ import { getServerSession } from '@/lib/auth-server';
 import { updateUserProfile } from '@/lib/database/appUser';
 import { uploadAvatar } from '@/lib/storage';
 import { profileSchema } from '@/lib/validations/profile';
+import { revalidatePath } from 'next/cache';
 
 export const updateProfileAction = async (formData: FormData) => {
   const session = await getServerSession();
@@ -24,6 +25,9 @@ export const updateProfileAction = async (formData: FormData) => {
     avatarUrl,
   };
 
+  console.log(session.user.id);
+
   const validated = profileSchema.parse(data);
-  return updateUserProfile(Number(session.user.id), validated);
+  await updateUserProfile(session.user.id, validated);
+  revalidatePath('/profile');
 };
