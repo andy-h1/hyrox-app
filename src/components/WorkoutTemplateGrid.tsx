@@ -3,13 +3,14 @@
 import { useState } from 'react';
 import { WorkoutForm } from './WorkoutForm';
 import { TemplateCard } from './TemplateCard';
-import type { WorkoutTemplate } from '../app/workouts/page';
+import type { WorkoutTemplate, ExerciseList } from '../app/workouts/page';
 
 type TemplateProps = {
   initialTemplate: WorkoutTemplate[];
+  exerciseList: ExerciseList[];
 };
 
-export const WorkoutTemplateGrid = ({ initialTemplate }: TemplateProps) => {
+export const WorkoutTemplateGrid = ({ initialTemplate, exerciseList }: TemplateProps) => {
   const [showForm, setShowForm] = useState(false);
   const [templates, setTemplates] = useState(initialTemplate);
 

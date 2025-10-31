@@ -1,41 +1,28 @@
-import {
-  Description,
-  Field,
-  Fieldset,
-  Input,
-  Legend,
-  Label,
-  Select,
-  Switch,
-} from '@headlessui/react';
+import { Description, Field, Fieldset, Legend, Label } from './tailwind/fieldset';
+import { Input } from './tailwind/input';
+import { Select } from './tailwind/select';
+import { Switch, SwitchField } from './tailwind/switch';
 import { useState } from 'react';
 import { createWorkoutTemplateAction } from '@/app/actions/workouts';
 
 export const WorkoutForm = ({ onSuccess }) => {
   const [enabled, setEnabled] = useState(false);
 
-  const handleSubmit = async (formData: FormData, userId) => {
+  const handleSubmit = async (formData: FormData, userId: number) => {
     const result = await createWorkoutTemplateAction(formData, userId);
+    console.log({ result });
     if (result.success) {
       onSuccess(result.template);
     }
   };
   return (
-    <Fieldset className="space-y-12 rounded-md border-b border-gray-900/10 bg-white p-4 pb-12">
-      <Legend as="div" className="font-semibold text-gray-900">
-        Create a workout template to log your exercises
-      </Legend>
+    <Fieldset>
+      <Legend>Create a workout template to log your exercises</Legend>
       <Field>
-        <Label className="block text-base font-medium text-gray-900">Workout name</Label>
-        <Description className="block text-sm/6 font-medium text-gray-700">
-          Choose a name{' '}
-        </Description>
+        <Label>Workout name</Label>
+        <Description>Choose a name </Description>
+        <Input name="name" type="text" />
       </Field>
-      <input
-        name="name"
-        type="text"
-        className="block min-w-0 grow bg-white py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
-      />
       <Field>
         <Label>Workout type</Label>
         <Description>Select the format of workout</Description>
@@ -56,13 +43,11 @@ export const WorkoutForm = ({ onSuccess }) => {
         <Description>Choose the number of rounds of the workout</Description>
         <Input name="duration" type="number" />
       </Field>
-      <Switch
-        checked={enabled}
-        onChange={setEnabled}
-        className="group inline-flex h-6 w-11 items-center rounded-full bg-gray-200 transition data-checked:bg-blue-600"
-      >
-        <span className="size-4 translate-x-1 rounded-full bg-white transition group-data-checked:translate-x-6" />
-      </Switch>
+      <SwitchField>
+        <Label>Workout public</Label>
+        <Description>Makes your workout available to the public</Description>
+        <Switch name="isPublic" checked={enabled} onChange={setEnabled} />
+      </SwitchField>
     </Fieldset>
   );
 };
