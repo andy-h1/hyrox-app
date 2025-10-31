@@ -16,7 +16,7 @@ export const WorkoutTemplateGrid = ({ initialTemplate }: TemplateProps) => {
   if (showForm) {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-black/50 p-4">
-        <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-black p-6">
+        <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg p-8 dark:bg-black">
           <button
             onClick={() => setShowForm(false)}
             className="float-right text-gray-500 hover:text-gray-700"
@@ -33,6 +33,8 @@ export const WorkoutTemplateGrid = ({ initialTemplate }: TemplateProps) => {
       </div>
     );
   }
+
+  console.log({ templates });
 
   return (
     <>

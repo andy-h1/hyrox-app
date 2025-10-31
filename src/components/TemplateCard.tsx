@@ -19,8 +19,8 @@ export const TemplateCard = ({ template }: { template: WorkoutTemplate }) => {
           {exercises.length} exercise{exercises.length !== 1 ? 's' : ''}
         </p>
         <ul className="mt-1 text-sm text-gray-600">
-          {exercises.slice(0, 5).map((ex) => (
-            <li key={ex.id}>
+          {exercises.slice(0, 5).map((ex, idx) => (
+            <li key={idx}>
               • {ex.name} {ex.targetValue} {ex.targetUnit}
             </li>
           ))}
