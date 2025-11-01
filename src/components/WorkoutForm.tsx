@@ -5,7 +5,7 @@ import { Switch, SwitchField } from './tailwind/switch';
 import { useState } from 'react';
 import { createWorkoutTemplateAction } from '@/app/actions/workouts';
 
-export const WorkoutForm = ({ onSuccess }) => {
+export const WorkoutForm = ({ onSuccess, exerciseList }) => {
   const [enabled, setEnabled] = useState(false);
 
   const handleSubmit = async (formData: FormData, userId: number) => {
@@ -15,6 +15,7 @@ export const WorkoutForm = ({ onSuccess }) => {
       onSuccess(result.template);
     }
   };
+
   return (
     <Fieldset>
       <Legend>Create a workout template to log your exercises</Legend>

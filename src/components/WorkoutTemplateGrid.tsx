@@ -25,6 +25,7 @@ export const WorkoutTemplateGrid = ({ initialTemplate, exerciseList }: TemplateP
             ✕
           </button>
           <WorkoutForm
+            exerciseList={exerciseList}
             onSuccess={(newTemplate: WorkoutTemplate) => {
               setTemplates([newTemplate, ...templates]);
               setShowForm(false);
