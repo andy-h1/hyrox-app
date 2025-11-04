@@ -1,74 +1,25 @@
-import { WorkoutTemplate } from '@prisma/client';
+import type { WorkoutTemplate } from '@prisma/client';
+import type { TemplateExercise } from '@prisma/client';
 import { prisma } from '../../lib/prisma';
+import { getCurrentUser } from '../auth-server';
 
-//TODO: fix type for workoutData
-
-// export async function createWorkout(workoutData: any, userId: number) {
-//   const { name, type, notes, exercises } = workoutData;
-
-//   const formatType = type === 'forTraining' ? 'FOR_TRAINING' : 'HYROX_SIM';
-
-//   try {
-//     console.log('Creating workout for user:', userId, 'with data:', workoutData);
-//     await prisma.$transaction(async (tx) => {
-//       // Step 1: Create the workout
-//       const newWorkout = await tx.workout.create({
-//         data: {
-//           userId,
-//           date: new Date(),
-//           type: formatType,
-//           notes,
-//         },
-//       });
-
-//       console.log('Workout DB entry created:', newWorkout);
-
-//       for (const exercise of exercises) {
-//         console.log(
-//           'Creating workoutExercise for workoutId:',
-//           newWorkout.id,
-//           'exercise:',
-//           exercise,
-//         );
-//         await tx.workoutExercise.create({
-//           data: {
-//             workoutId: newWorkout.id,
-//             exerciseId: parseFloat(exercise.exerciseId),
-//             value: parseFloat(exercise.value),
-//             timeTaken: parseFloat(exercise.timeTaken),
-//             orderInWorkout: parseFloat(exercise.orderInWorkout),
-//           },
-//         });
-//       }
-//       console.log('All workout exercises created for workoutId:', newWorkout.id);
-//       return { message: 'Workout logged successfully', newWorkout };
-//     });
-//   } catch (error) {
-//     console.error('Error in createWorkout:', error);
-//     throw error; // Rethrow so the route handler can catch and respond
-//   }
-// }
-// // Note: Does my database structure make sense?!
-
-// export async function getWorkoutTemplates() {
-//   try {
-//     const workoutTemplates = await prisma.workoutTemplate.findMany({
-//       select: {
-//         id: true,
-//         name: true,
-//         description: true,
-//         createdBy: true,
-//         format: true,
-//         duration: true,
-//         targetRounds: true,
-//       },
-//     });
-
-//     return workoutTemplates;
-//   } catch (error) {
-//     throw new Error(error instanceof Error ? error.message : 'Unknown error');
-//   }
-// }
+type WorkoutData = {
+  name: string;
+  description?: string;
+  format: string;
+  duration?: number;
+  targetRounds?: number;
+  isPublic: boolean;
+  exercises: [
+    {
+      exerciseId: number;
+      targetValue: number;
+      targetUnit: string;
+      orderInIndex: number;
+      notes?: string;
+    },
+  ];
+};
 
 export async function getLoggedWorkouts() {
   try {
@@ -140,13 +91,16 @@ export async function getWorkoutTemplates() {
   }
 }
 
-export async function createWorkoutTemplate(workoutData, userId) {
+export async function createWorkoutTemplate(workoutData: WorkoutData) {
+  const user = await getCurrentUser();
+  if (!user) throw Error('Unauthorised');
+
   try {
-    await prisma.$transaction(async (tx) => {
+    const newWorkoutTemplate = await prisma.$transaction(async (tx) => {
       // tables that need to be updated are: WorkoutTemplate / TemplateExercise / TemplateShare?
-      const newWorkoutTemplate = await tx.workoutTemplate.create({
+      const template = await tx.workoutTemplate.create({
         data: {
-          createdBy: userId,
+          createdBy: user.id,
           name: workoutData.name,
           description: workoutData.description,
           isPublic: workoutData.isPublic,
@@ -156,21 +110,24 @@ export async function createWorkoutTemplate(workoutData, userId) {
         },
       });
 
-      const selectedExercises = workoutData.exercise;
+      await Promise.all(
+        workoutData.exercises.map((exercise) => {
+          tx.templateExercise.create({
+            data: {
+              templateId: template.id,
+              exerciseId: exercise.exerciseId,
+              targetValue: exercise.targetValue,
+              targetUnit: exercise.targetUnit,
+              orderIndex: exercise.orderInIndex,
+            },
+          });
+        }),
+      );
 
-      // for each exercise - create a new template exercise row
-      selectedExercises.forEach(async (exercise) => {
-        await tx.templateExercise.create({
-          data: {
-            templateId: newWorkoutTemplate.id,
-            exerciseId: exercise.id,
-            targetValue: exercise.targetValue,
-            targetUnit: exercise.targetUnit,
-            orderIndex: exercise.orderIndex,
-          },
-        });
-      });
+      return template;
     });
+
+    return { success: true, template: newWorkoutTemplate };
   } catch (error) {
     console.error('Error creating new workout templates', error);
   }

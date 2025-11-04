@@ -4,7 +4,7 @@ import { Select } from './tailwind/select';
 import { Switch, SwitchField } from './tailwind/switch';
 import { Checkbox, CheckboxField } from './tailwind/checkbox';
 import { useState } from 'react';
-import { createWorkoutTemplateAction } from '@/app/actions/workouts';
+import { createWorkoutTemplateAction } from '@/app/workouts/actions';
 import { WorkoutTemplate } from '@/app/workouts/page';
 
 type Exercise = {
@@ -67,7 +67,7 @@ export const WorkoutForm = ({ onSuccess, exerciseList }: WorkoutFormProps) => {
 
     formData.append('exercises', JSON.stringify(selectedExercises));
 
-    const result = await createWorkoutTemplateAction(formData, 1); // TODO: Get real userId
+    const result = await createWorkoutTemplateAction(formData);
     if (result?.success) {
       onSuccess(result.template);
     }
@@ -75,14 +75,14 @@ export const WorkoutForm = ({ onSuccess, exerciseList }: WorkoutFormProps) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Fieldset>
-        <Legend>Create a workout template to log your exercises</Legend>
-        <Field>
+      <Fieldset className="grid gap-6 rounded-md bg-white p-4 md:grid-cols-1 lg:grid-cols-2">
+        <Legend className="col-span-4">Create a workout template to log your exercises</Legend>
+        <Field className="md:col-span-1 lg:col-span-2">
           <Label>Workout name</Label>
           <Description>Choose a name </Description>
           <Input name="name" type="text" required />
         </Field>
-        <Field>
+        <Field className="md:col-span-1 lg:col-span-2">
           <Label>Workout type</Label>
           <Description>Select the format of workout</Description>
           <Select name="format">
@@ -91,27 +91,23 @@ export const WorkoutForm = ({ onSuccess, exerciseList }: WorkoutFormProps) => {
             <option>EMOM</option>
           </Select>
         </Field>
-        <Field>
+        <Field className="md:col-span-1 lg:col-span-2">
           <Label>Duration (minutes)</Label>
           <Description>Choose the duration of the workout</Description>
-          <Input name="duration" type="number" required />
+          <Input name="duration" type="number" />
         </Field>
-        <Field>
+        <Field className="md:col-span-1 lg:col-span-2">
           <Label>Target rounds</Label>
+          <Description>Choose number of rounds for the workout</Description>
           <Input name="targetRounds" type="number" />
         </Field>
 
-        <SwitchField>
-          <Label>Public workout</Label>
-          <Switch name="isPublic" checked={enabled} onChange={setEnabled} />
-        </SwitchField>
-
         {/* Exercise selection */}
-        <Fieldset>
-          <Legend>Select Exercises</Legend>
+        <Fieldset className="col-span-2">
+          <Legend className="mb-2">Select Exercises</Legend>
           <div className="space-y-4">
             {exerciseList.map((exercise) => (
-              <div key={exercise.id}>
+              <div key={exercise.id} className="md:col-span-1 lg:col-span-4">
                 <CheckboxField>
                   <Checkbox
                     checked={selectedExercises.some((ex) => ex.exerciseId === exercise.id)}
@@ -165,7 +161,13 @@ export const WorkoutForm = ({ onSuccess, exerciseList }: WorkoutFormProps) => {
           </div>
         </Fieldset>
 
-        <button type="submit" className="mt-6 rounded bg-blue-500 px-4 py-2 text-white">
+        <SwitchField className="col-span-4">
+          <Description>Choose if you want this workout available to the public</Description>
+          <Label>Public workout</Label>
+          <Switch name="isPublic" checked={enabled} onChange={setEnabled} />
+        </SwitchField>
+
+        <button type="submit" className="col-span-4 mt-6 rounded bg-blue-500 px-4 py-2 text-white">
           Create Template
         </button>
       </Fieldset>

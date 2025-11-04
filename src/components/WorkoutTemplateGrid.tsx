@@ -20,7 +20,7 @@ export const WorkoutTemplateGrid = ({ initialTemplate, exerciseList }: TemplateP
         <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg p-8 dark:bg-black">
           <button
             onClick={() => setShowForm(false)}
-            className="float-right text-gray-500 hover:text-gray-700"
+            className="float-end text-gray-500 hover:text-gray-700"
           >
             ✕
           </button>

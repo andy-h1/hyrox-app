@@ -2,7 +2,6 @@
 
 import { useState, useTransition } from 'react';
 import { sendMagicLink } from './actions';
-import { SignInButton } from '@/components/AuthButtons';
 import { signIn } from 'next-auth/react';
 
 export default function LoginPage() {
