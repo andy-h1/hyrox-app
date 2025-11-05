@@ -2,6 +2,9 @@
 import Image from 'next/image';
 import { useState } from 'react';
 import { updateProfileAction } from '@/app/profile/actions';
+import { Field, Fieldset, Label } from './tailwind/fieldset';
+import { Input } from './tailwind/input';
+import { Textarea } from './tailwind/textarea';
 
 type ProfileFormProps = {
   user: { name: string; id: string };
@@ -33,85 +36,57 @@ export const ProfileForm = ({ user, profile }: ProfileFormProps) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-1">
-      <div className="flex flex-col gap-1">
-        <label className="text-gray-90 block text-sm/6 font-medium" htmlFor="avatar">
-          Profile Picture
-        </label>
-        {profile?.avatarUrl && (
-          <Image
-            src={profile.avatarUrl}
-            alt="avatar"
-            width={100}
-            height={100}
-            className="rounded-full"
+    <form onSubmit={handleSubmit}>
+      <Fieldset className="flex flex-col gap-4 border-2 border-red-500">
+        <Field className="justify-items-center border-2 border-blue-500">
+          {profile?.avatarUrl && (
+            <Image
+              src={profile.avatarUrl}
+              alt="avatar"
+              width={100}
+              height={100}
+              className="rounded-full"
+            />
+          )}
+
+          <Input type="file" id="avatar" name="avatar" accept="image/*" />
+        </Field>
+
+        <Field>
+          <Label htmlFor="name">Name</Label>
+          <Input type="text" id="name" name="name" defaultValue={user.name ?? ''} />
+        </Field>
+
+        <Field>
+          <Label htmlFor="bio">Bio</Label>
+          <Textarea id="bio" name="bio" defaultValue={profile?.bio ?? ''} maxLength={500} />
+        </Field>
+
+        <Field>
+          <Label htmlFor="height">Height</Label>
+          <Input
+            type="number"
+            id="height"
+            name="height"
+            defaultValue={profile?.height ?? undefined}
           />
-        )}
-        <input
-          className="rounded-md border-1 border-blue-900 px-2 py-1 dark:border-white"
-          type="file"
-          id="avatar"
-          name="avatar"
-          accept="image/*"
-        />
-      </div>
+        </Field>
 
-      <div className="flex flex-col gap-1">
-        <label className="text-gray-90 block text-sm/6 font-medium" htmlFor="name">
-          Name
-        </label>
-        <input
-          className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-          type="text"
-          id="name"
-          name="name"
-          defaultValue={user.name ?? ''}
-        />
-      </div>
+        <Field>
+          <Label htmlFor="height">Weight</Label>
+          <Input
+            type="number"
+            id="weight"
+            name="weight"
+            step={0.1}
+            defaultValue={profile?.weight ?? undefined}
+          />
+        </Field>
 
-      <div className="flex flex-col gap-1">
-        <label className="text-gray-90 block text-sm/6 font-medium" htmlFor="bio">
-          Bio
-        </label>
-        <textarea
-          className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-          id="bio"
-          name="bio"
-          defaultValue={profile?.bio ?? ''}
-          maxLength={500}
-        />
-      </div>
-
-      <div className="flex flex-col gap-1">
-        <label className="text-gray-90 block text-sm/6 font-medium" htmlFor="height">
-          Height
-        </label>
-        <input
-          className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-          type="number"
-          id="height"
-          name="height"
-          defaultValue={profile?.height ?? undefined}
-        />
-      </div>
-
-      <div className="flex flex-col gap-1">
-        <label className="text-gray-90 block text-sm/6 font-medium" htmlFor="height">
-          Weight
-        </label>
-        <input
-          className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-          type="number"
-          id="weight"
-          name="weight"
-          step={0.1}
-          defaultValue={profile?.weight ?? undefined}
-        />
-      </div>
-
-      <button type="submit" disabled={isLoading}>
-        {isLoading ? 'Saving...' : 'Save Profile'}
-      </button>
+        <button type="submit" disabled={isLoading}>
+          {isLoading ? 'Saving...' : 'Save Profile'}
+        </button>
+      </Fieldset>
     </form>
   );
 };
