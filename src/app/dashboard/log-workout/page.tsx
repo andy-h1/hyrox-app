@@ -4,7 +4,6 @@ import { getExercisesList } from '@/lib/database/exercises';
 import { getWorkoutTemplates } from '@/lib/database/workouts';
 
 export default async function LogWorkoutForm() {
-  const exerciseList = await getExercisesList();
   const workoutTemplates = await getWorkoutTemplates();
 
   return (
@@ -12,7 +11,6 @@ export default async function LogWorkoutForm() {
       <main className="row-start-2 flex flex-col items-center gap-[32px] sm:items-start">
         <h1>Let&apos;s get it! Choose your workout from the list below</h1>
         <WorkoutLogger templates={workoutTemplates} />
-        {/* <WorkoutWizard exerciseList={exerciseList} /> */}
       </main>
     </div>
   );

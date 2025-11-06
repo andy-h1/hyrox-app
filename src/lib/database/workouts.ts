@@ -59,6 +59,7 @@ export async function getWorkoutTemplates() {
             targetValue: true,
             targetUnit: true,
             exercise: true,
+            orderIndex: true,
           },
         },
         creator: true,

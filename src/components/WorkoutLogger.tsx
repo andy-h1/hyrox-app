@@ -4,7 +4,6 @@ import type { WorkoutTemplate } from '@/app/workouts/page';
 import { TemplateCard } from './TemplateCard';
 import { useState } from 'react';
 import { ExerciseLog } from './ExerciseLog';
-import { Stopwatch } from './Stopwatch';
 import { Button } from './tailwind/button';
 
 type WorkoutLoggerProps = {
@@ -13,8 +12,17 @@ type WorkoutLoggerProps = {
 
 export const WorkoutLogger = ({ templates }: WorkoutLoggerProps) => {
   const [selectedTemplate, setSelectedTemplate] = useState<WorkoutTemplate>();
+  const [loggerStep, setLoggerStep] = useState(0);
+
+  console.log({ templates });
 
   console.log(selectedTemplate);
+
+  const handleSelectedTemplate = (template) => {
+    setSelectedTemplate(template);
+    setLoggerStep(1);
+    return loggerStep;
+  };
 
   return (
     <>
@@ -22,14 +30,14 @@ export const WorkoutLogger = ({ templates }: WorkoutLoggerProps) => {
         {templates.map((template) => (
           <div key={template.id} className="flex flex-col justify-center gap-3">
             <TemplateCard template={template} />
-            <Button type="button" onClick={() => setSelectedTemplate(template)}>
+            <Button type="button" onClick={() => handleSelectedTemplate(template)}>
               Select workout
             </Button>
           </div>
         ))}
       </div>
 
-      {selectedTemplate && <ExerciseLog template={selectedTemplate} />}
+      {selectedTemplate && loggerStep === 1 && <ExerciseLog template={selectedTemplate} />}
     </>
   );
 };

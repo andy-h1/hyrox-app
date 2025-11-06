@@ -5,6 +5,7 @@ import { updateProfileAction } from '@/app/profile/actions';
 import { Field, Fieldset, Label } from './tailwind/fieldset';
 import { Input } from './tailwind/input';
 import { Textarea } from './tailwind/textarea';
+import { Button } from './tailwind/button';
 
 type ProfileFormProps = {
   user: { name: string; id: string };
@@ -37,8 +38,8 @@ export const ProfileForm = ({ user, profile }: ProfileFormProps) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Fieldset className="flex flex-col gap-4 border-2 border-red-500">
-        <Field className="justify-items-center border-2 border-blue-500">
+      <Fieldset className="flex flex-col gap-4">
+        <Field className="justify-items-center">
           {profile?.avatarUrl && (
             <Image
               src={profile.avatarUrl}
@@ -49,7 +50,7 @@ export const ProfileForm = ({ user, profile }: ProfileFormProps) => {
             />
           )}
 
-          <Input type="file" id="avatar" name="avatar" accept="image/*" />
+          <Input type="file" id="avatar" name="avatar" accept="image/png, image/jpeg" />
         </Field>
 
         <Field>
@@ -83,9 +84,9 @@ export const ProfileForm = ({ user, profile }: ProfileFormProps) => {
           />
         </Field>
 
-        <button type="submit" disabled={isLoading}>
+        <Button type="submit" disabled={isLoading}>
           {isLoading ? 'Saving...' : 'Save Profile'}
-        </button>
+        </Button>
       </Fieldset>
     </form>
   );
