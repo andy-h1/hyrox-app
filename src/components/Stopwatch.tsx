@@ -17,6 +17,10 @@ export const Stopwatch = ({ exercises }) => {
   const [laps, setLaps] = useState<Lap[]>([]);
   const [currentType, setCurrentType] = useState<'exercise' | 'rest'>('exercise');
   const intervalRef = useRef<number | null>(null);
+  const [exerciseIndex, setExerciseIndex] = useState(0);
+
+  const currentExercise = exercises[exerciseIndex];
+  const isLastExercise = exerciseIndex === exercises.length - 1;
 
   useEffect(() => {
     if (isRunning) {
@@ -41,7 +45,18 @@ export const Stopwatch = ({ exercises }) => {
   const handleLap = () => {
     setLaps((prev) => [...prev, { id: Date.now(), type: currentType, duration: time }]);
     setTime(0);
-    setCurrentType(currentType === 'exercise' ? 'rest' : 'exercise');
+
+    if (currentType === 'exercise') {
+      setCurrentType('rest');
+    } else {
+      if (!isLastExercise) {
+        setExerciseIndex((prev) => prev + 1);
+        setCurrentType('exercise');
+      } else {
+        setIsRunning(false);
+        alert('Workout complete!');
+      }
+    }
   };
 
   const reset = () => {
@@ -49,13 +64,18 @@ export const Stopwatch = ({ exercises }) => {
     setTime(0);
     setLaps([]);
     setCurrentType('exercise');
+    setExerciseIndex(0);
   };
 
   return (
     <div className="flex w-full flex-col place-content-center justify-center rounded-md border-2">
       <p>{formatTime(time)}</p>
 
-      <h3>Current: {currentType.toUpperCase()}</h3>
+      <h3>
+        {currentType === 'exercise'
+          ? `Exercise ${exerciseIndex + 1}/${exercises.length}: ${currentExercise?.name}`
+          : `Rest (Next: ${exercises[exerciseIndex + 1]?.name || 'Finished'})`}
+      </h3>
 
       <span className="grid gap-4 md:grid-cols-3">
         <button
@@ -82,7 +102,7 @@ export const Stopwatch = ({ exercises }) => {
       <h3>Laps ({laps.length})</h3>
       {laps.map((lap, index) => (
         <p key={lap.id}>
-          #{index + 1} - {lap.type}: {formatTime(lap.duration)}
+          #{index + 1} - {currentExercise?.name}: {formatTime(lap.duration)}
         </p>
       ))}
     </div>

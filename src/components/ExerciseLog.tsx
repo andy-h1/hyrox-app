@@ -1,14 +1,21 @@
 import type { WorkoutTemplate } from '@/app/workouts/page';
 import { Stopwatch } from './Stopwatch';
 
+enum format {
+  'FOR_TIME' = 'For time',
+  'AMRAP' = 'As many reps as possible',
+  'EMOM' = 'Every minute on the minute',
+}
+
 export const ExerciseLog = ({ template }: { template: WorkoutTemplate }) => {
   const { id, name, description, format, exercises, creator, sharedWith, createdAt } = template;
 
-  const exerciseName = exercises.map((ex) => ex.name);
-  console.log({ exerciseName });
+  console.log({ template });
+
   return (
     <div>
-      <h1>{description}</h1>
+      <h1>{name}</h1>
+      <p>{description}</p>
       <Stopwatch exercises={exercises} />
     </div>
   );

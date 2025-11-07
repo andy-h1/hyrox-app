@@ -160,6 +160,33 @@ async function main() {
       },
     },
   });
+
+  const HyroxSimpleSession = await prisma.workoutTemplate.create({
+    data: {
+      name: 'Easy Hyrox session',
+      targetRounds: 2,
+      description: 'Simple session for testing',
+      createdBy: user1.id,
+      format: 'FOR_TIME',
+      isPublic: true,
+      exercises: {
+        create: [
+          {
+            exerciseId: 1,
+            targetValue: 1000,
+            targetUnit: 'meters',
+            orderIndex: 1,
+          },
+          {
+            exerciseId: 3,
+            targetValue: 1000,
+            targetUnit: 'meters',
+            orderIndex: 2,
+          },
+        ],
+      },
+    },
+  });
 }
 
 main()
