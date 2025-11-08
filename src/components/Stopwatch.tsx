@@ -3,24 +3,36 @@ import { useState, useEffect, useRef } from 'react';
 
 type Lap = {
   id: number;
+  name: string;
   type: 'exercise' | 'rest';
   duration: number;
 };
 
-type StopWatchProps = {
-  exercises: Exercise[];
+type ExerciseTarget = {
+  id: number;
+  name: string;
+  category: string;
+  targetValue: number;
+  targetUnit: string;
 };
 
-export const Stopwatch = ({ exercises }) => {
+type StopWatchProps = {
+  exercises: ExerciseTarget[];
+};
+
+export const Stopwatch = ({ exercises }: StopWatchProps) => {
   const [time, setTime] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const [laps, setLaps] = useState<Lap[]>([]);
   const [currentType, setCurrentType] = useState<'exercise' | 'rest'>('exercise');
-  const intervalRef = useRef<number | null>(null);
   const [exerciseIndex, setExerciseIndex] = useState(0);
+  const intervalRef = useRef<number | null>(null);
 
   const currentExercise = exercises[exerciseIndex];
   const isLastExercise = exerciseIndex === exercises.length - 1;
+
+  console.log({ laps });
+  console.log({ currentType });
 
   useEffect(() => {
     if (isRunning) {
@@ -43,13 +55,21 @@ export const Stopwatch = ({ exercises }) => {
   };
 
   const handleLap = () => {
-    setLaps((prev) => [...prev, { id: Date.now(), type: currentType, duration: time }]);
+    // setLaps((prev) => [...prev, { id: Date.now(), name:  type: currentType, duration: time }]);
     setTime(0);
 
     if (currentType === 'exercise') {
+      setLaps((prev) => [
+        ...prev,
+        { id: Date.now(), name: currentExercise?.name, type: currentType, duration: time },
+      ]);
       setCurrentType('rest');
     } else {
       if (!isLastExercise) {
+        setLaps((prev) => [
+          ...prev,
+          { id: Date.now(), name: 'Rest', type: currentType, duration: time },
+        ]);
         setExerciseIndex((prev) => prev + 1);
         setCurrentType('exercise');
       } else {
@@ -68,7 +88,7 @@ export const Stopwatch = ({ exercises }) => {
   };
 
   return (
-    <div className="flex w-full flex-col place-content-center justify-center rounded-md border-2">
+    <div className="flex w-full flex-col place-content-center justify-center rounded-md border-2 p-4">
       <p>{formatTime(time)}</p>
 
       <h3>
@@ -102,7 +122,7 @@ export const Stopwatch = ({ exercises }) => {
       <h3>Laps ({laps.length})</h3>
       {laps.map((lap, index) => (
         <p key={lap.id}>
-          #{index + 1} - {currentExercise?.name}: {formatTime(lap.duration)}
+          #{lap.name}: {formatTime(lap.duration)}
         </p>
       ))}
     </div>

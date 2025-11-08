@@ -1,6 +1,4 @@
 import { WorkoutLogger } from '@/components/WorkoutLogger';
-import { WorkoutWizard } from '@/components/WorkoutWizard';
-import { getExercisesList } from '@/lib/database/exercises';
 import { getWorkoutTemplates } from '@/lib/database/workouts';
 
 export default async function LogWorkoutForm() {
