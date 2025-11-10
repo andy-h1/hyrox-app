@@ -176,7 +176,7 @@ model WorkoutLog {
 
   template       WorkoutTemplate? @relation(fields: [templateId], references: [id])
   user           AppUser          @relation(fields: [userId], references: [id])
-  rounds         WorkoutRound[] // The gold - round-by-round breakdown
+  rounds         WorkoutRound[]
   PersonalRecord PersonalRecord[]
 
   @@map("workout_logs")
