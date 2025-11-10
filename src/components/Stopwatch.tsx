@@ -1,7 +1,7 @@
 import { Exercise } from '@prisma/client';
 import { useState, useEffect, useRef } from 'react';
 
-type Lap = {
+export type Lap = {
   id: number;
   name: string;
   type: 'exercise' | 'rest' | 'finished';
@@ -18,15 +18,17 @@ type ExerciseTarget = {
 
 type StopWatchProps = {
   exercises: ExerciseTarget[];
+  onSave: (laps: Lap[]) => Promise<void>;
 };
 
-export const Stopwatch = ({ exercises }: StopWatchProps) => {
+export const Stopwatch = ({ exercises, onSave }: StopWatchProps) => {
   const [time, setTime] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const [laps, setLaps] = useState<Lap[]>([]);
   const [currentType, setCurrentType] = useState<'exercise' | 'rest' | 'finished'>('exercise');
   const [exerciseIndex, setExerciseIndex] = useState(0);
   const [lapIdCounter, setLapIdCounter] = useState(1);
+  const [isSaving, setIsSaving] = useState(false);
   const intervalRef = useRef<number | null>(null);
 
   const currentExercise = exercises[exerciseIndex];
@@ -62,7 +64,13 @@ export const Stopwatch = ({ exercises }: StopWatchProps) => {
     if (currentType === 'exercise') {
       setLaps((prev) => [
         ...prev,
-        { id: lapIdCounter, name: currentExercise?.name, type: currentType, duration: time },
+        {
+          id: lapIdCounter,
+          name: currentExercise?.name,
+          type: currentType,
+          duration: time,
+          exerciseId: currentExercise?.id,
+        },
       ]);
       setLapIdCounter((prev) => prev + 1);
 
@@ -94,7 +102,10 @@ export const Stopwatch = ({ exercises }: StopWatchProps) => {
     setExerciseIndex(0);
   };
 
-  const handleSaveWorkout = () => {};
+  const handleSaveWorkout = async () => {
+    setIsSaving(true);
+    await onSave(laps);
+  };
 
   return (
     <div className="flex w-full flex-col place-content-center justify-center rounded-md border-2 p-4">
@@ -135,9 +146,7 @@ export const Stopwatch = ({ exercises }: StopWatchProps) => {
           <>
             <button
               className="cursor-pointer rounded-md bg-green-800 px-6 py-3 text-xl font-semibold text-white shadow-xs hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 dark:bg-green-500 dark:shadow-none dark:hover:bg-green-400 dark:focus-visible:outline-green-500"
-              onClick={() => {
-                /* saving workout logic */
-              }}
+              onClick={handleSaveWorkout}
             >
               Save Workout
             </button>

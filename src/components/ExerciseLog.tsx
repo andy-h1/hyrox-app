@@ -1,5 +1,7 @@
 import type { WorkoutTemplate } from '@/app/workouts/page';
 import { Stopwatch } from './Stopwatch';
+import type { Lap } from './Stopwatch';
+import { saveWorkoutAction } from '@/app/dashboard/log-workout/actions';
 
 enum format {
   'FOR_TIME' = 'For time',
@@ -12,11 +14,19 @@ export const ExerciseLog = ({ template }: { template: WorkoutTemplate }) => {
 
   console.log({ template });
 
+  const handleSaveWorkout = async (laps: Lap[]) => {
+    const formData = new FormData();
+    formData.append('templateId', template.id.toString());
+    formData.append('laps', JSON.stringify(laps));
+
+    await saveWorkoutAction(formData);
+  };
+
   return (
     <div>
       <h1>{name}</h1>
       <p>{description}</p>
-      <Stopwatch exercises={exercises} />
+      <Stopwatch exercises={exercises} onSave={handleSaveWorkout} />
     </div>
   );
 };
