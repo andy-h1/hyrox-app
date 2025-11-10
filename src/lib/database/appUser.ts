@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma';
 
-export const updateUserProfile = async (
+export async function updateUserProfile(
   authUserId: string,
   updates: {
     name?: string;
@@ -9,7 +9,7 @@ export const updateUserProfile = async (
     weight?: number;
     avatarUrl?: string;
   },
-) => {
+) {
   const userUpdates = { name: updates.name };
   const profileUpdates = {
     bio: updates.bio,
@@ -41,4 +41,4 @@ export const updateUserProfile = async (
 
     return { user, profile };
   });
-};
+}
