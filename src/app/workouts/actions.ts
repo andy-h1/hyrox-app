@@ -3,6 +3,7 @@
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { createWorkoutTemplate } from '@/lib/database/workouts';
+import { redirect } from 'next/navigation';
 
 const workoutDataSchema = z.object({
   name: z.string().min(1, 'Workout name is required'),
@@ -52,5 +53,5 @@ export async function createWorkoutTemplateAction(formData: FormData) {
   await createWorkoutTemplate(formData);
 
   revalidatePath('/workouts');
-  redirect('/workouts/');
+  redirect('/workouts');
 }

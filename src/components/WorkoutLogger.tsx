@@ -26,16 +26,21 @@ export const WorkoutLogger = ({ templates }: WorkoutLoggerProps) => {
 
   return (
     <>
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {templates.map((template) => (
-          <div key={template.id} className="flex flex-col justify-center gap-3">
-            <TemplateCard template={template} />
-            <Button type="button" onClick={() => handleSelectedTemplate(template)}>
-              Select workout
-            </Button>
+      {!selectedTemplate && loggerStep === 0 && (
+        <>
+          <h1>Let&apos;s get it! Choose your workout from the list below</h1>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {templates.map((template) => (
+              <div key={template.id} className="flex flex-col justify-center gap-3">
+                <TemplateCard template={template} />
+                <Button type="button" onClick={() => handleSelectedTemplate(template)}>
+                  Select workout
+                </Button>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </>
+      )}
 
       {selectedTemplate && loggerStep === 1 && <ExerciseLog template={selectedTemplate} />}
     </>
