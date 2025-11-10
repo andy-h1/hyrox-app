@@ -10,23 +10,19 @@ enum format {
 }
 
 export const ExerciseLog = ({ template }: { template: WorkoutTemplate }) => {
-  const { id, name, description, format, exercises, creator, sharedWith, createdAt } = template;
-
-  console.log({ template });
-
   const handleSaveWorkout = async (laps: Lap[]) => {
     const formData = new FormData();
     formData.append('templateId', template.id.toString());
     formData.append('laps', JSON.stringify(laps));
+    formData.append('workoutStartTime', laps[0]?.startedAt.toISOString() || '');
+    formData.append('workoutEndTime', laps[laps.length - 1]?.completedAt.toISOString() || '');
 
     await saveWorkoutAction(formData);
   };
 
   return (
     <div>
-      <h1>{name}</h1>
-      <p>{description}</p>
-      <Stopwatch exercises={exercises} onSave={handleSaveWorkout} />
+      <Stopwatch exercises={template.exercises} onSave={handleSaveWorkout} />
     </div>
   );
 };

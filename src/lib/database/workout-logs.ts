@@ -1,18 +1,17 @@
-import { success } from 'zod';
 import { prisma } from '../prisma';
+import type { Lap } from '@/components/Stopwatch';
 
 type LogWorkoutData = {
   userId: number;
   templateId: number;
-  laps: [
-    {
-      name: string;
-      type: 'exercise' | 'rest';
-      duration: number; //milliseconds
-      exerciseId?: number;
-    },
-  ];
+  laps: Lap[];
 };
+
+// export async function getLoggedWorkouts(userId: number) {
+//  try {
+//     const workoutLogData = await
+//  }
+// }
 
 export async function createWorkoutLog(data: LogWorkoutData) {
   const { userId, templateId, laps } = data;
@@ -35,7 +34,7 @@ export async function createWorkoutLog(data: LogWorkoutData) {
           totalDuration,
           totalRestTime,
           totalWorkTime,
-          status: 'COMPLETED',
+          status: 'COMPLETED', //TODO: Set status based on if the user completed all the rounds
         },
       });
 
@@ -52,9 +51,9 @@ export async function createWorkoutLog(data: LogWorkoutData) {
           data: {
             logId: log.id,
             roundNumber: currentRound,
-            startedAt: new Date(),
-            completedAt: new Date(),
-            duration: Math.floor(lap.duration),
+            startedAt: new Date(lap.startedAt),
+            completedAt: new Date(lap.completedAt),
+            duration: Math.floor(lap.duration / 1000),
             restAfter,
           },
         });
@@ -64,11 +63,11 @@ export async function createWorkoutLog(data: LogWorkoutData) {
             data: {
               roundId: round.id,
               exerciseId: lap.exerciseId,
-              startedAt: new Date(),
-              completedAt: new Date(),
+              startedAt: new Date(lap.startedAt),
+              completedAt: new Date(lap.completedAt),
               duration: Math.floor(lap.duration / 1000),
-              actualValue: 0, //TODO: Capture actual reps/distance,
-              actualUnit: 'reps', //TODO: Get from lap data,
+              actualValue: lap.actualValue || lap.targetValue || 0,
+              actualUnit: lap.actualUnit || lap.targetUnit || 'reps',
               scaled: false,
             },
           });

@@ -1,11 +1,19 @@
 import { Exercise } from '@prisma/client';
 import { useState, useEffect, useRef } from 'react';
 
+//TODO: Move this type somewhere better than at the child component
 export type Lap = {
   id: number;
   name: string;
   type: 'exercise' | 'rest' | 'finished';
   duration: number;
+  exerciseId?: number;
+  startedAt: Date;
+  completedAt: Date;
+  actualValue?: number;
+  actualUnit?: string;
+  targetValue?: number;
+  targetUnit?: string;
 };
 
 type ExerciseTarget = {
@@ -29,14 +37,24 @@ export const Stopwatch = ({ exercises, onSave }: StopWatchProps) => {
   const [exerciseIndex, setExerciseIndex] = useState(0);
   const [lapIdCounter, setLapIdCounter] = useState(1);
   const [isSaving, setIsSaving] = useState(false);
+  const [workoutStartTime, setWorkoutStartTime] = useState<Date | null>(null);
+  const [currentLapStartTime, setCurrentLapStartTime] = useState<Date | null>(null);
   const intervalRef = useRef<number | null>(null);
 
   const currentExercise = exercises[exerciseIndex];
+  const nextExercise = exercises[exerciseIndex + 1];
   const isLastExercise = exerciseIndex === exercises.length - 1;
 
   useEffect(() => {
     console.log('Laps updated:', laps);
   }, [laps]);
+
+  useEffect(() => {
+    if (isRunning && !workoutStartTime) {
+      setWorkoutStartTime(new Date());
+      setCurrentLapStartTime(new Date());
+    }
+  }, [isRunning, workoutStartTime]);
 
   useEffect(() => {
     if (isRunning) {
@@ -59,6 +77,7 @@ export const Stopwatch = ({ exercises, onSave }: StopWatchProps) => {
   };
 
   const handleLap = () => {
+    const now = new Date();
     setTime(0);
 
     if (currentType === 'exercise') {
@@ -67,9 +86,16 @@ export const Stopwatch = ({ exercises, onSave }: StopWatchProps) => {
         {
           id: lapIdCounter,
           name: currentExercise?.name,
-          type: currentType,
+          type: 'exercise',
           duration: time,
           exerciseId: currentExercise?.id,
+          startedAt: currentLapStartTime!,
+          completedAt: now,
+          targetValue: currentExercise?.targetValue,
+          targetUnit: currentExercise?.targetUnit,
+          // TODO: Capture actual value from user input
+          actualValue: currentExercise?.targetValue,
+          actualUnit: currentExercise?.targetUnit,
         },
       ]);
       setLapIdCounter((prev) => prev + 1);
@@ -86,7 +112,14 @@ export const Stopwatch = ({ exercises, onSave }: StopWatchProps) => {
     //Rest Period
     setLaps((prev) => [
       ...prev,
-      { id: lapIdCounter, name: 'Rest', type: currentType, duration: time },
+      {
+        id: lapIdCounter,
+        name: 'Rest',
+        type: currentType,
+        duration: time,
+        startedAt: currentLapStartTime!,
+        completedAt: now,
+      },
     ]);
     setExerciseIndex((prev) => prev + 1);
     setLapIdCounter((prev) => prev + 1);
@@ -129,8 +162,8 @@ export const Stopwatch = ({ exercises, onSave }: StopWatchProps) => {
 
           <h3>
             {currentType === 'exercise'
-              ? `Exercise ${exerciseIndex + 1}/${exercises.length}: ${currentExercise?.name}`
-              : `Rest (Next: ${exercises[exerciseIndex + 1]?.name || 'Finished'})`}
+              ? `Exercise ${exerciseIndex + 1}/${exercises.length}: ${currentExercise?.name} ${currentExercise.targetValue} ${currentExercise.targetUnit}`
+              : `Rest (Next: ${nextExercise?.name} - ${nextExercise.targetValue} ${nextExercise.targetUnit}`}
           </h3>
           <h3>Laps ({laps.length})</h3>
           {laps.map((l) => (

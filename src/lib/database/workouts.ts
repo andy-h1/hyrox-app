@@ -1,6 +1,4 @@
-import type { WorkoutTemplate } from '@prisma/client';
-import type { TemplateExercise } from '@prisma/client';
-import { prisma } from '../../lib/prisma';
+import { prisma } from '../prisma';
 import { getCurrentUser } from '../auth-server';
 
 type WorkoutData = {
@@ -20,26 +18,6 @@ type WorkoutData = {
     },
   ];
 };
-
-export async function getLoggedWorkouts() {
-  try {
-    const workoutLogs = await prisma.workoutLog.findMany({
-      select: {
-        id: true,
-        roundsCompleted: true,
-        totalDuration: true,
-        totalWorkTime: true,
-        totalRestTime: true,
-        status: true,
-        notes: true,
-      },
-    });
-
-    return workoutLogs;
-  } catch (error) {
-    throw new Error(error instanceof Error ? error.message : 'Unknown error');
-  }
-}
 
 export async function getWorkoutTemplates() {
   try {
