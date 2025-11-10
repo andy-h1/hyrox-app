@@ -1,4 +1,3 @@
-import { Exercise } from '@prisma/client';
 import { useState, useEffect, useRef } from 'react';
 
 //TODO: Move this type somewhere better than at the child component
