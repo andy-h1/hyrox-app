@@ -32,15 +32,15 @@ export function HowItWorksSection() {
         </div>
 
         <div className="mt-12 grid gap-8 lg:grid-cols-3">
-          {steps.map((step, index) => (
+          {steps.map((step) => (
             <div key={step.title} className="relative h-full">
               <div
                 className={`flex h-full flex-col rounded-lg bg-gradient-to-br p-8 transition hover:shadow-lg ${step.gradient}`}
               >
                 <div className="inline-flex rounded-full bg-white/20 px-4 py-1.5 text-lg font-semibold text-white backdrop-blur-sm">
-                  {index + 1}
+                  <h3 className="text-xl font-semibold text-white">{step.title}</h3>
                 </div>
-                <h3 className="mt-4 text-xl font-semibold text-white">{step.title}</h3>
+
                 <p className="mt-2 text-sm text-white/90">{step.description}</p>
               </div>
             </div>

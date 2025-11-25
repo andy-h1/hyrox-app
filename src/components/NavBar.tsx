@@ -5,7 +5,6 @@ import { getServerSession } from '@/lib/auth-server';
 import { SignInButton, SignOutButton } from './AuthButtons';
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
-import { Logo } from './landing/Logo';
 
 export const NavBar = async () => {
   const session = await getServerSession();
@@ -40,8 +39,7 @@ export const NavBar = async () => {
           <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
             <div className="flex shrink-0 items-center gap-3">
               <Link href="/" aria-label="Go to home" className="flex items-center gap-3">
-                <Logo />
-                <span className="text-lg font-semibold text-white">Hyrox Tracker</span>
+                <span className="text-xl font-[800] text-zinc-950 italic dark:text-white">HT</span>
               </Link>
             </div>
 
