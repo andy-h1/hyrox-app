@@ -1,22 +1,23 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { auth } from './auth';
-import { prisma } from './lib/prisma';
 
 export async function middleware(request: NextRequest) {
   console.log('Middleware hit:', request.nextUrl.pathname);
   const session = await auth();
   const { pathname } = request.nextUrl;
 
-  if (pathname === '/' || pathname === '/login') {
-    return NextResponse.next();
-  }
+  // Create response with pathname header for layout
+  const response = pathname === '/' || pathname === '/login'
+    ? NextResponse.next()
+    : !session?.user?.id
+    ? NextResponse.redirect(new URL('/login', request.url))
+    : NextResponse.next();
 
-  if (!session?.user?.id) {
-    return NextResponse.redirect(new URL('/login', request.url));
-  }
+  // Add pathname to headers so layout can access it
+  response.headers.set('x-pathname', pathname);
 
-  return NextResponse.next();
+  return response;
 }
 
 export const config = {

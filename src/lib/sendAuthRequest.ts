@@ -1,7 +1,13 @@
 import { Resend } from 'resend';
 import MagicLinkEmail from '@/emails/MagicLinkEmail';
 
-const resend = new Resend(process.env.AUTH_RESEND_KEY);
+function getResendClient() {
+  const apiKey = process.env.AUTH_RESEND_KEY;
+  if (!apiKey) {
+    throw new Error('Missing AUTH_RESEND_KEY environment variable');
+  }
+  return new Resend(apiKey);
+}
 
 export async function sendVerificationRequest({
   identifier: to,
@@ -22,6 +28,7 @@ export async function sendVerificationRequest({
 
   const text = `Sign in to ${host}\n\n${url}\n\nIf you did not request this, ignore this email.`;
 
+  const resend = getResendClient();
   const { error } = await resend.emails.send({
     from: provider.from,
     to,
