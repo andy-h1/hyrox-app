@@ -2,6 +2,8 @@ import { redirect } from 'next/navigation';
 import { WorkoutSummary } from '@/components/WorkoutSummary';
 import Link from 'next/link';
 import { getCurrentUser } from '@/lib/auth-server';
+import { prisma } from '@/lib/prisma';
+import { ClockIcon, TrophyIcon, FireIcon } from '@heroicons/react/24/outline';
 
 export default async function Dashboard() {
   const user = await getCurrentUser();
@@ -11,19 +13,153 @@ export default async function Dashboard() {
     redirect('/login');
   }
 
+  // Get this week's challenge
+  const now = new Date();
+  const thisWeekChallenge = await prisma.challenge.findFirst({
+    where: {
+      startDate: { lte: now },
+      endDate: { gte: now },
+    },
+    include: {
+      targetExercise: true,
+      results: {
+        orderBy: { rank: 'asc' },
+        take: 10,
+        include: {
+          user: true,
+        },
+      },
+    },
+  });
+
   return (
-    <div className="grid min-h-screen grid-rows-[20px_1fr_20px] items-center justify-items-center gap-16 p-8 pb-20 text-center font-sans sm:p-20">
-      <main className="row-start-2 flex flex-col items-center gap-[32px]">
-        <h1 className="text-center text-3xl">Dashboard</h1>
-        <Link
-          href="/dashboard/log-workout"
-          type="button"
-          className="w-full rounded-md bg-teal-700 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-xs hover:bg-teal-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500 dark:bg-teal-400 dark:shadow-none dark:hover:bg-teal-400 dark:focus-visible:outline-teal-500"
-        >
-          Log your workout
-        </Link>
-        <WorkoutSummary />
-      </main>
+    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold tracking-tight text-zinc-950 dark:text-white">
+            Welcome back, {user.name}
+          </h1>
+          <p className="mt-2 text-base text-zinc-600 dark:text-zinc-400">
+            Track your progress and compete with friends
+          </p>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <Link
+            href="/dashboard/log-workout"
+            className="flex items-center gap-4 rounded-lg border border-zinc-950/10 bg-white p-6 transition hover:bg-zinc-50 dark:border-white/10 dark:bg-zinc-900 dark:hover:bg-zinc-800"
+          >
+            <div className="rounded-lg bg-zinc-700 p-3 dark:bg-zinc-600">
+              <ClockIcon className="h-6 w-6 text-white" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-zinc-950 dark:text-white">Log Workout</h3>
+              <p className="text-sm text-zinc-600 dark:text-zinc-400">Track your training</p>
+            </div>
+          </Link>
+
+          <Link
+            href="/activities"
+            className="flex items-center gap-4 rounded-lg border border-zinc-950/10 bg-white p-6 transition hover:bg-zinc-50 dark:border-white/10 dark:bg-zinc-900 dark:hover:bg-zinc-800"
+          >
+            <div className="rounded-lg bg-zinc-700 p-3 dark:bg-zinc-600">
+              <FireIcon className="h-6 w-6 text-white" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-zinc-950 dark:text-white">My Activities</h3>
+              <p className="text-sm text-zinc-600 dark:text-zinc-400">View your history</p>
+            </div>
+          </Link>
+
+          <Link
+            href="/workouts"
+            className="flex items-center gap-4 rounded-lg border border-zinc-950/10 bg-white p-6 transition hover:bg-zinc-50 dark:border-white/10 dark:bg-zinc-900 dark:hover:bg-zinc-800"
+          >
+            <div className="rounded-lg bg-zinc-700 p-3 dark:bg-zinc-600">
+              <TrophyIcon className="h-6 w-6 text-white" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-zinc-950 dark:text-white">Workouts</h3>
+              <p className="text-sm text-zinc-600 dark:text-zinc-400">Browse templates</p>
+            </div>
+          </Link>
+        </div>
+
+        {/* This Week's Challenge */}
+        {thisWeekChallenge && (
+          <div className="mb-8">
+            <div className="rounded-lg border border-zinc-950/10 bg-white p-6 dark:border-white/10 dark:bg-zinc-900">
+              <div className="mb-4 flex items-center justify-between">
+                <h2 className="text-xl font-bold text-zinc-950 dark:text-white">
+                  This Week&apos;s Challenge
+                </h2>
+                <span className="rounded-full bg-zinc-100 px-3 py-1 text-xs font-medium text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
+                  {new Date(thisWeekChallenge.startDate).toLocaleDateString()} -{' '}
+                  {new Date(thisWeekChallenge.endDate).toLocaleDateString()}
+                </span>
+              </div>
+              <h3 className="mb-2 text-lg font-semibold text-zinc-950 dark:text-white">
+                {thisWeekChallenge.name}
+              </h3>
+              {thisWeekChallenge.description && (
+                <p className="mb-4 text-sm text-zinc-600 dark:text-zinc-400">
+                  {thisWeekChallenge.description}
+                </p>
+              )}
+
+              {/* Leaderboard */}
+              <div className="mt-6">
+                <h4 className="mb-3 text-sm font-semibold tracking-wide text-zinc-500 uppercase dark:text-zinc-400">
+                  Leaderboard
+                </h4>
+                <div className="space-y-2">
+                  {thisWeekChallenge.results.map((result, index) => (
+                    <div
+                      key={result.id}
+                      className={`flex items-center justify-between rounded-lg p-3 ${
+                        result.userId === user.id
+                          ? 'bg-zinc-100 dark:bg-zinc-800'
+                          : 'bg-zinc-50 dark:bg-zinc-900/50'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <span
+                          className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold ${
+                            index === 0
+                              ? 'bg-yellow-500 text-white'
+                              : index === 1
+                                ? 'bg-zinc-400 text-white'
+                                : index === 2
+                                  ? 'bg-orange-600 text-white'
+                                  : 'bg-zinc-200 text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300'
+                          }`}
+                        >
+                          {result.rank || index + 1}
+                        </span>
+                        <span className="font-medium text-zinc-950 dark:text-white">
+                          {result.user.name}
+                          {result.userId === user.id && ' (You)'}
+                        </span>
+                      </div>
+                      <span className="font-semibold text-zinc-950 dark:text-white">
+                        {result.resultValue.toFixed(2)}s
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Workout Summary */}
+        <div className="rounded-lg border border-zinc-950/10 bg-white p-6 dark:border-white/10 dark:bg-zinc-900">
+          <h2 className="mb-4 text-xl font-bold text-zinc-950 dark:text-white">Recent Activity</h2>
+          <WorkoutSummary />
+        </div>
+      </div>
     </div>
   );
 }

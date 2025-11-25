@@ -52,6 +52,101 @@ async function main() {
 
   console.log('Seed data created successfully');
 
+  // Create 3 friends for the leaderboard
+  const friendsData = [
+    { email: 'sarah.miller@example.com', name: 'Sarah Miller' },
+    { email: 'mike.johnson@example.com', name: 'Mike Johnson' },
+    { email: 'emma.wilson@example.com', name: 'Emma Wilson' },
+  ];
+
+  const friends = [];
+  for (const friendData of friendsData) {
+    const friend = await prisma.appUser.upsert({
+      where: { email: friendData.email },
+      update: { name: friendData.name },
+      create: friendData,
+    });
+    friends.push(friend);
+    console.log(`✅ Created/found friend: ${friend.name}`);
+  }
+
+  // Find or create Sled Push exercise for the challenge
+  const sledPushExercise = await prisma.exercise.findFirst({
+    where: { name: 'Sled Push' },
+  });
+
+  if (!sledPushExercise) {
+    throw new Error('Sled Push exercise not found');
+  }
+
+  // Create this week's challenge
+  const today = new Date();
+  const startOfWeek = new Date(today);
+  startOfWeek.setDate(today.getDate() - today.getDay()); // Sunday
+  startOfWeek.setHours(0, 0, 0, 0);
+
+  const endOfWeek = new Date(startOfWeek);
+  endOfWeek.setDate(startOfWeek.getDate() + 6); // Saturday
+  endOfWeek.setHours(23, 59, 59, 999);
+
+  const challenge = await prisma.challenge.upsert({
+    where: {
+      id: 1,
+    },
+    update: {
+      name: 'Fastest Sled Push',
+      description: 'Complete a 50m sled push as fast as possible. May the best athlete win!',
+      startDate: startOfWeek,
+      endDate: endOfWeek,
+      challengeType: 'TIME_TRIAL',
+      targetExerciseId: sledPushExercise.id,
+      targetValue: 50,
+    },
+    create: {
+      name: 'Fastest Sled Push',
+      description: 'Complete a 50m sled push as fast as possible. May the best athlete win!',
+      startDate: startOfWeek,
+      endDate: endOfWeek,
+      challengeType: 'TIME_TRIAL',
+      targetExerciseId: sledPushExercise.id,
+      targetValue: 50,
+    },
+  });
+
+  console.log('✅ Created/updated challenge: Fastest Sled Push');
+
+  // Create leaderboard results with realistic times (in seconds)
+  const leaderboardData = [
+    { user: user1, time: 45.23, rank: 2 }, // You're in 2nd place
+    { user: friends[0], time: 43.87, rank: 1 }, // Sarah is fastest
+    { user: friends[1], time: 47.91, rank: 3 }, // Mike is 3rd
+    { user: friends[2], time: 51.45, rank: 4 }, // Emma is 4th
+  ];
+
+  for (const entry of leaderboardData) {
+    await prisma.challengeResult.upsert({
+      where: {
+        challengeId_userId: {
+          challengeId: challenge.id,
+          userId: entry.user.id,
+        },
+      },
+      update: {
+        resultValue: entry.time,
+        rank: entry.rank,
+      },
+      create: {
+        challengeId: challenge.id,
+        userId: entry.user.id,
+        resultValue: entry.time,
+        rank: entry.rank,
+      },
+    });
+    console.log(
+      `✅ Created/updated result for ${entry.user.name}: ${entry.time}s (Rank: ${entry.rank})`
+    );
+  }
+
   const HyroxMonTemplate = await prisma.workoutTemplate.update({
     where: {
       id: 2,

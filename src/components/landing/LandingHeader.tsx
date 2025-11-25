@@ -13,7 +13,7 @@ export function LandingHeader() {
           <Button outline href="/login" className="hidden sm:inline-flex">
             Login
           </Button>
-          <Button color="blue" href="/login">
+          <Button color="zinc" href="/login">
             Sign Up
           </Button>
         </div>
