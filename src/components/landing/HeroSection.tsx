@@ -5,7 +5,7 @@ export function HeroSection() {
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-zinc-800 to-zinc-900 dark:from-zinc-900 dark:to-black">
       {/* Background Image */}
-      <div className="absolute inset-0">
+      {/* <div className="absolute inset-0">
         <Image
           src="/hero-landing.jpg"
           alt="Hyrox workout background"
@@ -13,7 +13,7 @@ export function HeroSection() {
           className="object-cover opacity-50"
           unoptimized
         />
-      </div>
+      </div> */}
 
       {/* Overlay for better text readability */}
       <div className="absolute inset-0 bg-black/40" />

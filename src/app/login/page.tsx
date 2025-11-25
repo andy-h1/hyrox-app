@@ -30,9 +30,11 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="mx-auto mt-16 max-w-md font-sans">
-      <h1 className="mb-3 text-2xl font-bold">Sign in</h1>
-      <p className="mb-4 text-sm text-gray-600">We’ll email you a magic link to sign in.</p>
+    <div className="mx-auto mt-8 max-w-md px-4 py-12 pb-8 font-sans sm:mt-16 sm:px-6">
+      <h1 className="mb-3 text-xl font-bold sm:text-2xl">Sign in</h1>
+      <p className="mb-4 text-sm text-gray-600 dark:text-gray-400">
+        We&apos;ll email you a magic link to sign in.
+      </p>
 
       <form action={action} className="space-y-3">
         <input
@@ -40,12 +42,12 @@ export default function LoginPage() {
           name="email"
           required
           placeholder="you@pandy.dev"
-          className="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-gray-900 focus:outline-none"
+          className="w-full rounded-md border border-gray-300 px-3 py-2.5 text-base ring-2 focus:ring-gray-900 focus:outline-none sm:text-sm dark:border-gray-600 dark:bg-gray-800 dark:text-white"
         />
         <button
           type="submit"
           disabled={status === 'sending' || isPending}
-          className="w-full rounded-md border border-gray-900 bg-gray-900 px-3 py-2 font-semibold text-white disabled:opacity-70"
+          className="w-full rounded-md border border-gray-900 bg-gray-900 px-3 py-2.5 font-semibold text-white transition-opacity hover:bg-gray-800 disabled:opacity-70 dark:border-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600"
         >
           {status === 'sending' || isPending ? 'Sending…' : 'Send magic link'}
         </button>
@@ -53,10 +55,10 @@ export default function LoginPage() {
 
       <div className="relative my-6">
         <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-gray-300"></div>
+          <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
         </div>
         <div className="relative flex justify-center text-sm">
-          <span className="rounded-2xl bg-white px-2 text-gray-500 dark:bg-black dark:text-white">
+          <span className="rounded-2xl bg-white px-3 text-gray-500 dark:bg-black dark:text-gray-400">
             Or continue with
           </span>
         </div>
@@ -66,7 +68,7 @@ export default function LoginPage() {
       <button
         onClick={handleGoogleLogin}
         type="button"
-        className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 font-semibold text-gray-700 hover:bg-gray-50"
+        className="w-full rounded-md border border-gray-300 bg-white px-3 py-2.5 font-semibold text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700"
       >
         <span className="flex items-center justify-center gap-2">
           <svg className="h-5 w-5" viewBox="0 0 24 24">
@@ -92,9 +94,15 @@ export default function LoginPage() {
       </button>
 
       {status === 'sent' && (
-        <p className="mt-3 text-sm text-green-600">Check your inbox for the magic link.</p>
+        <p className="mt-4 rounded-md bg-green-50 p-3 text-sm text-green-700 dark:bg-green-900/20 dark:text-green-400">
+          Check your inbox for the magic link.
+        </p>
       )}
-      {status === 'error' && <p className="mt-3 text-sm text-red-600">{error}</p>}
+      {status === 'error' && (
+        <p className="mt-4 rounded-md bg-red-50 p-3 text-sm text-red-700 dark:bg-red-900/20 dark:text-red-400">
+          {error}
+        </p>
+      )}
     </div>
   );
 }
