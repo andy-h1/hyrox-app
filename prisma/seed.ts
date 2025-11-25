@@ -143,8 +143,56 @@ async function main() {
       },
     });
     console.log(
-      `✅ Created/updated result for ${entry.user.name}: ${entry.time}s (Rank: ${entry.rank})`
+      `✅ Created/updated result for ${entry.user.name}: ${entry.time}s (Rank: ${entry.rank})`,
     );
+  }
+
+  // Create workout logs for this week
+  const daysAgo = [1, 3, 5]; // Monday, Wednesday, Friday (assuming today varies)
+  const workoutTemplates = [2, 3, 4]; // Template IDs to use
+
+  for (let i = 0; i < daysAgo.length; i++) {
+    const workoutDate = new Date();
+    workoutDate.setDate(workoutDate.getDate() - daysAgo[i]);
+    workoutDate.setHours(18, 30, 0, 0); // 6:30 PM
+
+    const workoutLog = await prisma.workoutLog.create({
+      data: {
+        userId: user1.id,
+        templateId: workoutTemplates[i],
+        completedAt: workoutDate,
+        roundsCompleted: 2,
+        totalDuration: 1800 + Math.floor(Math.random() * 300), // 30-35 minutes
+        totalWorkTime: 1500 + Math.floor(Math.random() * 200),
+        totalRestTime: 300 + Math.floor(Math.random() * 100),
+        status: 'COMPLETED',
+        notes: 'Felt strong today!',
+      },
+    });
+
+    // Create rounds for the workout
+    for (let roundNum = 1; roundNum <= 2; roundNum++) {
+      const roundStartTime = new Date(workoutDate);
+      roundStartTime.setMinutes(roundStartTime.getMinutes() + (roundNum - 1) * 15);
+
+      const roundEndTime = new Date(roundStartTime);
+      roundEndTime.setMinutes(roundEndTime.getMinutes() + 12 + Math.floor(Math.random() * 3));
+
+      const duration = Math.floor((roundEndTime.getTime() - roundStartTime.getTime()) / 1000);
+
+      await prisma.workoutRound.create({
+        data: {
+          logId: workoutLog.id,
+          roundNumber: roundNum,
+          startedAt: roundStartTime,
+          completedAt: roundEndTime,
+          duration: duration,
+          restAfter: roundNum < 2 ? 120 : null, // 2 min rest between rounds
+        },
+      });
+    }
+
+    console.log(`✅ Created workout log for ${workoutDate.toLocaleDateString()}`);
   }
 
   const HyroxMonTemplate = await prisma.workoutTemplate.update({

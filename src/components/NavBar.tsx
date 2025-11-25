@@ -61,7 +61,7 @@ export const NavBar = async () => {
             </div>
           </div>
 
-          <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+          <div className="absolute inset-y-0 right-0 hidden items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:flex sm:pr-0">
             <div className="ml-3 flex items-center gap-3">
               {session ? (
                 <>

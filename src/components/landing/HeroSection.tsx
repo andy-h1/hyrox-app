@@ -4,10 +4,14 @@ export function HeroSection() {
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-zinc-800 to-zinc-900 dark:from-zinc-900 dark:to-black">
       <div className="relative mx-auto max-w-7xl px-4 py-20 text-center sm:px-6 sm:py-32 lg:px-8">
-        <h1 className="text-4xl font-bold tracking-tight text-white sm:text-6xl">
-          Train Smarter. Compete Harder.
+        <h1 className="text-4xl font-bold tracking-tight sm:text-6xl">
+          <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+            Train Smarter. Compete Harder.
+          </span>
           <br />
-          Master Hyrox.
+          <span className="bg-gradient-to-r from-green-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
+            Master Hyrox.
+          </span>
         </h1>
         <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-zinc-300 dark:text-zinc-400">
           Track your Hyrox workouts with precision. Prepopulated training plans, real-time stopwatch

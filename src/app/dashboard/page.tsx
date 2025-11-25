@@ -5,6 +5,20 @@ import { getCurrentUser } from '@/lib/auth-server';
 import { prisma } from '@/lib/prisma';
 import { ClockIcon, TrophyIcon, FireIcon } from '@heroicons/react/24/outline';
 
+function formatDateWithOrdinal(date: Date): string {
+  const day = date.getDate();
+  const month = date.toLocaleString('en-US', { month: 'short' });
+  const year = date.getFullYear().toString().slice(-2);
+
+  const ordinal = (n: number) => {
+    const s = ['th', 'st', 'nd', 'rd'];
+    const v = n % 100;
+    return n + (s[(v - 20) % 10] || s[v] || s[0]);
+  };
+
+  return `${ordinal(day)} ${month} ${year}`;
+}
+
 export default async function Dashboard() {
   const user = await getCurrentUser();
   console.log({ user });
@@ -49,40 +63,40 @@ export default async function Dashboard() {
         <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <Link
             href="/dashboard/log-workout"
-            className="flex items-center gap-4 rounded-lg border border-zinc-950/10 bg-white p-6 transition hover:bg-zinc-50 dark:border-white/10 dark:bg-zinc-900 dark:hover:bg-zinc-800"
+            className="group flex items-center gap-4 rounded-lg bg-gradient-to-br from-green-500 to-emerald-600 p-6 transition hover:from-green-600 hover:to-emerald-700"
           >
-            <div className="rounded-lg bg-zinc-700 p-3 dark:bg-zinc-600">
+            <div className="rounded-lg bg-white/20 p-3 backdrop-blur-sm">
               <ClockIcon className="h-6 w-6 text-white" />
             </div>
             <div>
-              <h3 className="font-semibold text-zinc-950 dark:text-white">Log Workout</h3>
-              <p className="text-sm text-zinc-600 dark:text-zinc-400">Track your training</p>
+              <h3 className="font-semibold text-white">Log Workout</h3>
+              <p className="text-sm text-white/90">Track your training</p>
             </div>
           </Link>
 
           <Link
             href="/activities"
-            className="flex items-center gap-4 rounded-lg border border-zinc-950/10 bg-white p-6 transition hover:bg-zinc-50 dark:border-white/10 dark:bg-zinc-900 dark:hover:bg-zinc-800"
+            className="group flex items-center gap-4 rounded-lg bg-gradient-to-br from-orange-500 to-red-600 p-6 transition hover:from-orange-600 hover:to-red-700"
           >
-            <div className="rounded-lg bg-zinc-700 p-3 dark:bg-zinc-600">
+            <div className="rounded-lg bg-white/20 p-3 backdrop-blur-sm">
               <FireIcon className="h-6 w-6 text-white" />
             </div>
             <div>
-              <h3 className="font-semibold text-zinc-950 dark:text-white">My Activities</h3>
-              <p className="text-sm text-zinc-600 dark:text-zinc-400">View your history</p>
+              <h3 className="font-semibold text-white">My Activities</h3>
+              <p className="text-sm text-white/90">View your history</p>
             </div>
           </Link>
 
           <Link
             href="/workouts"
-            className="flex items-center gap-4 rounded-lg border border-zinc-950/10 bg-white p-6 transition hover:bg-zinc-50 dark:border-white/10 dark:bg-zinc-900 dark:hover:bg-zinc-800"
+            className="group flex items-center gap-4 rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 p-6 transition hover:from-purple-600 hover:to-indigo-700"
           >
-            <div className="rounded-lg bg-zinc-700 p-3 dark:bg-zinc-600">
+            <div className="rounded-lg bg-white/20 p-3 backdrop-blur-sm">
               <TrophyIcon className="h-6 w-6 text-white" />
             </div>
             <div>
-              <h3 className="font-semibold text-zinc-950 dark:text-white">Workouts</h3>
-              <p className="text-sm text-zinc-600 dark:text-zinc-400">Browse templates</p>
+              <h3 className="font-semibold text-white">Workouts</h3>
+              <p className="text-sm text-white/90">Browse templates</p>
             </div>
           </Link>
         </div>
@@ -96,8 +110,8 @@ export default async function Dashboard() {
                   This Week&apos;s Challenge
                 </h2>
                 <span className="rounded-full bg-zinc-100 px-3 py-1 text-xs font-medium text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
-                  {new Date(thisWeekChallenge.startDate).toLocaleDateString()} -{' '}
-                  {new Date(thisWeekChallenge.endDate).toLocaleDateString()}
+                  {formatDateWithOrdinal(new Date(thisWeekChallenge.startDate))} -{' '}
+                  {formatDateWithOrdinal(new Date(thisWeekChallenge.endDate))}
                 </span>
               </div>
               <h3 className="mb-2 text-lg font-semibold text-zinc-950 dark:text-white">

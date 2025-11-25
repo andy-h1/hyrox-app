@@ -1,78 +1,83 @@
-// import { ExerciseList } from '@/context/WorkoutContext/types';
 import { getLoggedWorkouts } from '@/lib/database/workouts';
-import { formatDate } from '@/utils/timeAndDateUtils';
-// import { Exercise, WorkoutExercise } from '@prisma/client';
-import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react';
-import { ChevronDownIcon } from '@heroicons/react/24/solid';
+import { ClockIcon, FireIcon } from '@heroicons/react/24/outline';
 
-type WorkoutResponse = {
-  id: string;
-  date: Date;
-  type: string;
-  totalDuration: number;
-  roundsCompleted: number;
-  exercises: Array<{
-    workoutId: string;
-    exercise: string;
-    value: number;
-    timeTaken: number;
-    orderInWorkout: number;
-  }>;
-};
+function formatDuration(seconds: number): string {
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  return `${mins}:${secs.toString().padStart(2, '0')}`;
+}
 
 export const WorkoutSummary = async () => {
-  // const loggedWorkouts = await getLoggedWorkouts();
+  const loggedWorkouts = await getLoggedWorkouts();
 
-  // console.log({ loggedWorkouts });
-  // TODO: time isn't calculated correctly
+  if (loggedWorkouts.length === 0) {
+    return (
+      <div className="text-center text-zinc-600 dark:text-zinc-400">
+        <p>No workouts logged yet. Time to get started!</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="round-md border-neutral grid grid-cols-1 gap-6 rounded-md border-2 p-8 sm:grid-cols-2 lg:grid-cols-3">
-      <h1 className="col-span-full">Your workouts this week:</h1>
-
-      {/* {loggedWorkouts.map((workout) => (
-        <Disclosure
-          as="div"
+    <div className="space-y-4">
+      {loggedWorkouts.map((workout) => (
+        <div
           key={workout.id}
-          defaultOpen={false}
-          className="rounded-md border-2 border-solid border-slate-300 p-8"
+          className="rounded-lg border border-zinc-950/10 bg-zinc-50 p-4 dark:border-white/10 dark:bg-zinc-900/50"
         >
-          <DisclosureButton className="group flex w-full flex-col items-center justify-between">
-            <p>{workout.type === 'FOR_TRAINING' ? 'Training session' : 'Hyrox simulation'}</p>
-            <span className="mb-2 pr-2 text-sm text-gray-500 dark:text-white">
-              {formatDate(workout.date)}
+          <div className="mb-3 flex items-start justify-between">
+            <div>
+              <h3 className="font-semibold text-zinc-950 dark:text-white">
+                {workout.template?.name || 'Workout'}
+              </h3>
+              <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                {new Date(workout.completedAt).toLocaleDateString('en-US', {
+                  weekday: 'short',
+                  month: 'short',
+                  day: 'numeric',
+                })}
+              </p>
+            </div>
+            <span className="rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-700 dark:bg-green-900/30 dark:text-green-400">
+              {workout.status}
             </span>
-            <ChevronDownIcon className="group-data-hover:fill-neutral/700 size-5 fill-neutral-700 group-data-open:rotate-180 dark:fill-white/60 dark:group-data-hover:fill-white/50" />
-          </DisclosureButton>
+          </div>
 
-          {workout.exercises.map((exercise) => (
-            <DisclosurePanel
-              key={`${exercise.id}-${exercise.orderInWorkout}`}
-              className="mt-2 text-sm/5 text-slate-800 dark:text-white/50"
-            >
-              <div
-                aria-hidden="true"
-                className="mt-4 w-full border-t border-gray-300 dark:border-white/15"
-              >
-                <span className="mt-2 flex justify-between">
-                  <p className="font-bold text-slate-800 dark:text-white/50">
+          <div className="grid grid-cols-2 gap-3 text-sm">
+            <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-400">
+              <ClockIcon className="h-4 w-4" />
+              <span>{formatDuration(workout.totalDuration)}</span>
+            </div>
+            <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-400">
+              <FireIcon className="h-4 w-4" />
+              <span>{workout.roundsCompleted} rounds</span>
+            </div>
+          </div>
+
+          {workout.template?.exercises && workout.template.exercises.length > 0 && (
+            <div className="mt-3 border-t border-zinc-200 pt-3 dark:border-zinc-800">
+              <p className="mb-2 text-xs font-medium text-zinc-500 dark:text-zinc-400">
+                Exercises:
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {workout.template.exercises.slice(0, 4).map((exercise) => (
+                  <span
+                    key={exercise.id}
+                    className="rounded bg-zinc-200 px-2 py-1 text-xs text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
+                  >
                     {exercise.exercise.name}
-                  </p>
-                  <p className="text-xs text-neutral-700 dark:text-blue-500">
-                    Order: {exercise.orderInWorkout}
-                  </p>
-                </span>
-
-                <p>
-                  {exercise.value} {exercise.exercise.unit}
-                </p>
-
-                {exercise.timeTaken && <p>{convertSecondsToMins(exercise.timeTaken)}</p>}
+                  </span>
+                ))}
+                {workout.template.exercises.length > 4 && (
+                  <span className="rounded bg-zinc-200 px-2 py-1 text-xs text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
+                    +{workout.template.exercises.length - 4} more
+                  </span>
+                )}
               </div>
-            </DisclosurePanel>
-          ))}
-        </Disclosure>
-      ))} */}
+            </div>
+          )}
+        </div>
+      ))}
     </div>
   );
 };

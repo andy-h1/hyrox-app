@@ -111,3 +111,44 @@ export async function createWorkoutTemplate(workoutData: WorkoutData) {
     console.error('Error creating new workout templates', error);
   }
 }
+
+export async function getLoggedWorkouts() {
+  const user = await getCurrentUser();
+  if (!user) return [];
+
+  try {
+    const workoutLogs = await prisma.workoutLog.findMany({
+      where: {
+        userId: user.id,
+      },
+      include: {
+        template: {
+          include: {
+            exercises: {
+              include: {
+                exercise: true,
+              },
+              orderBy: {
+                orderIndex: 'asc',
+              },
+            },
+          },
+        },
+        rounds: {
+          orderBy: {
+            roundNumber: 'asc',
+          },
+        },
+      },
+      orderBy: {
+        completedAt: 'desc',
+      },
+      take: 10,
+    });
+
+    return workoutLogs;
+  } catch (error) {
+    console.error('Error fetching logged workouts:', error);
+    return [];
+  }
+}
