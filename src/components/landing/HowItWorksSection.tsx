@@ -1,19 +1,20 @@
-import { Badge } from '@/components/tailwind/badge';
-
 const steps = [
   {
     title: 'Sign Up',
     description: 'Create your free account in seconds with Google or email.',
+    gradient: 'from-blue-400 to-blue-600 dark:from-blue-900 dark:to-blue-950',
   },
   {
     title: 'Log Your Workouts',
     description:
       'Use prepopulated Hyrox templates or create custom training sessions with our stopwatch system.',
+    gradient: 'from-amber-400 to-amber-600 dark:from-amber-900 dark:to-amber-950',
   },
   {
     title: 'Compete & Improve',
     description:
       'Join weekly challenges, track your progress on the leaderboard, and watch your performance soar.',
+    gradient: 'from-emerald-400 to-emerald-600 dark:from-emerald-900 dark:to-emerald-950',
   },
 ];
 
@@ -32,15 +33,15 @@ export function HowItWorksSection() {
 
         <div className="mt-12 grid gap-8 lg:grid-cols-3">
           {steps.map((step, index) => (
-            <div key={step.title} className="relative">
-              <div className="rounded-lg bg-white p-8 dark:bg-zinc-800">
-                <Badge color="blue" className="text-lg">
+            <div key={step.title} className="relative h-full">
+              <div
+                className={`flex h-full flex-col rounded-lg bg-gradient-to-br p-8 transition hover:shadow-lg ${step.gradient}`}
+              >
+                <div className="inline-flex rounded-full bg-white/20 px-4 py-1.5 text-lg font-semibold text-white backdrop-blur-sm">
                   {index + 1}
-                </Badge>
-                <h3 className="mt-4 text-xl font-semibold text-zinc-950 dark:text-white">
-                  {step.title}
-                </h3>
-                <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">{step.description}</p>
+                </div>
+                <h3 className="mt-4 text-xl font-semibold text-white">{step.title}</h3>
+                <p className="mt-2 text-sm text-white/90">{step.description}</p>
               </div>
             </div>
           ))}

@@ -4,23 +4,27 @@ const features = [
     title: 'Weekly Training Plans',
     description:
       'Access professionally designed Hyrox workout templates tailored for each week of your training cycle.',
+    gradient: 'from-purple-400 to-pink-500 dark:from-purple-900 dark:to-pink-900',
   },
   {
     icon: '⏱️',
     title: 'Precision Timing',
     description:
       'Track station times and rest periods with our built-in stopwatch system for accurate performance metrics.',
+    gradient: 'from-blue-400 to-cyan-500 dark:from-blue-900 dark:to-cyan-900',
   },
   {
     icon: '🏆',
     title: 'Compete with Friends',
     description: 'Join weekly challenges and push your limits alongside your training partners.',
+    gradient: 'from-orange-400 to-red-500 dark:from-orange-900 dark:to-red-900',
   },
   {
     icon: '📊',
     title: 'Global Rankings',
     description:
       'See how you stack up against the community with our real-time leaderboard system.',
+    gradient: 'from-green-400 to-emerald-500 dark:from-green-900 dark:to-emerald-900',
   },
 ];
 
@@ -41,13 +45,11 @@ export function FeaturesSection() {
           {features.map((feature) => (
             <div
               key={feature.title}
-              className="rounded-lg border border-zinc-950/10 bg-white p-6 transition hover:bg-zinc-50 dark:border-white/10 dark:bg-zinc-800 dark:hover:bg-white/5"
+              className={`rounded-lg bg-gradient-to-br p-6 transition hover:shadow-lg ${feature.gradient}`}
             >
               <div className="text-4xl">{feature.icon}</div>
-              <h3 className="mt-4 text-lg font-semibold text-zinc-950 dark:text-white">
-                {feature.title}
-              </h3>
-              <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">{feature.description}</p>
+              <h3 className="mt-4 text-lg font-semibold text-white">{feature.title}</h3>
+              <p className="mt-2 text-sm text-white/90">{feature.description}</p>
             </div>
           ))}
         </div>
