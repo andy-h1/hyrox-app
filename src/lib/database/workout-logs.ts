@@ -19,18 +19,27 @@ export async function createWorkoutLog(data: LogWorkoutData) {
   const exerciseLaps = laps.filter((l) => l.type === 'exercise');
   const restLaps = laps.filter((l) => l.type === 'rest');
 
-  const totalWorkTime = Math.floor(exerciseLaps.reduce((acc, lap) => acc + lap.duration, 0));
-  const totalRestTime = Math.floor(restLaps.reduce((acc, lap) => acc + lap.duration, 0));
+  const totalWorkTime = Math.floor(exerciseLaps.reduce((acc, lap) => acc + lap.duration, 0) / 1000);
+  const totalRestTime = Math.floor(restLaps.reduce((acc, lap) => acc + lap.duration, 0) / 1000);
   const totalDuration = totalWorkTime + totalRestTime;
 
   try {
+    // Get template to know how many exercises per round
+    const template = await prisma.workoutTemplate.findUnique({
+      where: { id: templateId },
+      include: { exercises: true },
+    });
+
+    const exercisesPerRound = template?.exercises.length || 1;
+    const actualRoundsCompleted = Math.floor(exerciseLaps.length / exercisesPerRound);
+
     const workoutLog = await prisma.$transaction(async (tx) => {
       const log = await tx.workoutLog.create({
         data: {
           userId,
           templateId,
           completedAt: new Date(),
-          roundsCompleted: exerciseLaps.length,
+          roundsCompleted: actualRoundsCompleted,
           totalDuration,
           totalRestTime,
           totalWorkTime,
@@ -39,41 +48,75 @@ export async function createWorkoutLog(data: LogWorkoutData) {
       });
 
       let currentRound = 1;
+      let exerciseIndexInRound = 0;
+      let roundStartTime: Date | null = null;
+      let roundExercises: typeof exerciseLaps = [];
+      let roundDuration = 0;
 
-      for (const lap of exerciseLaps) {
-        const lapIndex = laps.indexOf(lap);
-        const restAfter =
-          laps[lapIndex + 1]?.type === 'rest'
-            ? Math.floor(laps[lapIndex + 1].duration / 1000)
-            : null;
+      for (let i = 0; i < exerciseLaps.length; i++) {
+        const lap = exerciseLaps[i];
 
-        const round = await tx.workoutRound.create({
-          data: {
-            logId: log.id,
-            roundNumber: currentRound,
-            startedAt: new Date(lap.startedAt),
-            completedAt: new Date(lap.completedAt),
-            duration: Math.floor(lap.duration / 1000),
-            restAfter,
-          },
-        });
-
-        if (lap.exerciseId) {
-          await tx.roundExercise.create({
-            data: {
-              roundId: round.id,
-              exerciseId: lap.exerciseId,
-              startedAt: new Date(lap.startedAt),
-              completedAt: new Date(lap.completedAt),
-              duration: Math.floor(lap.duration / 1000),
-              actualValue: lap.actualValue || lap.targetValue || 0,
-              actualUnit: lap.actualUnit || lap.targetUnit || 'reps',
-              scaled: false,
-            },
-          });
+        if (exerciseIndexInRound === 0) {
+          roundStartTime = new Date(lap.startedAt);
+          roundExercises = [];
+          roundDuration = 0;
         }
 
-        currentRound++;
+        roundExercises.push(lap);
+        roundDuration += Math.floor(lap.duration / 1000);
+        exerciseIndexInRound++;
+
+        // Check if this completes a round
+        const isRoundComplete = exerciseIndexInRound === exercisesPerRound;
+        const isLastExercise = i === exerciseLaps.length - 1;
+
+        if (isRoundComplete || isLastExercise) {
+          const lapIndex = laps.indexOf(lap);
+          const restAfter =
+            laps[lapIndex + 1]?.type === 'rest'
+              ? Math.floor(laps[lapIndex + 1].duration / 1000)
+              : null;
+
+          const round = await tx.workoutRound.create({
+            data: {
+              logId: log.id,
+              roundNumber: currentRound,
+              startedAt: roundStartTime!,
+              completedAt: new Date(lap.completedAt),
+              duration: roundDuration,
+              restAfter,
+            },
+          });
+
+          // Create exercise entries for this round
+          for (const exerciseLap of roundExercises) {
+            if (exerciseLap.exerciseId) {
+              // Find rest after this exercise in the original laps array
+              const lapIndex = laps.indexOf(exerciseLap);
+              const restAfter =
+                laps[lapIndex + 1]?.type === 'rest'
+                  ? Math.floor(laps[lapIndex + 1].duration / 1000)
+                  : null;
+
+              await tx.roundExercise.create({
+                data: {
+                  roundId: round.id,
+                  exerciseId: exerciseLap.exerciseId,
+                  startedAt: new Date(exerciseLap.startedAt),
+                  completedAt: new Date(exerciseLap.completedAt),
+                  duration: Math.floor(exerciseLap.duration / 1000),
+                  restAfter,
+                  actualValue: exerciseLap.actualValue || exerciseLap.targetValue || 0,
+                  actualUnit: exerciseLap.actualUnit || exerciseLap.targetUnit || 'reps',
+                  scaled: false,
+                },
+              });
+            }
+          }
+
+          currentRound++;
+          exerciseIndexInRound = 0;
+        }
       }
 
       return log;

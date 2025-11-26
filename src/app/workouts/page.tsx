@@ -10,7 +10,7 @@ export default async function WorkoutsPage() {
   const exerciseList = await getExercisesList();
 
   return (
-    <div className="flex h-full flex-col border-2 border-red-500 p-6">
+    <div className="flex h-full flex-col p-6">
       <WorkoutTemplateGrid initialTemplate={workoutTemplates} exerciseList={exerciseList} />
     </div>
   );

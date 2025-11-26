@@ -1,4 +1,7 @@
+'use client';
+
 import { useState, useEffect, useRef } from 'react';
+import { ConfirmationModal } from './ConfirmationModal';
 
 //TODO: Move this type somewhere better than at the child component
 export type Lap = {
@@ -25,24 +28,29 @@ type ExerciseTarget = {
 
 type StopWatchProps = {
   exercises: ExerciseTarget[];
-  onSave: (laps: Lap[]) => Promise<void>;
+  onFinish: (laps: Lap[]) => void;
+  onBack: () => void;
+  targetRounds?: number;
 };
 
-export const Stopwatch = ({ exercises, onSave }: StopWatchProps) => {
+export const Stopwatch = ({ exercises, onFinish, onBack, targetRounds = 1 }: StopWatchProps) => {
   const [time, setTime] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const [laps, setLaps] = useState<Lap[]>([]);
   const [currentType, setCurrentType] = useState<'exercise' | 'rest' | 'finished'>('exercise');
   const [exerciseIndex, setExerciseIndex] = useState(0);
+  const [currentRound, setCurrentRound] = useState(1);
   const [lapIdCounter, setLapIdCounter] = useState(1);
-  const [isSaving, setIsSaving] = useState(false);
   const [workoutStartTime, setWorkoutStartTime] = useState<Date | null>(null);
   const [currentLapStartTime, setCurrentLapStartTime] = useState<Date | null>(null);
+  const [showDiscardModal, setShowDiscardModal] = useState(false);
+  const [showFinishEarlyModal, setShowFinishEarlyModal] = useState(false);
   const intervalRef = useRef<number | null>(null);
 
   const currentExercise = exercises[exerciseIndex];
   const nextExercise = exercises[exerciseIndex + 1];
   const isLastExercise = exerciseIndex === exercises.length - 1;
+  const isLastRound = currentRound === targetRounds;
 
   useEffect(() => {
     console.log('Laps updated:', laps);
@@ -78,6 +86,7 @@ export const Stopwatch = ({ exercises, onSave }: StopWatchProps) => {
   const handleLap = () => {
     const now = new Date();
     setTime(0);
+    setCurrentLapStartTime(now);
 
     if (currentType === 'exercise') {
       setLaps((prev) => [
@@ -99,16 +108,25 @@ export const Stopwatch = ({ exercises, onSave }: StopWatchProps) => {
       ]);
       setLapIdCounter((prev) => prev + 1);
 
-      if (isLastExercise) {
-        //Last exercise
+      if (isLastExercise && isLastRound) {
+        // Last exercise of last round - navigate to summary
         setIsRunning(false);
         setCurrentType('finished');
         return;
       }
+
+      if (isLastExercise && !isLastRound) {
+        // Last exercise of current round - add rest and move to next round
+        setCurrentType('rest');
+        return;
+      }
+
+      // Not last exercise - continue with rest
       setCurrentType('rest');
       return;
     }
-    //Rest Period
+
+    // Rest Period
     setLaps((prev) => [
       ...prev,
       {
@@ -120,101 +138,249 @@ export const Stopwatch = ({ exercises, onSave }: StopWatchProps) => {
         completedAt: now,
       },
     ]);
-    setExerciseIndex((prev) => prev + 1);
     setLapIdCounter((prev) => prev + 1);
+
+    // Check if we just finished resting after the last exercise of a round
+    if (isLastExercise && !isLastRound) {
+      // Start next round - reset to first exercise
+      setExerciseIndex(0);
+      setCurrentRound((prev) => prev + 1);
+      setCurrentType('exercise');
+      return;
+    }
+
+    // Continue to next exercise in current round
+    setExerciseIndex((prev) => prev + 1);
     setCurrentType('exercise');
   };
 
-  const reset = () => {
+  const handleDiscard = () => {
+    setShowDiscardModal(true);
+  };
+
+  const confirmDiscard = () => {
     setIsRunning(false);
     setTime(0);
     setLaps([]);
     setLapIdCounter(1);
     setCurrentType('exercise');
     setExerciseIndex(0);
+    setCurrentRound(1);
+    setShowDiscardModal(false);
+    onBack();
   };
 
-  const handleSaveWorkout = async () => {
-    setIsSaving(true);
-    await onSave(laps);
+  const handleFinishEarly = () => {
+    setShowFinishEarlyModal(true);
   };
+
+  const confirmFinishEarly = () => {
+    setIsRunning(false);
+    setCurrentType('finished');
+    setShowFinishEarlyModal(false);
+    // Add current lap if running
+    if (time > 0) {
+      handleLap();
+    }
+  };
+
+  const handleNavigateToSummary = () => {
+    onFinish(laps);
+  };
+
+  if (currentType === 'finished') {
+    return (
+      <div className="flex min-h-screen w-full flex-col bg-gray-50 dark:bg-gray-950">
+        {/* Header */}
+        <div className="sticky top-0 z-10 bg-white px-4 py-4 shadow-sm dark:bg-gray-900">
+          <h1 className="text-center text-2xl font-bold text-gray-900 dark:text-white">
+            Workout Complete!
+          </h1>
+        </div>
+
+        {/* Content */}
+        <div className="flex-1 px-4 py-6">
+          <div className="mx-auto max-w-2xl">
+            <div className="mb-6 rounded-lg bg-white p-6 shadow dark:bg-gray-900">
+              <p className="text-center text-lg text-gray-600 dark:text-gray-400">
+                Review your workout on the next page
+              </p>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex flex-col gap-3">
+              <button
+                className="w-full cursor-pointer rounded-lg bg-green-600 px-6 py-4 text-lg font-semibold text-white shadow-sm hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 dark:bg-green-500 dark:hover:bg-green-400"
+                onClick={handleNavigateToSummary}
+              >
+                Continue to Summary
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="flex w-full flex-col place-content-center justify-center rounded-md border-2 p-4">
-      {currentType === 'finished' ? (
-        //Summary view
-        <div>
-          <h2>Workout Complete! 🎉</h2>
-          <p>Total Time: {formatTime(laps.reduce((acc, lap) => acc + lap.duration, 0))}</p>
-          <p>Exercises: {laps.filter((l) => l.type === 'exercise').length}</p>
-
-          <h3>Summary:</h3>
-          {laps.map((lap) => (
-            <p key={lap.id}>
-              {lap.name}: {formatTime(lap.duration)}
-            </p>
-          ))}
+    <>
+      <div className="fixed inset-0 flex h-screen w-full flex-col bg-gray-50 dark:bg-gray-950">
+        {/* Header with back button */}
+        <div className="flex-shrink-0 border-b border-gray-200 bg-white px-4 py-3 dark:border-gray-800 dark:bg-gray-900">
+          <div className="flex items-center">
+            <button
+              onClick={onBack}
+              className="mr-3 rounded-lg p-2 text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
+            >
+              <svg
+                className="h-6 w-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 19l-7-7 7-7"
+                />
+              </svg>
+            </button>
+            <h1 className="text-lg font-semibold text-gray-900 dark:text-white md:text-xl">
+              Workout in Progress
+            </h1>
+          </div>
         </div>
-      ) : (
-        <>
-          <p>{formatTime(time)}</p>
 
-          <h3>
-            {currentType === 'exercise'
-              ? `Exercise ${exerciseIndex + 1}/${exercises.length}: ${currentExercise?.name} ${currentExercise.targetValue} ${currentExercise.targetUnit}`
-              : `Rest (Next: ${nextExercise?.name} - ${nextExercise.targetValue} ${nextExercise.targetUnit}`}
-          </h3>
-          <h3>Laps ({laps.length})</h3>
-          {laps.map((l) => (
-            <p key={l.id}>
-              #{l.name}: {formatTime(l.duration)}
-            </p>
-          ))}
-        </>
-      )}
+        {/* Main Content */}
+        <div className="flex flex-1 flex-col justify-between overflow-hidden px-4 py-4">
+          <div className="mx-auto w-full max-w-2xl space-y-3 md:space-y-4">
+            {/* Current Exercise/Rest Card */}
+            <div className="rounded-lg bg-white p-4 shadow dark:bg-gray-900 md:p-6">
+              <div className="mb-2 flex items-center justify-between">
+                <p className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                  {currentType === 'exercise' ? 'Current Exercise' : 'Rest Period'}
+                </p>
+                {targetRounds > 1 && (
+                  <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
+                    Round {currentRound} of {targetRounds}
+                  </span>
+                )}
+              </div>
+              <h2 className="mb-1 text-xl font-bold text-gray-900 dark:text-white md:text-2xl">
+                {currentType === 'exercise'
+                  ? currentExercise?.name
+                  : 'Rest'}
+              </h2>
+              {currentType === 'exercise' && (
+                <p className="text-base text-gray-600 dark:text-gray-400 md:text-lg">
+                  {currentExercise?.targetValue} {currentExercise?.targetUnit}
+                </p>
+              )}
+              <p className="mt-1 text-xs text-gray-500 dark:text-gray-500">
+                Exercise {exerciseIndex + 1} of {exercises.length}
+              </p>
+            </div>
 
-      <span className="grid gap-4 md:grid-cols-3">
-        {currentType === 'finished' ? (
-          <>
-            <button
-              className="cursor-pointer rounded-md bg-green-800 px-6 py-3 text-xl font-semibold text-white shadow-xs hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 dark:bg-green-500 dark:shadow-none dark:hover:bg-green-400 dark:focus-visible:outline-green-500"
-              onClick={handleSaveWorkout}
-            >
-              Save Workout
-            </button>
-            <button
-              className="cursor-pointer rounded-md bg-red-800 px-6 py-3 text-xl font-semibold text-white shadow-xs hover:bg-red-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 dark:bg-red-500 dark:shadow-none dark:hover:bg-red-400 dark:focus-visible:outline-red-500"
-              onClick={reset}
-            >
-              Discard
-            </button>
-          </>
-        ) : (
-          <>
-            <button
-              className="cursor-pointer rounded-md bg-sky-950 px-6 py-3 text-xl font-semibold text-white shadow-xs hover:bg-sky-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600 dark:bg-sky-500 dark:shadow-none dark:hover:bg-sky-400 dark:focus-visible:outline-sky-500"
-              onClick={() => setIsRunning(!isRunning)}
-            >
-              {isRunning ? 'Pause' : 'Start'}
-            </button>
-            <button
-              className="cursor-pointer rounded-md bg-green-800 px-6 py-3 text-xl font-semibold text-white shadow-xs hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 dark:bg-green-500 dark:shadow-none dark:hover:bg-green-400 dark:focus-visible:outline-green-500"
-              onClick={handleLap}
-              disabled={!isRunning}
-            >
-              {currentType === 'exercise' && isLastExercise
-                ? 'Finish workout'
-                : `Log ${currentType === 'exercise' ? 'Exercise' : 'Rest'}`}
-            </button>
-            <button
-              className="cursor-pointer rounded-md bg-red-800 px-6 py-3 text-xl font-semibold text-white shadow-xs hover:bg-red-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 dark:bg-red-500 dark:shadow-none dark:hover:bg-red-400 dark:focus-visible:outline-red-500"
-              onClick={reset}
-            >
-              Reset all
-            </button>
-          </>
-        )}
-      </span>
-    </div>
+            {/* Stopwatch Display */}
+            <div className="rounded-lg bg-white p-6 shadow dark:bg-gray-900 md:p-8">
+              <p className="text-center font-mono text-5xl font-bold tabular-nums text-gray-900 dark:text-white md:text-6xl">
+                {formatTime(time)}
+              </p>
+            </div>
+
+            {/* Next Exercise Card */}
+            {nextExercise && currentType === 'rest' && (
+              <div className="rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-800 md:p-6">
+                <p className="mb-1 text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                  Up Next
+                </p>
+                <h3 className="mb-1 text-lg font-semibold text-gray-900 dark:text-white md:text-xl">
+                  {nextExercise.name}
+                </h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400 md:text-base">
+                  {nextExercise.targetValue} {nextExercise.targetUnit}
+                </p>
+              </div>
+            )}
+
+            {currentType === 'exercise' && !isLastExercise && (
+              <div className="rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-800 md:p-6">
+                <p className="mb-1 text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                  After Rest
+                </p>
+                <h3 className="mb-1 text-lg font-semibold text-gray-900 dark:text-white md:text-xl">
+                  {nextExercise?.name}
+                </h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400 md:text-base">
+                  {nextExercise?.targetValue} {nextExercise?.targetUnit}
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* Fixed Bottom Controls */}
+          <div className="mx-auto w-full max-w-2xl flex-shrink-0 space-y-2 pt-4 md:space-y-3">
+            {/* Primary Action Buttons */}
+            <div className="grid grid-cols-2 gap-2 md:gap-3">
+              <button
+                className="cursor-pointer rounded-lg bg-sky-600 px-4 py-3 text-base font-semibold text-white shadow-sm hover:bg-sky-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600 dark:bg-sky-500 dark:hover:bg-sky-400 md:px-6 md:py-4 md:text-lg"
+                onClick={() => setIsRunning(!isRunning)}
+              >
+                {isRunning ? 'Pause' : 'Start'}
+              </button>
+              <button
+                className="cursor-pointer rounded-lg bg-green-600 px-4 py-3 text-base font-semibold text-white shadow-sm hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-green-500 dark:hover:bg-green-400 md:px-6 md:py-4 md:text-lg"
+                onClick={handleLap}
+                disabled={!isRunning}
+              >
+                {currentType === 'exercise' && isLastExercise
+                  ? 'Finish'
+                  : `Log ${currentType === 'exercise' ? 'Exercise' : 'Rest'}`}
+              </button>
+            </div>
+
+            {/* Secondary Action Buttons */}
+            <div className="grid grid-cols-2 gap-2 md:gap-3">
+              <button
+                className="cursor-pointer rounded-lg border-2 border-red-600 bg-transparent px-3 py-2 text-sm font-semibold text-red-600 hover:bg-red-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 dark:border-red-500 dark:text-red-500 dark:hover:bg-red-950 md:px-4 md:py-3"
+                onClick={handleDiscard}
+              >
+                Discard Workout
+              </button>
+              <button
+                className="cursor-pointer rounded-lg border-2 border-orange-600 bg-transparent px-3 py-2 text-sm font-semibold text-orange-600 hover:bg-orange-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 dark:border-orange-500 dark:text-orange-500 dark:hover:bg-orange-950 md:px-4 md:py-3"
+                onClick={handleFinishEarly}
+              >
+                Finish Early
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Confirmation Modals */}
+      <ConfirmationModal
+        isOpen={showDiscardModal}
+        title="Discard Workout?"
+        message="Are you sure you want to discard this workout? All your progress will be lost."
+        confirmText="Discard"
+        cancelText="Keep Going"
+        confirmVariant="danger"
+        onConfirm={confirmDiscard}
+        onCancel={() => setShowDiscardModal(false)}
+      />
+
+      <ConfirmationModal
+        isOpen={showFinishEarlyModal}
+        title="Finish Early?"
+        message="Do you want to finish this workout early? Your progress will be saved."
+        confirmText="Finish Early"
+        cancelText="Continue Workout"
+        confirmVariant="warning"
+        onConfirm={confirmFinishEarly}
+        onCancel={() => setShowFinishEarlyModal(false)}
+      />
+    </>
   );
 };

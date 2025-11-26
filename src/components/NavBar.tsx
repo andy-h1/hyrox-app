@@ -1,14 +1,14 @@
+'use client';
 // components/NavBar.tsx
 import Link from 'next/link';
 import Image from 'next/image';
-import { getServerSession } from '@/lib/auth-server';
+import { useSession } from 'next-auth/react';
 import { SignInButton, SignOutButton } from './AuthButtons';
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 
-export const NavBar = async () => {
-  const session = await getServerSession();
-  console.log({ session });
+export const NavBar = () => {
+  const { data: session } = useSession();
   const profilePic = session?.user?.image ?? '/blank-avatar.jpg';
 
   const navigation = [

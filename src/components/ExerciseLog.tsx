@@ -1,5 +1,9 @@
+'use client';
+
+import { useState } from 'react';
 import type { WorkoutTemplate } from '@/app/workouts/page';
 import { Stopwatch } from './Stopwatch';
+import { WorkoutReview } from './WorkoutReview';
 import type { Lap } from './Stopwatch';
 import { saveWorkoutAction } from '@/app/dashboard/log-workout/actions';
 
@@ -9,21 +13,51 @@ enum format {
   'EMOM' = 'Every minute on the minute',
 }
 
-export const ExerciseLog = ({ template }: { template: WorkoutTemplate }) => {
-  const handleSaveWorkout = async (laps: Lap[]) => {
+type ExerciseLogProps = {
+  template: WorkoutTemplate;
+  onBack: () => void;
+};
+
+export const ExerciseLog = ({ template, onBack }: ExerciseLogProps) => {
+  const [step, setStep] = useState<'workout' | 'review'>('workout');
+  const [laps, setLaps] = useState<Lap[]>([]);
+
+  const handleFinishWorkout = (completedLaps: Lap[]) => {
+    setLaps(completedLaps);
+    setStep('review');
+  };
+
+  const handleBackToWorkout = () => {
+    setStep('workout');
+  };
+
+  const handleSaveWorkout = async (editedLaps: Lap[]) => {
     const formData = new FormData();
     formData.append('templateId', template.id.toString());
-    formData.append('laps', JSON.stringify(laps));
-    formData.append('workoutStartTime', laps[0]?.startedAt.toISOString() || '');
-    formData.append('workoutEndTime', laps[laps.length - 1]?.completedAt.toISOString() || '');
+    formData.append('laps', JSON.stringify(editedLaps));
+    formData.append('workoutStartTime', editedLaps[0]?.startedAt.toISOString() || '');
+    formData.append('workoutEndTime', editedLaps[editedLaps.length - 1]?.completedAt.toISOString() || '');
 
     await saveWorkoutAction(formData);
   };
 
+  if (step === 'review') {
+    return (
+      <WorkoutReview
+        laps={laps}
+        onSave={handleSaveWorkout}
+        onBack={handleBackToWorkout}
+      />
+    );
+  }
+
   return (
-    <div>
-      <Stopwatch exercises={template.exercises} onSave={handleSaveWorkout} />
-    </div>
+    <Stopwatch
+      exercises={template.exercises}
+      onFinish={handleFinishWorkout}
+      onBack={onBack}
+      targetRounds={template.targetRounds || 1}
+    />
   );
 };
 

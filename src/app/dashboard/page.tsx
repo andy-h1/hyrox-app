@@ -1,9 +1,13 @@
 import { redirect } from 'next/navigation';
-import { WorkoutSummary } from '@/components/WorkoutSummary';
+import { WorkoutSummaryClient } from '@/components/WorkoutSummary';
+import { getLoggedWorkouts } from '@/lib/database/workouts';
 import Link from 'next/link';
 import { getCurrentUser } from '@/lib/auth-server';
 import { prisma } from '@/lib/prisma';
 import { ClockIcon, TrophyIcon, FireIcon } from '@heroicons/react/24/outline';
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 function formatDateWithOrdinal(date: Date): string {
   const day = date.getDate();
@@ -45,6 +49,9 @@ export default async function Dashboard() {
       },
     },
   });
+
+  // Get logged workouts for summary
+  const loggedWorkouts = await getLoggedWorkouts();
 
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
@@ -171,7 +178,7 @@ export default async function Dashboard() {
         {/* Workout Summary */}
         <div className="rounded-lg border border-zinc-950/10 bg-white p-6 dark:border-white/10 dark:bg-zinc-900">
           <h2 className="mb-4 text-xl font-bold text-zinc-950 dark:text-white">Recent Activity</h2>
-          <WorkoutSummary />
+          <WorkoutSummaryClient workouts={loggedWorkouts} />
         </div>
       </div>
     </div>

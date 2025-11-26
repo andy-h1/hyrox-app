@@ -211,6 +211,7 @@ model RoundExercise {
   startedAt   DateTime @map("started_at")
   completedAt DateTime @map("completed_at")
   duration    Int // seconds on this specific exercise
+  restAfter   Int? @map("rest_after") // seconds of rest after this exercise
 
   // What they actually did (vs template target):
   actualValue Float   @map("actual_value")

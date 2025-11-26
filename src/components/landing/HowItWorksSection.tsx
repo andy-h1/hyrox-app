@@ -37,7 +37,7 @@ export function HowItWorksSection() {
               <div
                 className={`flex h-full flex-col rounded-lg bg-gradient-to-br p-8 transition hover:shadow-lg ${step.gradient}`}
               >
-                <div className="inline-flex rounded-full bg-white/20 px-4 py-1.5 text-lg font-semibold text-white backdrop-blur-sm">
+                <div className="inline-flex py-1.5 text-lg font-semibold text-white backdrop-blur-sm">
                   <h3 className="text-xl font-semibold text-white">{step.title}</h3>
                 </div>
 

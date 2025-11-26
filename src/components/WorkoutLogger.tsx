@@ -18,10 +18,15 @@ export const WorkoutLogger = ({ templates }: WorkoutLoggerProps) => {
 
   console.log(selectedTemplate);
 
-  const handleSelectedTemplate = (template) => {
+  const handleSelectedTemplate = (template: WorkoutTemplate) => {
     setSelectedTemplate(template);
     setLoggerStep(1);
     return loggerStep;
+  };
+
+  const handleBackToSelection = () => {
+    setSelectedTemplate(undefined);
+    setLoggerStep(0);
   };
 
   return (
@@ -42,7 +47,9 @@ export const WorkoutLogger = ({ templates }: WorkoutLoggerProps) => {
         </>
       )}
 
-      {selectedTemplate && loggerStep === 1 && <ExerciseLog template={selectedTemplate} />}
+      {selectedTemplate && loggerStep === 1 && (
+        <ExerciseLog template={selectedTemplate} onBack={handleBackToSelection} />
+      )}
     </>
   );
 };

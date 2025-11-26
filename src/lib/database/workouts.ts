@@ -135,6 +135,16 @@ export async function getLoggedWorkouts() {
           },
         },
         rounds: {
+          include: {
+            exercises: {
+              include: {
+                exercise: true,
+              },
+              orderBy: {
+                startedAt: 'asc',
+              },
+            },
+          },
           orderBy: {
             roundNumber: 'asc',
           },
@@ -145,6 +155,11 @@ export async function getLoggedWorkouts() {
       },
       take: 10,
     });
+
+    // Debug: Check if restAfter is in the data
+    if (workoutLogs.length > 0) {
+      console.log('Server - First exercise:', workoutLogs[0].rounds[0]?.exercises[0]);
+    }
 
     return workoutLogs;
   } catch (error) {
