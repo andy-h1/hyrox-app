@@ -156,11 +156,6 @@ export async function getLoggedWorkouts() {
       take: 10,
     });
 
-    // Debug: Check if restAfter is in the data
-    if (workoutLogs.length > 0) {
-      console.log('Server - First exercise:', workoutLogs[0].rounds[0]?.exercises[0]);
-    }
-
     return workoutLogs;
   } catch (error) {
     console.error('Error fetching logged workouts:', error);

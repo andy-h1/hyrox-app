@@ -9,9 +9,8 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL") // @prisma-ignore: Required for Prisma 6.x
 }
 
 // Used for authentication
@@ -211,7 +210,7 @@ model RoundExercise {
   startedAt   DateTime @map("started_at")
   completedAt DateTime @map("completed_at")
   duration    Int // seconds on this specific exercise
-  restAfter   Int? @map("rest_after") // seconds of rest after this exercise
+  restAfter   Int?     @map("rest_after") // seconds of rest after this exercise
 
   // What they actually did (vs template target):
   actualValue Float   @map("actual_value")

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { ClockIcon, FireIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
 
 type WorkoutLog = {
@@ -159,20 +159,17 @@ export const WorkoutSummaryClient = ({ workouts }: WorkoutSummaryClientProps) =>
                         Round Breakdown
                       </h4>
                       <div className="space-y-3">
-                        {workout.rounds.map((round) => (
-                          <div
-                            key={round.id}
-                            className="rounded bg-zinc-50 p-3 dark:bg-zinc-800"
-                          >
-                            <div className="mb-2 flex items-center justify-between">
-                              <span className="text-sm font-medium text-zinc-900 dark:text-white">
-                                Round {round.roundNumber}
-                              </span>
-                              <span className="text-sm text-zinc-600 dark:text-zinc-400">
-                                {formatDuration(round.duration)}
-                                {round.restAfter && ` + ${formatDuration(round.restAfter)} rest`}
-                              </span>
-                            </div>
+                        {workout.rounds.map((round, idx) => (
+                          <React.Fragment key={round.id}>
+                            <div className="rounded bg-zinc-50 p-3 dark:bg-zinc-800">
+                              <div className="mb-2 flex items-center justify-between">
+                                <span className="text-sm font-medium text-zinc-900 dark:text-white">
+                                  Round {round.roundNumber}
+                                </span>
+                                <span className="text-sm text-zinc-600 dark:text-zinc-400">
+                                  {formatDuration(round.duration)}
+                                </span>
+                              </div>
                             {round.exercises && round.exercises.length > 0 && (
                               <div className="space-y-1 border-t border-zinc-200 pt-2 dark:border-zinc-700">
                                 {round.exercises.map((ex) => (
@@ -195,7 +192,15 @@ export const WorkoutSummaryClient = ({ workouts }: WorkoutSummaryClientProps) =>
                                 ))}
                               </div>
                             )}
-                          </div>
+                            </div>
+                            {round.restAfter && idx < workout.rounds.length - 1 && (
+                              <div className="flex items-center justify-center">
+                                <div className="rounded-full bg-orange-100 px-3 py-1 text-xs font-medium text-orange-700 dark:bg-orange-900/30 dark:text-orange-400">
+                                  Rest: {formatDuration(round.restAfter)}
+                                </div>
+                              </div>
+                            )}
+                          </React.Fragment>
                         ))}
                       </div>
                     </div>

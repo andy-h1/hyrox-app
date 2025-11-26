@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { ClockIcon, FireIcon, CalendarIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
 
 type WorkoutLog = {
@@ -80,9 +80,6 @@ function getCondensedExerciseDisplay(template: WorkoutLog['template']): string {
 
 export default function ActivitiesClient({ workouts }: ActivitiesClientProps) {
   const [expandedId, setExpandedId] = useState<number | null>(null);
-
-  // Debug: Check if rest data is present
-  console.log('First workout round exercises:', workouts[0]?.rounds[0]?.exercises);
 
   if (workouts.length === 0) {
     return (
@@ -195,20 +192,17 @@ export default function ActivitiesClient({ workouts }: ActivitiesClientProps) {
                         Round Breakdown
                       </h4>
                       <div className="space-y-3">
-                        {workout.rounds.map((round) => (
-                          <div
-                            key={round.id}
-                            className="rounded-lg bg-white p-4 dark:bg-zinc-900"
-                          >
-                            <div className="mb-2 flex items-center justify-between">
-                              <span className="font-medium text-zinc-900 dark:text-white">
-                                Round {round.roundNumber}
-                              </span>
-                              <span className="text-sm text-zinc-600 dark:text-zinc-400">
-                                {formatDuration(round.duration)}
-                                {round.restAfter && ` + ${formatDuration(round.restAfter)} rest`}
-                              </span>
-                            </div>
+                        {workout.rounds.map((round, idx) => (
+                          <React.Fragment key={round.id}>
+                            <div className="rounded-lg bg-white p-4 dark:bg-zinc-900">
+                              <div className="mb-2 flex items-center justify-between">
+                                <span className="font-medium text-zinc-900 dark:text-white">
+                                  Round {round.roundNumber}
+                                </span>
+                                <span className="text-sm text-zinc-600 dark:text-zinc-400">
+                                  {formatDuration(round.duration)}
+                                </span>
+                              </div>
                             {round.exercises && round.exercises.length > 0 && (
                               <div className="space-y-2 border-t border-zinc-200 pt-3 dark:border-zinc-800">
                                 {round.exercises.map((ex) => (
@@ -231,7 +225,15 @@ export default function ActivitiesClient({ workouts }: ActivitiesClientProps) {
                                 ))}
                               </div>
                             )}
-                          </div>
+                            </div>
+                            {round.restAfter && idx < workout.rounds.length - 1 && (
+                              <div className="flex items-center justify-center">
+                                <div className="rounded-full bg-orange-100 px-4 py-2 text-sm font-medium text-orange-700 dark:bg-orange-900/30 dark:text-orange-400">
+                                  Rest Between Rounds: {formatDuration(round.restAfter)}
+                                </div>
+                              </div>
+                            )}
+                          </React.Fragment>
                         ))}
                       </div>
                     </div>
