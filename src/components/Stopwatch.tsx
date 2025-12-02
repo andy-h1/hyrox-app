@@ -277,7 +277,10 @@ export const Stopwatch = ({ exercises, onFinish, onBack, targetRounds = 1 }: Sto
 
             {/* Stopwatch Display */}
             <div className="rounded-lg bg-white p-6 shadow md:p-8 dark:bg-gray-900">
-              <p className="text-center font-mono text-5xl font-bold text-gray-900 tabular-nums md:text-6xl dark:text-white">
+              <p
+                role="timer"
+                className="text-center font-mono text-5xl font-bold text-gray-900 tabular-nums md:text-6xl dark:text-white"
+              >
                 {formatTime(time)}
               </p>
             </div>

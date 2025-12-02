@@ -1,6 +1,6 @@
 import React from 'react';
 import { Stopwatch } from './Stopwatch';
-import { describe, it, expect, vi } from 'vitest';
+import { afterEach, beforeEach, describe, it, expect, vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { ExerciseTarget } from './Stopwatch';
@@ -37,6 +37,15 @@ const mockProps = {
 };
 
 describe('Stopwatch component', () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.resetAllMocks();
+    vi.useRealTimers();
+  });
+
   it('should render with the initial state', () => {
     const { container } = render(<Stopwatch {...mockProps} />);
 
@@ -46,5 +55,20 @@ describe('Stopwatch component', () => {
     expect(container).toMatchSnapshot();
     expect(h2).toBeDefined();
     expect(h3).toBeDefined();
+  });
+
+  it('should start and pause the timer when the user clicks the button', async () => {
+    const user = userEvent.setup({ delay: null });
+    render(<Stopwatch {...mockProps} />);
+
+    const startButton = screen.getByRole('button', { name: /start/i });
+    await user.click(startButton);
+
+    vi.advanceTimersByTime(1500);
+
+    const pauseButton = screen.getByRole('button', { name: /pause/i });
+    await user.click(pauseButton);
+
+    expect(screen.getByRole('timer')).toBe('00:01:50');
   });
 });

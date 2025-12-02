@@ -87,6 +87,7 @@ exports[`Stopwatch component > should render with the initial state 1`] = `
         >
           <p
             class="text-center font-mono text-5xl font-bold text-gray-900 tabular-nums md:text-6xl dark:text-white"
+            role="timer"
           >
             00:00:00
           </p>
