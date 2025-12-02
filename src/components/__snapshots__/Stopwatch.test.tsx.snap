@@ -1,0 +1,152 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Stopwatch component > should render with the initial state 1`] = `
+<div>
+  <div
+    class="fixed inset-0 flex h-screen w-full flex-col bg-gray-50 dark:bg-gray-950"
+  >
+    <div
+      class="flex-shrink-0 border-b border-gray-200 bg-white px-4 py-3 dark:border-gray-800 dark:bg-gray-900"
+    >
+      <div
+        class="flex items-center"
+      >
+        <button
+          class="mr-3 rounded-lg p-2 text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
+        >
+          <svg
+            class="h-6 w-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M15 19l-7-7 7-7"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+            />
+          </svg>
+        </button>
+        <h1
+          class="text-lg font-semibold text-gray-900 md:text-xl dark:text-white"
+        >
+          Workout in Progress
+        </h1>
+      </div>
+    </div>
+    <div
+      class="flex flex-1 flex-col justify-between overflow-hidden px-4 py-4"
+    >
+      <div
+        class="mx-auto w-full max-w-2xl space-y-3 md:space-y-4"
+      >
+        <div
+          class="rounded-lg bg-white p-4 shadow md:p-6 dark:bg-gray-900"
+        >
+          <div
+            class="mb-2 flex items-center justify-between"
+          >
+            <p
+              class="text-xs font-medium tracking-wide text-gray-500 uppercase dark:text-gray-400"
+            >
+              Current Exercise
+            </p>
+            <span
+              class="rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700 dark:bg-blue-900/30 dark:text-blue-400"
+            >
+              Round 
+              1
+               of 
+              2
+            </span>
+          </div>
+          <h2
+            class="mb-1 text-xl font-bold text-gray-900 md:text-2xl dark:text-white"
+          >
+            Push-ups
+          </h2>
+          <p
+            class="text-base text-gray-600 md:text-lg dark:text-gray-400"
+          >
+            20
+             
+            reps
+          </p>
+          <p
+            class="mt-1 text-xs text-gray-500 dark:text-gray-500"
+          >
+            Exercise 
+            1
+             of 
+            3
+          </p>
+        </div>
+        <div
+          class="rounded-lg bg-white p-6 shadow md:p-8 dark:bg-gray-900"
+        >
+          <p
+            class="text-center font-mono text-5xl font-bold text-gray-900 tabular-nums md:text-6xl dark:text-white"
+          >
+            00:00:00
+          </p>
+        </div>
+        <div
+          class="rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 p-4 md:p-6 dark:border-gray-700 dark:bg-gray-800"
+        >
+          <p
+            class="mb-1 text-xs font-medium tracking-wide text-gray-500 uppercase dark:text-gray-400"
+          >
+            After Rest
+          </p>
+          <h3
+            class="mb-1 text-lg font-semibold text-gray-900 md:text-xl dark:text-white"
+          >
+            Squats
+          </h3>
+          <p
+            class="text-sm text-gray-600 md:text-base dark:text-gray-400"
+          >
+            30
+             
+            reps
+          </p>
+        </div>
+      </div>
+      <div
+        class="mx-auto w-full max-w-2xl flex-shrink-0 space-y-2 pt-4 md:space-y-3"
+      >
+        <div
+          class="grid grid-cols-2 gap-2 md:gap-3"
+        >
+          <button
+            class="cursor-pointer rounded-lg bg-sky-600 px-4 py-3 text-base font-semibold text-white shadow-sm hover:bg-sky-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600 md:px-6 md:py-4 md:text-lg dark:bg-sky-500 dark:hover:bg-sky-400"
+          >
+            Start
+          </button>
+          <button
+            class="cursor-pointer rounded-lg bg-green-600 px-4 py-3 text-base font-semibold text-white shadow-sm hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 disabled:cursor-not-allowed disabled:opacity-50 md:px-6 md:py-4 md:text-lg dark:bg-green-500 dark:hover:bg-green-400"
+            disabled=""
+          >
+            Log Exercise
+          </button>
+        </div>
+        <div
+          class="grid grid-cols-2 gap-2 md:gap-3"
+        >
+          <button
+            class="cursor-pointer rounded-lg border-2 border-red-600 bg-transparent px-3 py-2 text-sm font-semibold text-red-600 hover:bg-red-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 md:px-4 md:py-3 dark:border-red-500 dark:text-red-500 dark:hover:bg-red-950"
+          >
+            Discard Workout
+          </button>
+          <button
+            class="cursor-pointer rounded-lg border-2 border-orange-600 bg-transparent px-3 py-2 text-sm font-semibold text-orange-600 hover:bg-orange-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 md:px-4 md:py-3 dark:border-orange-500 dark:text-orange-500 dark:hover:bg-orange-950"
+          >
+            Finish Early
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

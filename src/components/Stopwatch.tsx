@@ -18,7 +18,7 @@ export type Lap = {
   targetUnit?: string;
 };
 
-type ExerciseTarget = {
+export type ExerciseTarget = {
   id: number;
   name: string;
   category: string;
@@ -232,12 +232,7 @@ export const Stopwatch = ({ exercises, onFinish, onBack, targetRounds = 1 }: Sto
               onClick={onBack}
               className="mr-3 rounded-lg p-2 text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
             >
-              <svg
-                className="h-6 w-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
+              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -246,7 +241,7 @@ export const Stopwatch = ({ exercises, onFinish, onBack, targetRounds = 1 }: Sto
                 />
               </svg>
             </button>
-            <h1 className="text-lg font-semibold text-gray-900 dark:text-white md:text-xl">
+            <h1 className="text-lg font-semibold text-gray-900 md:text-xl dark:text-white">
               Workout in Progress
             </h1>
           </div>
@@ -256,9 +251,9 @@ export const Stopwatch = ({ exercises, onFinish, onBack, targetRounds = 1 }: Sto
         <div className="flex flex-1 flex-col justify-between overflow-hidden px-4 py-4">
           <div className="mx-auto w-full max-w-2xl space-y-3 md:space-y-4">
             {/* Current Exercise/Rest Card */}
-            <div className="rounded-lg bg-white p-4 shadow dark:bg-gray-900 md:p-6">
+            <div className="rounded-lg bg-white p-4 shadow md:p-6 dark:bg-gray-900">
               <div className="mb-2 flex items-center justify-between">
-                <p className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                <p className="text-xs font-medium tracking-wide text-gray-500 uppercase dark:text-gray-400">
                   {currentType === 'exercise' ? 'Current Exercise' : 'Rest Period'}
                 </p>
                 {targetRounds > 1 && (
@@ -267,13 +262,11 @@ export const Stopwatch = ({ exercises, onFinish, onBack, targetRounds = 1 }: Sto
                   </span>
                 )}
               </div>
-              <h2 className="mb-1 text-xl font-bold text-gray-900 dark:text-white md:text-2xl">
-                {currentType === 'exercise'
-                  ? currentExercise?.name
-                  : 'Rest'}
+              <h2 className="mb-1 text-xl font-bold text-gray-900 md:text-2xl dark:text-white">
+                {currentType === 'exercise' ? currentExercise?.name : 'Rest'}
               </h2>
               {currentType === 'exercise' && (
-                <p className="text-base text-gray-600 dark:text-gray-400 md:text-lg">
+                <p className="text-base text-gray-600 md:text-lg dark:text-gray-400">
                   {currentExercise?.targetValue} {currentExercise?.targetUnit}
                 </p>
               )}
@@ -283,36 +276,36 @@ export const Stopwatch = ({ exercises, onFinish, onBack, targetRounds = 1 }: Sto
             </div>
 
             {/* Stopwatch Display */}
-            <div className="rounded-lg bg-white p-6 shadow dark:bg-gray-900 md:p-8">
-              <p className="text-center font-mono text-5xl font-bold tabular-nums text-gray-900 dark:text-white md:text-6xl">
+            <div className="rounded-lg bg-white p-6 shadow md:p-8 dark:bg-gray-900">
+              <p className="text-center font-mono text-5xl font-bold text-gray-900 tabular-nums md:text-6xl dark:text-white">
                 {formatTime(time)}
               </p>
             </div>
 
             {/* Next Exercise Card */}
             {nextExercise && currentType === 'rest' && (
-              <div className="rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-800 md:p-6">
-                <p className="mb-1 text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+              <div className="rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 p-4 md:p-6 dark:border-gray-700 dark:bg-gray-800">
+                <p className="mb-1 text-xs font-medium tracking-wide text-gray-500 uppercase dark:text-gray-400">
                   Up Next
                 </p>
-                <h3 className="mb-1 text-lg font-semibold text-gray-900 dark:text-white md:text-xl">
+                <h3 className="mb-1 text-lg font-semibold text-gray-900 md:text-xl dark:text-white">
                   {nextExercise.name}
                 </h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400 md:text-base">
+                <p className="text-sm text-gray-600 md:text-base dark:text-gray-400">
                   {nextExercise.targetValue} {nextExercise.targetUnit}
                 </p>
               </div>
             )}
 
             {currentType === 'exercise' && !isLastExercise && (
-              <div className="rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-800 md:p-6">
-                <p className="mb-1 text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+              <div className="rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 p-4 md:p-6 dark:border-gray-700 dark:bg-gray-800">
+                <p className="mb-1 text-xs font-medium tracking-wide text-gray-500 uppercase dark:text-gray-400">
                   After Rest
                 </p>
-                <h3 className="mb-1 text-lg font-semibold text-gray-900 dark:text-white md:text-xl">
+                <h3 className="mb-1 text-lg font-semibold text-gray-900 md:text-xl dark:text-white">
                   {nextExercise?.name}
                 </h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400 md:text-base">
+                <p className="text-sm text-gray-600 md:text-base dark:text-gray-400">
                   {nextExercise?.targetValue} {nextExercise?.targetUnit}
                 </p>
               </div>
@@ -324,13 +317,13 @@ export const Stopwatch = ({ exercises, onFinish, onBack, targetRounds = 1 }: Sto
             {/* Primary Action Buttons */}
             <div className="grid grid-cols-2 gap-2 md:gap-3">
               <button
-                className="cursor-pointer rounded-lg bg-sky-600 px-4 py-3 text-base font-semibold text-white shadow-sm hover:bg-sky-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600 dark:bg-sky-500 dark:hover:bg-sky-400 md:px-6 md:py-4 md:text-lg"
+                className="cursor-pointer rounded-lg bg-sky-600 px-4 py-3 text-base font-semibold text-white shadow-sm hover:bg-sky-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600 md:px-6 md:py-4 md:text-lg dark:bg-sky-500 dark:hover:bg-sky-400"
                 onClick={() => setIsRunning(!isRunning)}
               >
                 {isRunning ? 'Pause' : 'Start'}
               </button>
               <button
-                className="cursor-pointer rounded-lg bg-green-600 px-4 py-3 text-base font-semibold text-white shadow-sm hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-green-500 dark:hover:bg-green-400 md:px-6 md:py-4 md:text-lg"
+                className="cursor-pointer rounded-lg bg-green-600 px-4 py-3 text-base font-semibold text-white shadow-sm hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 disabled:cursor-not-allowed disabled:opacity-50 md:px-6 md:py-4 md:text-lg dark:bg-green-500 dark:hover:bg-green-400"
                 onClick={handleLap}
                 disabled={!isRunning}
               >
@@ -343,13 +336,13 @@ export const Stopwatch = ({ exercises, onFinish, onBack, targetRounds = 1 }: Sto
             {/* Secondary Action Buttons */}
             <div className="grid grid-cols-2 gap-2 md:gap-3">
               <button
-                className="cursor-pointer rounded-lg border-2 border-red-600 bg-transparent px-3 py-2 text-sm font-semibold text-red-600 hover:bg-red-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 dark:border-red-500 dark:text-red-500 dark:hover:bg-red-950 md:px-4 md:py-3"
+                className="cursor-pointer rounded-lg border-2 border-red-600 bg-transparent px-3 py-2 text-sm font-semibold text-red-600 hover:bg-red-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 md:px-4 md:py-3 dark:border-red-500 dark:text-red-500 dark:hover:bg-red-950"
                 onClick={handleDiscard}
               >
                 Discard Workout
               </button>
               <button
-                className="cursor-pointer rounded-lg border-2 border-orange-600 bg-transparent px-3 py-2 text-sm font-semibold text-orange-600 hover:bg-orange-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 dark:border-orange-500 dark:text-orange-500 dark:hover:bg-orange-950 md:px-4 md:py-3"
+                className="cursor-pointer rounded-lg border-2 border-orange-600 bg-transparent px-3 py-2 text-sm font-semibold text-orange-600 hover:bg-orange-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 md:px-4 md:py-3 dark:border-orange-500 dark:text-orange-500 dark:hover:bg-orange-950"
                 onClick={handleFinishEarly}
               >
                 Finish Early
