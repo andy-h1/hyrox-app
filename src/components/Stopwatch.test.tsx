@@ -40,6 +40,11 @@ describe('Stopwatch component', () => {
   it('should render with the initial state', () => {
     const { container } = render(<Stopwatch {...mockProps} />);
 
+    const h2 = screen.getByRole('heading', { level: 2, name: /push-ups/i });
+    const h3 = screen.getByRole('heading', { level: 3, name: /squats/i });
+
     expect(container).toMatchSnapshot();
+    expect(h2).toBeDefined();
+    expect(h3).toBeDefined();
   });
 });
