@@ -61,6 +61,7 @@ describe('Stopwatch component', () => {
     const user = userEvent.setup({ delay: null });
     render(<Stopwatch {...mockProps} />);
 
+    //TODO: multiple elements with start
     const startButton = screen.getByRole('button', { name: /start/i });
     await user.click(startButton);
 
