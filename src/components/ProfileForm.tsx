@@ -1,7 +1,7 @@
 'use client';
 import Image from 'next/image';
 import { useState } from 'react';
-import { updateProfileAction } from '@/app/profile/actions';
+import { updateProfileAction } from '@/app/(authenticated)/profile/actions';
 import { Field, Fieldset, Label } from './tailwind/fieldset';
 import { Input } from './tailwind/input';
 import { Textarea } from './tailwind/textarea';

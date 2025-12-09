@@ -3,7 +3,6 @@ import { getCurrentUser } from '@/lib/auth-server';
 import { getLoggedWorkouts } from '@/lib/database/workouts';
 import ActivitiesClient from './ActivitiesClient';
 
-export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export default async function ActivitiesPage() {

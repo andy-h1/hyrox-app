@@ -6,7 +6,6 @@ import { getCurrentUser } from '@/lib/auth-server';
 import { prisma } from '@/lib/prisma';
 import { ClockIcon, TrophyIcon, FireIcon } from '@heroicons/react/24/outline';
 
-export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 function formatDateWithOrdinal(date: Date): string {

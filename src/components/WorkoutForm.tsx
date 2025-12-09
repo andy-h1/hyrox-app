@@ -4,8 +4,8 @@ import { Select } from './tailwind/select';
 import { Switch, SwitchField } from './tailwind/switch';
 import { Checkbox, CheckboxField } from './tailwind/checkbox';
 import { useState } from 'react';
-import { createWorkoutTemplateAction } from '@/app/workouts/actions';
-import { WorkoutTemplate } from '@/app/workouts/page';
+import { createWorkoutTemplateAction } from '@/app/(authenticated)/workouts/actions';
+import { WorkoutTemplate } from '@/app/(authenticated)/workouts/page';
 
 type Exercise = {
   id: number;

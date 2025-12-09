@@ -1,6 +1,6 @@
 'use client';
 
-import type { WorkoutTemplate } from '@/app/workouts/page';
+import type { WorkoutTemplate } from '@/app/(authenticated)/workouts/page';
 import { TemplateCard } from './TemplateCard';
 import { useState } from 'react';
 import { ExerciseLog } from './ExerciseLog';

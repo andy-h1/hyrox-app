@@ -203,28 +203,29 @@ export default function ActivitiesClient({ workouts }: ActivitiesClientProps) {
                                   {formatDuration(round.duration)}
                                 </span>
                               </div>
-                            {round.exercises && round.exercises.length > 0 && (
-                              <div className="space-y-2 border-t border-zinc-200 pt-3 dark:border-zinc-800">
-                                {round.exercises.map((ex) => (
-                                  <div
-                                    key={ex.id}
-                                    className="flex items-center justify-between text-sm"
-                                  >
-                                    <span className="text-zinc-900 dark:text-white">
-                                      {ex.exercise.name}
-                                    </span>
-                                    <span className="text-zinc-600 dark:text-zinc-400">
-                                      {formatDuration(ex.duration)} • {ex.actualValue} {ex.actualUnit}
-                                      {ex.restAfter && (
-                                        <span className="ml-1 text-orange-600 dark:text-orange-400">
-                                          + {formatDuration(ex.restAfter)} rest
-                                        </span>
-                                      )}
-                                    </span>
-                                  </div>
-                                ))}
-                              </div>
-                            )}
+                              {round.exercises && round.exercises.length > 0 && (
+                                <div className="space-y-2 border-t border-zinc-200 pt-3 dark:border-zinc-800">
+                                  {round.exercises.map((ex) => (
+                                    <div
+                                      key={ex.id}
+                                      className="flex items-center justify-between text-sm"
+                                    >
+                                      <span className="text-zinc-900 dark:text-white">
+                                        {ex.exercise.name}
+                                      </span>
+                                      <span className="text-zinc-600 dark:text-zinc-400">
+                                        {formatDuration(ex.duration)} • {ex.actualValue}{' '}
+                                        {ex.actualUnit}
+                                        {ex.restAfter && (
+                                          <span className="ml-1 text-orange-600 dark:text-orange-400">
+                                            + {formatDuration(ex.restAfter)} rest
+                                          </span>
+                                        )}
+                                      </span>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
                             </div>
                             {round.restAfter && idx < workout.rounds.length - 1 && (
                               <div className="flex items-center justify-center">

@@ -1,11 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import type { WorkoutTemplate } from '@/app/workouts/page';
+import type { WorkoutTemplate } from '@/app/(authenticated)/workouts/page';
 import { Stopwatch } from './Stopwatch';
 import { WorkoutReview } from './WorkoutReview';
 import type { Lap } from './Stopwatch';
-import { saveWorkoutAction } from '@/app/dashboard/log-workout/actions';
+import { saveWorkoutAction } from '@/app/(authenticated)/dashboard/log-workout/actions';
 
 enum format {
   'FOR_TIME' = 'For time',
