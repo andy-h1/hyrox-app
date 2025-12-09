@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { formatDate } from '@/utils/timeAndDateUtils';
-import { WorkoutTemplate } from '../app/workouts/page';
+import { WorkoutTemplate } from '@/app/(authenticated)/workouts/page';
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
 
 function getCondensedExerciseDisplay(template: WorkoutTemplate): string {

@@ -20,11 +20,11 @@ export const ExerciseForm: React.FC<ExerciseFormProps> = ({ exercise }) => {
       <p className="text-sm text-gray-500 capitalize">{exercise.category}</p>
       <div className="flex flex-col gap-2">
         <label className="text-gray-900">
-          {exercise.unit === 'meters' ? 'Distance (m)' : 'Weight (kg)'}
+          {exercise.category === 'cardio' ? 'Distance (m)' : 'Reps'}
         </label>
         <input
           className="rounded-md border-1 border-slate-400 p-1"
-          placeholder={exercise.unit === 'meters' ? '1000' : '50'}
+          placeholder={exercise.category === 'cardio' ? '1000' : '50'}
           type="number"
           min="0"
           // NOTE: Using string interpolation so that each input is unique to that exercises

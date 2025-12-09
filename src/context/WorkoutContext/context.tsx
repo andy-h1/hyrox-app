@@ -16,7 +16,7 @@ const initialState: State = {
   workoutType: 'forTraining',
   selectedExercises: [],
   exerciseEntries: {
-    exerciseId: 0,
+    id: 0,
     value: 0,
     timeTaken: 0,
   },

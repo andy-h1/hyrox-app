@@ -3,7 +3,6 @@
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { createWorkoutTemplate } from '@/lib/database/workouts';
-import { redirect } from 'next/navigation';
 
 const workoutDataSchema = z.object({
   name: z.string().min(1, 'Workout name is required'),
@@ -50,8 +49,30 @@ export type WorkoutTemplateInput = {
 };
 
 export async function createWorkoutTemplateAction(formData: FormData) {
-  await createWorkoutTemplate(formData);
+  const rawData = {
+    name: formData.get('name') as string,
+    description: formData.get('description') as string,
+    format: formData.get('format') as 'AMRAP' | 'FOR_TIME' | 'EMOM',
+    duration: formData.get('duration') ? Number(formData.get('duration')) : undefined,
+    targetRounds: formData.get('targetRounds') ? Number(formData.get('targetRounds')) : undefined,
+    isPublic: formData.get('isPublic') === 'true',
+    exercises: JSON.parse(formData.get('exercises') as string),
+  };
+
+  const validatedData = workoutDataSchema.parse(rawData);
+
+  const template = await createWorkoutTemplate({
+    ...validatedData,
+    exercises: validatedData.exercises.map((ex) => ({
+      exerciseId: ex.exerciseId,
+      targetValue: ex.targetValue,
+      targetUnit: ex.targetUnit,
+      orderInIndex: ex.orderIndex,
+      notes: ex.notes,
+    })),
+  });
 
   revalidatePath('/workouts');
-  redirect('/workouts');
+
+  return { success: true, template };
 }

@@ -1,6 +1,8 @@
 import { Dispatch } from 'react';
 import { Exercise } from '@prisma/client';
 
+export type { Exercise };
+
 export type WorkoutFormStage =
   | 'selectWorkoutType'
   | 'selectExercises'

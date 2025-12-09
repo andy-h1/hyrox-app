@@ -17,9 +17,10 @@ import { createWorkoutTemplate } from '@/lib/database/workouts';
 export async function POST(req: NextRequest) {
   try {
     const data = await req.json();
-    const newWorkoutTemplate = await createWorkoutTemplate(data, userId);
+    const newWorkoutTemplate = await createWorkoutTemplate(data);
     return NextResponse.json({ data: newWorkoutTemplate }, { status: 201 });
   } catch (error) {
-    return NextResponse.json({ error: error.message || 'Unknown error' }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

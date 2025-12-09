@@ -8,15 +8,13 @@ type WorkoutData = {
   duration?: number;
   targetRounds?: number;
   isPublic: boolean;
-  exercises: [
-    {
-      exerciseId: number;
-      targetValue: number;
-      targetUnit: string;
-      orderInIndex: number;
-      notes?: string;
-    },
-  ];
+  exercises: Array<{
+    exerciseId: number;
+    targetValue: number;
+    targetUnit: string;
+    orderInIndex: number;
+    notes?: string;
+  }>;
 };
 
 export async function getWorkoutTemplates() {
@@ -76,7 +74,6 @@ export async function createWorkoutTemplate(workoutData: WorkoutData) {
 
   try {
     const newWorkoutTemplate = await prisma.$transaction(async (tx) => {
-      // tables that need to be updated are: WorkoutTemplate / TemplateExercise / TemplateShare?
       const template = await tx.workoutTemplate.create({
         data: {
           createdBy: user.id,
@@ -106,9 +103,55 @@ export async function createWorkoutTemplate(workoutData: WorkoutData) {
       return template;
     });
 
-    return { success: true, template: newWorkoutTemplate };
+    const completeTemplate = await prisma.workoutTemplate.findUnique({
+      where: { id: newWorkoutTemplate.id },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        isPublic: true,
+        format: true,
+        duration: true,
+        targetRounds: true,
+        createdAt: true,
+        updatedAt: true,
+        exercises: {
+          select: {
+            targetValue: true,
+            targetUnit: true,
+            exercise: true,
+            orderIndex: true,
+          },
+        },
+        creator: true,
+        sharedWith: {
+          select: {
+            user: true,
+          },
+        },
+      },
+    });
+
+    if (!completeTemplate) {
+      throw new Error('Failed to fetch created template');
+    }
+
+    const formattedTemplate = {
+      ...completeTemplate,
+      exercises: completeTemplate.exercises.map((e) => ({
+        id: e.exercise.id,
+        name: e.exercise.name,
+        category: e.exercise.category,
+        targetValue: e.targetValue,
+        targetUnit: e.targetUnit,
+      })),
+      sharedWith: completeTemplate.sharedWith.map((shared) => shared.user),
+    };
+
+    return formattedTemplate;
   } catch (error) {
     console.error('Error creating new workout templates', error);
+    throw error;
   }
 }
 
