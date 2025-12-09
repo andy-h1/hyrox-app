@@ -170,28 +170,29 @@ export const WorkoutSummaryClient = ({ workouts }: WorkoutSummaryClientProps) =>
                                   {formatDuration(round.duration)}
                                 </span>
                               </div>
-                            {round.exercises && round.exercises.length > 0 && (
-                              <div className="space-y-1 border-t border-zinc-200 pt-2 dark:border-zinc-700">
-                                {round.exercises.map((ex) => (
-                                  <div
-                                    key={ex.id}
-                                    className="flex items-center justify-between text-xs"
-                                  >
-                                    <span className="text-zinc-700 dark:text-zinc-300">
-                                      {ex.exercise.name}
-                                    </span>
-                                    <span className="text-zinc-500 dark:text-zinc-400">
-                                      {formatDuration(ex.duration)} • {ex.actualValue} {ex.actualUnit}
-                                      {ex.restAfter && (
-                                        <span className="ml-1 text-orange-600 dark:text-orange-400">
-                                          + {formatDuration(ex.restAfter)} rest
-                                        </span>
-                                      )}
-                                    </span>
-                                  </div>
-                                ))}
-                              </div>
-                            )}
+                              {round.exercises && round.exercises.length > 0 && (
+                                <div className="space-y-1 border-t border-zinc-200 pt-2 dark:border-zinc-700">
+                                  {round.exercises.map((ex) => (
+                                    <div
+                                      key={ex.id}
+                                      className="flex items-center justify-between text-xs"
+                                    >
+                                      <span className="text-zinc-700 dark:text-zinc-300">
+                                        {ex.exercise.name}
+                                      </span>
+                                      <span className="text-zinc-500 dark:text-zinc-400">
+                                        {formatDuration(ex.duration)} • {ex.actualValue}{' '}
+                                        {ex.actualUnit}
+                                        {ex.restAfter && (
+                                          <span className="ml-1 text-orange-600 dark:text-orange-400">
+                                            + {formatDuration(ex.restAfter)} rest
+                                          </span>
+                                        )}
+                                      </span>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
                             </div>
                             {round.restAfter && idx < workout.rounds.length - 1 && (
                               <div className="flex items-center justify-center">

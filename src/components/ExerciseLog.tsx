@@ -36,19 +36,16 @@ export const ExerciseLog = ({ template, onBack }: ExerciseLogProps) => {
     formData.append('templateId', template.id.toString());
     formData.append('laps', JSON.stringify(editedLaps));
     formData.append('workoutStartTime', editedLaps[0]?.startedAt.toISOString() || '');
-    formData.append('workoutEndTime', editedLaps[editedLaps.length - 1]?.completedAt.toISOString() || '');
+    formData.append(
+      'workoutEndTime',
+      editedLaps[editedLaps.length - 1]?.completedAt.toISOString() || '',
+    );
 
     await saveWorkoutAction(formData);
   };
 
   if (step === 'review') {
-    return (
-      <WorkoutReview
-        laps={laps}
-        onSave={handleSaveWorkout}
-        onBack={handleBackToWorkout}
-      />
-    );
+    return <WorkoutReview laps={laps} onSave={handleSaveWorkout} onBack={handleBackToWorkout} />;
   }
 
   return (

@@ -12,17 +12,17 @@ type WorkoutReviewProps = {
 // Map exercise names to their available units
 const exerciseUnitOptions: Record<string, string[]> = {
   // Cardio exercises
-  'SkiErg': ['meters', 'calories'],
-  'Bike': ['meters', 'calories'],
-  'Row': ['meters', 'calories'],
-  'Run': ['meters', 'km', 'miles'],
+  SkiErg: ['meters', 'calories'],
+  Bike: ['meters', 'calories'],
+  Row: ['meters', 'calories'],
+  Run: ['meters', 'km', 'miles'],
   'Sled Push': ['meters'],
   'Sled Pull': ['meters'],
 
   // Strength exercises
-  'Burpees': ['reps'],
+  Burpees: ['reps'],
   'Wall Balls': ['reps'],
-  'Lunges': ['reps'],
+  Lunges: ['reps'],
   'Farmers Carry': ['meters'],
   'Sandbag Carry': ['meters'],
 };
@@ -66,13 +66,20 @@ export const WorkoutReview = ({ laps, onSave, onBack }: WorkoutReviewProps) => {
     return `${minutes}m ${seconds}s`;
   };
 
-  const handleUpdateLap = (lapId: number, field: 'actualValue' | 'actualUnit', value: string | number) => {
+  const handleUpdateLap = (
+    lapId: number,
+    field: 'actualValue' | 'actualUnit',
+    value: string | number,
+  ) => {
     setEditedLaps((prev) =>
       prev.map((lap) =>
         lap.id === lapId
-          ? { ...lap, [field]: field === 'actualValue' ? (value === '' ? 0 : Number(value)) : value }
-          : lap
-      )
+          ? {
+              ...lap,
+              [field]: field === 'actualValue' ? (value === '' ? 0 : Number(value)) : value,
+            }
+          : lap,
+      ),
     );
   };
 
@@ -100,12 +107,7 @@ export const WorkoutReview = ({ laps, onSave, onBack }: WorkoutReviewProps) => {
             className="mr-3 rounded-lg p-2 text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
             disabled={isSaving}
           >
-            <svg
-              className="h-6 w-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -114,7 +116,7 @@ export const WorkoutReview = ({ laps, onSave, onBack }: WorkoutReviewProps) => {
               />
             </svg>
           </button>
-          <h1 className="text-lg font-semibold text-gray-900 dark:text-white md:text-xl">
+          <h1 className="text-lg font-semibold text-gray-900 md:text-xl dark:text-white">
             Workout Summary
           </h1>
         </div>
@@ -125,22 +127,16 @@ export const WorkoutReview = ({ laps, onSave, onBack }: WorkoutReviewProps) => {
         <div className="space-y-4 p-4">
           {/* Overall Stats */}
           <div className="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-900">
-            <h2 className="mb-3 text-xl font-bold text-gray-900 dark:text-white">
-              Great Work!
-            </h2>
+            <h2 className="mb-3 text-xl font-bold text-gray-900 dark:text-white">Great Work!</h2>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-xs font-medium text-gray-500 dark:text-gray-400">
-                  Total Time
-                </p>
+                <p className="text-xs font-medium text-gray-500 dark:text-gray-400">Total Time</p>
                 <p className="text-2xl font-bold text-gray-900 dark:text-white">
                   {formatTimeShort(totalTime)}
                 </p>
               </div>
               <div>
-                <p className="text-xs font-medium text-gray-500 dark:text-gray-400">
-                  Exercises
-                </p>
+                <p className="text-xs font-medium text-gray-500 dark:text-gray-400">Exercises</p>
                 <p className="text-2xl font-bold text-gray-900 dark:text-white">
                   {exerciseLaps.length}
                 </p>
@@ -228,7 +224,7 @@ export const WorkoutReview = ({ laps, onSave, onBack }: WorkoutReviewProps) => {
                               onChange={(e) =>
                                 handleUpdateLap(lap.id, 'actualValue', e.target.value)
                               }
-                              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-sky-500 focus:ring-2 focus:ring-sky-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                             />
                           </div>
                           <div>
@@ -244,7 +240,7 @@ export const WorkoutReview = ({ laps, onSave, onBack }: WorkoutReviewProps) => {
                               onChange={(e) =>
                                 handleUpdateLap(lap.id, 'actualUnit', e.target.value)
                               }
-                              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-sky-500 focus:ring-2 focus:ring-sky-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                             >
                               {unitOptions.map((unit) => (
                                 <option key={unit} value={unit}>
@@ -267,7 +263,7 @@ export const WorkoutReview = ({ laps, onSave, onBack }: WorkoutReviewProps) => {
       {/* Fixed Bottom Save Button - Full Width */}
       <div className="flex-shrink-0 border-t border-gray-200 bg-white px-4 py-3 dark:border-gray-800 dark:bg-gray-900">
         <button
-          className="w-full cursor-pointer rounded-lg bg-green-600 px-6 py-3 text-base font-semibold text-white shadow-sm hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-green-500 dark:hover:bg-green-400 md:py-4 md:text-lg"
+          className="w-full cursor-pointer rounded-lg bg-green-600 px-6 py-3 text-base font-semibold text-white shadow-sm hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 disabled:cursor-not-allowed disabled:opacity-50 md:py-4 md:text-lg dark:bg-green-500 dark:hover:bg-green-400"
           onClick={handleSave}
           disabled={isSaving}
         >

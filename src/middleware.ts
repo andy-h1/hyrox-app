@@ -8,11 +8,12 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Create response with pathname header for layout
-  const response = pathname === '/' || pathname === '/login'
-    ? NextResponse.next()
-    : !session?.user?.id
-    ? NextResponse.redirect(new URL('/login', request.url))
-    : NextResponse.next();
+  const response =
+    pathname === '/' || pathname === '/login'
+      ? NextResponse.next()
+      : !session?.user?.id
+        ? NextResponse.redirect(new URL('/login', request.url))
+        : NextResponse.next();
 
   // Add pathname to headers so layout can access it
   response.headers.set('x-pathname', pathname);

@@ -24,20 +24,19 @@ export const ConfirmationModal = ({
   if (!isOpen) return null;
 
   const confirmButtonStyles = {
-    danger: 'bg-red-600 hover:bg-red-700 focus-visible:outline-red-600 dark:bg-red-500 dark:hover:bg-red-400',
-    warning: 'bg-orange-600 hover:bg-orange-700 focus-visible:outline-orange-600 dark:bg-orange-500 dark:hover:bg-orange-400',
-    success: 'bg-green-600 hover:bg-green-700 focus-visible:outline-green-600 dark:bg-green-500 dark:hover:bg-green-400',
+    danger:
+      'bg-red-600 hover:bg-red-700 focus-visible:outline-red-600 dark:bg-red-500 dark:hover:bg-red-400',
+    warning:
+      'bg-orange-600 hover:bg-orange-700 focus-visible:outline-orange-600 dark:bg-orange-500 dark:hover:bg-orange-400',
+    success:
+      'bg-green-600 hover:bg-green-700 focus-visible:outline-green-600 dark:bg-green-500 dark:hover:bg-green-400',
   };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
       <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-xl dark:bg-gray-900">
-        <h2 className="mb-3 text-xl font-bold text-gray-900 dark:text-white">
-          {title}
-        </h2>
-        <p className="mb-6 text-gray-600 dark:text-gray-400">
-          {message}
-        </p>
+        <h2 className="mb-3 text-xl font-bold text-gray-900 dark:text-white">{title}</h2>
+        <p className="mb-6 text-gray-600 dark:text-gray-400">{message}</p>
 
         <div className="flex gap-3">
           <button
