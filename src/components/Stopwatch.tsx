@@ -247,10 +247,8 @@ export const Stopwatch = ({ exercises, onFinish, onBack, targetRounds = 1 }: Sto
           </div>
         </div>
 
-        {/* Main Content */}
         <div className="flex flex-1 flex-col justify-between overflow-hidden px-4 py-4">
           <div className="mx-auto w-full max-w-2xl space-y-3 md:space-y-4">
-            {/* Current Exercise/Rest Card */}
             <div className="rounded-lg bg-white p-4 shadow md:p-6 dark:bg-gray-900">
               <div className="mb-2 flex items-center justify-between">
                 <p className="text-xs font-medium tracking-wide text-gray-500 uppercase dark:text-gray-400">
@@ -275,7 +273,6 @@ export const Stopwatch = ({ exercises, onFinish, onBack, targetRounds = 1 }: Sto
               </p>
             </div>
 
-            {/* Stopwatch Display */}
             <div className="rounded-lg bg-white p-6 shadow md:p-8 dark:bg-gray-900">
               <p
                 role="timer"
@@ -285,7 +282,6 @@ export const Stopwatch = ({ exercises, onFinish, onBack, targetRounds = 1 }: Sto
               </p>
             </div>
 
-            {/* Next Exercise Card */}
             {nextExercise && currentType === 'rest' && (
               <div className="rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 p-4 md:p-6 dark:border-gray-700 dark:bg-gray-800">
                 <p className="mb-1 text-xs font-medium tracking-wide text-gray-500 uppercase dark:text-gray-400">
@@ -315,9 +311,7 @@ export const Stopwatch = ({ exercises, onFinish, onBack, targetRounds = 1 }: Sto
             )}
           </div>
 
-          {/* Fixed Bottom Controls */}
           <div className="mx-auto w-full max-w-2xl flex-shrink-0 space-y-2 pt-4 md:space-y-3">
-            {/* Primary Action Buttons */}
             <div className="grid grid-cols-2 gap-2 md:gap-3">
               <button
                 className="cursor-pointer rounded-lg bg-sky-600 px-4 py-3 text-base font-semibold text-white shadow-sm hover:bg-sky-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600 md:px-6 md:py-4 md:text-lg dark:bg-sky-500 dark:hover:bg-sky-400"
@@ -336,7 +330,6 @@ export const Stopwatch = ({ exercises, onFinish, onBack, targetRounds = 1 }: Sto
               </button>
             </div>
 
-            {/* Secondary Action Buttons */}
             <div className="grid grid-cols-2 gap-2 md:gap-3">
               <button
                 className="cursor-pointer rounded-lg border-2 border-red-600 bg-transparent px-3 py-2 text-sm font-semibold text-red-600 hover:bg-red-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 md:px-4 md:py-3 dark:border-red-500 dark:text-red-500 dark:hover:bg-red-950"
@@ -355,7 +348,6 @@ export const Stopwatch = ({ exercises, onFinish, onBack, targetRounds = 1 }: Sto
         </div>
       </div>
 
-      {/* Confirmation Modals */}
       <ConfirmationModal
         isOpen={showDiscardModal}
         title="Discard Workout?"
