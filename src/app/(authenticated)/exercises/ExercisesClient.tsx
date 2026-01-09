@@ -17,13 +17,16 @@ export default function ExercisesClient({ exercises }: ExercisesClientProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
-  // Get unique categories
+  const capitalizeFirstLetter = (str: string) => {
+    if (!str) return str;
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  };
+
   const categories = useMemo(() => {
     const uniqueCategories = Array.from(new Set(exercises.map((ex) => ex.category)));
     return ['all', ...uniqueCategories.sort()];
   }, [exercises]);
 
-  // Filter exercises based on search and category
   const filteredExercises = useMemo(() => {
     return exercises.filter((exercise) => {
       const matchesSearch = exercise.name.toLowerCase().includes(searchQuery.toLowerCase());
@@ -32,7 +35,6 @@ export default function ExercisesClient({ exercises }: ExercisesClientProps) {
     });
   }, [exercises, searchQuery, selectedCategory]);
 
-  // Group exercises by category
   const exercisesByCategory = useMemo(() => {
     const grouped: Record<string, Exercise[]> = {};
     filteredExercises.forEach((exercise) => {
@@ -69,7 +71,7 @@ export default function ExercisesClient({ exercises }: ExercisesClientProps) {
           >
             {categories.map((category) => (
               <option key={category} value={category}>
-                {category === 'all' ? 'All Categories' : category}
+                {category === 'all' ? 'All Categories' : capitalizeFirstLetter(category)}
               </option>
             ))}
           </select>
@@ -95,7 +97,7 @@ export default function ExercisesClient({ exercises }: ExercisesClientProps) {
           {sortedCategories.map((category) => (
             <div key={category}>
               <h2 className="mb-4 text-xl font-semibold text-zinc-950 dark:text-white">
-                {category}
+                {capitalizeFirstLetter(category)}
               </h2>
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {exercisesByCategory[category].map((exercise) => (
@@ -107,7 +109,7 @@ export default function ExercisesClient({ exercises }: ExercisesClientProps) {
                       <h3 className="font-medium text-zinc-950 dark:text-white">{exercise.name}</h3>
                     </div>
                     <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-                      {exercise.category}
+                      {capitalizeFirstLetter(exercise.category)}
                     </p>
                   </div>
                 ))}
